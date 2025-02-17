@@ -27,9 +27,9 @@ axiosInstance.interceptors.response.use(
         const [cookieName, cookieValue] = cookie.split(';')[0].split('=');
         Cookies.set(cookieName, cookieValue, { 
           path: '/', 
-          domain: 'hello.com', // Set to your frontend domain
+          domain: 'https://intube.pankajuday.tech', // Set to your frontend domain
           secure: true, 
-          sameSite: 'None' 
+          
         });
       });
     }
