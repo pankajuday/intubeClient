@@ -13,7 +13,7 @@ import Signup from "./components/Signup";
 import "./App.css";
 import Logout from "./components/Logout";
 import History from "./components/History";
-import CookieConsent from "./components/CookieConsent";
+
 
 const MainLayout = () => {
   return (
@@ -46,7 +46,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
       </Routes>
-      <CookieConsent />
+      
     </Router>
   );
 }
