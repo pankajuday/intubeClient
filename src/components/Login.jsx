@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 const Login = () => {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
@@ -13,10 +14,12 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await loginUser(data)
+      alert("Please Wait")
       navigate("/")
       console.log("Login successful:", response)
     } catch (error) {
       console.error("Error logging in:", error)
+      alert("Re Try");
     }
   }
 
