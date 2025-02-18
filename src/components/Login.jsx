@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 const Login = () => {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
@@ -19,7 +19,7 @@ const Login = () => {
       console.log("Login successful:", response)
     } catch (error) {
       console.error("Error logging in:", error)
-      alert("Re Try");
+      if(error.status === 404) alert("Username not Found ( 404 )")
     }
   }
 
