@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import VideoCard from './VideoCard';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import {  history } from '../axios';
+import {  likedVideo } from '../axios';
 
-const History = () => {
+const LikedVideo = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
  useEffect(() => {
      let isMounted = true;
-     const fetchHistory = async () => {
+     const fetchLikedVideo = async () => {
        try {
-         const response = await history();
+         const response = await likedVideo();
          
          
          if (isMounted ) {
@@ -31,7 +31,7 @@ const History = () => {
        }
      };
  
-     fetchHistory();
+     fetchLikedVideo();
      return () => {
        isMounted = false;
      };
@@ -60,4 +60,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default LikedVideo;
