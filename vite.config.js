@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: `${process.env.VITE_API_URL_ROOT}`,
+        target: "http://intubevideo.azurewebsites.net",
         changeOrigin: true,
       },
     },
@@ -22,3 +22,4 @@ export default defineConfig({
     }
   
 });
+

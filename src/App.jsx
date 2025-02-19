@@ -15,18 +15,18 @@ import Logout from "./components/Logout";
 import History from "./components/History";
 import LikedVideo from "./components/LikedVideo";
 
+
 const MainLayout = () => {
   return (
-    <div className="flex w-full  flex-col min-h-screen  items-center">
+    <div className="flex w-full flex-col min-h-screen items-center">
       <div className="border-2 border-red-900 right-0">
         <Navbar />
-        </div>
+      </div>
       <div className="">
         <Sidebar />
       </div>
-
       <div className="flex flex-1">
-        <main className="flex-1 ml-64 p-6  flex relative ">
+        <main className="flex-1 ml-64 p-6 flex relative">
           <Outlet />
         </main>
       </div>
@@ -49,6 +49,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
       </Routes>
+      
     </Router>
   );
 }
