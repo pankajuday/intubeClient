@@ -15,7 +15,7 @@ const Sidebar = () => {
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "Subscriptions", icon: Tv, path: "/subscriptions" },
     { name: "History", icon: Clock, path: "/history" },
-    { name: "Liked Videos", icon: ThumbsUp, path: "/liked-videos" },
+    { name: "Liked Videos", icon: ThumbsUp, path: "/likedvideos" },
     { name: "Playlists", icon: Library, path: "/playlists" },
   ];
 

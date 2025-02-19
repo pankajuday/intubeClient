@@ -13,6 +13,7 @@ import Signup from "./components/Signup";
 import "./App.css";
 import Logout from "./components/Logout";
 import History from "./components/History";
+import LikedVideo from "./components/LikedVideo";
 
 const MainLayout = () => {
   return (
@@ -41,6 +42,8 @@ function App() {
           <Route path="/" element={<VideoList />} />
           <Route path="/video/:videoId" element={<VideoPlayerPage />} />
           <Route path="/history" element={<History />} />
+          <Route path="/likedvideos" element={<LikedVideo />} />
+
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
