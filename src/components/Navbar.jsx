@@ -8,9 +8,9 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 w-[84%] bg-white shadow-sm z-50  right-0">
-      <div className=" h-10 w-full bg-slate-950 text-cyan-500 z-50 text-center items-center justify-center">
+      {/* <div className=" h-10 w-full bg-slate-950 text-cyan-500 z-50 text-center items-center justify-center">
       🔧 This site is currently under development. Some features may not work as expected. Stay tuned for updates! 🚀
-      </div>
+      </div> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left Section - Logo and Menu */}
