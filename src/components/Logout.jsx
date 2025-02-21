@@ -3,20 +3,29 @@ import { useNavigate } from "react-router-dom"
 import { logoutUser } from "../axios"
 
 const Logout = () => {
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
+  
+  
   useEffect(() => {
+    let isMounted = true;
     const handleLogout = async () => {
       try {
-        await logoutUser()
+        if(isMounted){
+          await logoutUser()
         console.log("Logout successful")
         navigate("/login")
+        }
       } catch (error) {
-        console.error("Error logging out:", error)
+        if(isMounted){
+          console.error("Error logging out:", error)
+        }
       }
     }
 
     handleLogout()
+    return ()=>{
+      isMounted = false
+    }
   }, [navigate])
 
   return (

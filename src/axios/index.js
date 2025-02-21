@@ -115,6 +115,14 @@ export const  history = async ()=>{
     
   }
 }
+export const  likedVideo = async ()=>{
+  try {
+    const response = await axiosInstance.get("/likes/videos");
+    return response.data;
+  } catch (error) {
+    
+  }
+}
 
 
 export default axiosInstance;
