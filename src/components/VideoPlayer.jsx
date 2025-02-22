@@ -16,9 +16,11 @@ import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchVideoByIdSlice } from "@/Redux/slices/video/videoSlice";
+import SpringLoader from "./SpringLoader";
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
+  const progressRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [progress, setProgress] = useState(0);
@@ -29,17 +31,28 @@ const VideoPlayer = () => {
   const [previousVolume, setPreviousVolume] = useState(0.5);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isPip, setIsPip] = useState(false);
-  const [isClickedSetting, setIsClickedSetting ] = useState(false)
+  const [isClickedSetting, setIsClickedSetting] = useState(false);
+  const [mediaLoader, setMediaLoader] = useState(false);
 
+  const { videoId } = useParams();
+  const dispatch = useDispatch();
+  const { selectedVideo, loading, error } = useSelector((state) => state.video);
 
+  console.log("MyComponent is rendering... from videoPlayer REdux");
+  console.log(mediaLoader);
+  console.log(loading);
+  console.log(error);
+  
+  
 
-   const { videoId } = useParams();
-    const dispatch = useDispatch()
-    const {selectedVideo, loading, error } = useSelector((state)=>state.video)
-    console.log("selectedVideo",selectedVideo)
-    console.log("loading",loading)
-    console.log("error",error)
-
+  useEffect(() => {
+    if (videoId) {
+      dispatch(fetchVideoByIdSlice(videoId));
+      
+    } else {
+      console.log("video id not found");
+    }
+  }, [dispatch]);
 
   // Handle fullscreen
   // const toggleFullscreen = () => {
@@ -57,16 +70,15 @@ const VideoPlayer = () => {
   //   }
   // };
 
-  const handleFullScreenToggle = () => {
-    // if (document.exitFullscreen) return document.exitFullscreen();
-    if (isFullScreen) {
-      document.exitFullscreen();
-      setIsFullScreen(!isFullScreen);
-    } else {
-      document.documentElement.requestFullscreen();
-      setIsFullScreen(!isFullScreen);
+  const handleFullScreen = () => {
+    if (videoRef.current) {
+      if (!document.fullscreenElement) {
+        videoRef.current.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
     }
-    // setIsFullScreen(!isFullScreen);
+    setIsFullScreen(!isFullScreen);
   };
 
   // Toggle play/pause
@@ -94,11 +106,6 @@ const VideoPlayer = () => {
 
   // Handle Volume Progress
   const volumeProgresshandler = (e) => {
-    // videoRef.current.volume = e
-    // // console.log(videoRef);
-
-    // setVolume(e)
-
     const newVolume = parseFloat(event.target.value);
     setVolume(newVolume);
     if (newVolume > 0) {
@@ -112,23 +119,18 @@ const VideoPlayer = () => {
   };
 
   const seekHandler = (seconds) => {
-    if (videoRef.current) {
-      videoRef.current.seekTo(seconds);
+    if (progressRef.current) {
+      progressRef.current.seekTo(seconds);
       setProgress(seconds);
     }
   };
 
   const pipHandler = () => {
-    if (isPip) {
-      document.exitPictureInPicture();
-    } else {
-      document.documentElement.requestPictureInPicture();
-    }
     setIsPip(!isPip);
   };
-  const settingClickHandler = ()=>{
-    setIsClickedSetting(!isClickedSetting)
-  }
+  const settingClickHandler = () => {
+    setIsClickedSetting(!isClickedSetting);
+  };
 
   const formatTime = (seconds) => {
     if (isNaN(seconds)) {
@@ -141,31 +143,18 @@ const VideoPlayer = () => {
     return `${formattedMinutes}:${formattedSeconds}`;
   };
 
-  useEffect(() => {
-    if (videoId) { 
-      console.log(videoId);
-      
-         dispatch(fetchVideoByIdSlice(videoId))
-    }else{
-      console.log("video id not found")
-    }
-
-    if (videoRef.current && videoRef.current.getDuration()) {
-      setDuration(videoRef.current.getDuration());
-    }
-  }, [videoRef.current, dispatch]);
+  const onMediaLoader = () => {
+    setMediaLoader(!mediaLoader);
+  };
 
   return (
     <AspectRatio
+      ref={videoRef}
       ratio={16 / 9}
-      className={`bg-black flex flex-wrap flex-cols ${
-        isFullScreen
-          ? "h-full w-full"
-          : "sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px]"
-      } relative text-white  overflow-hidden`}
+      className={`bg-black flex flex-wrap flex-cols sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px] relative text-white  overflow-hidden`}
     >
       <ReactPlayer
-        ref={videoRef}
+        ref={progressRef}
         url={selectedVideo?.videoFile}
         width="100%"
         height="100%" // Maintain aspect ratio
@@ -173,16 +162,33 @@ const VideoPlayer = () => {
         playing={isPlaying}
         playsinline={true}
         onProgress={handleProgress} // Track progress
-        onReady={() => {
-          if (videoRef.current && videoRef.current.getDuration()) {
-            setDuration(videoRef.current.getDuration());
-          }
-        }}
+        // onReady={() => {
+        //   if (videoRef.current && videoRef.current.getDuration()) {
+        //     setDuration(videoRef.current.getDuration());
+        //   }
+        // }}
         volume={volume}
         muted={isMuted}
-        pop={isPip}
+        pip={isPip}
+        onDuration={(duration) => setDuration(duration)}
+        onBuffer={ onMediaLoader}
+        onBufferEnd={onMediaLoader}
+        config={{
+          file: {
+            attributes: {
+              controlsList: "nodownload"
+            }
+          }
+        }} 
       />
+      {/* buffer animation SpringLoader */}
+      
       {/* Main window which contain all components */}
+      <div className=" h-full w-full absolute justify-center items-center flex">
+      {(loading || mediaLoader) ? <SpringLoader text-green-400 h-24 w-24 /> : ""}
+      {error ? <div>{error.message}</div> :""}
+      </div>
+
       <div
         className=" h-full w-full text-white absolute"
         onMouseEnter={() => setDisplayTrigger(!displayTrigger)}
@@ -193,14 +199,16 @@ const VideoPlayer = () => {
           <div
             className="relative w-full h-full flex justify-center items-center"
             onClick={togglePlayPause}
-            onDoubleClick={handleFullScreenToggle}
+            onDoubleClick={handleFullScreen}
           >
+             
             {isPlaying ? (
               <Pause className="text-green-400 h-24 w-24 " />
             ) : (
               <Play className="text-green-400  h-24 w-24" />
             )}
           </div>
+             
         ) : (
           ""
         )}
@@ -253,12 +261,19 @@ const VideoPlayer = () => {
 
               <div className="flex flex-row items-center justify-between w-[20%] space-x-10">
                 <button onClick={settingClickHandler}>
-                  <Settings className={`${isClickedSetting?" rotate-50 transition-all duration-200":"rotate-0  transition-all duration-200"}`}/>
+                  <Settings
+                    className={`${
+                      isClickedSetting
+                        ? " rotate-50 transition-all duration-200"
+                        : "rotate-0  transition-all duration-200"
+                    }`}
+                  />
+                  {/* picture in picture mode  */}
                 </button>
                 <button onClick={pipHandler}>
                   <PictureInPicture2 />
                 </button>
-                <button onClick={handleFullScreenToggle}>
+                <button onClick={handleFullScreen}>
                   {isFullScreen ? <Minimize /> : <Maximize />}
                 </button>
               </div>

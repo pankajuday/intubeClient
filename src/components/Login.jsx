@@ -1,37 +1,60 @@
 import { useForm } from "react-hook-form"
-import { loginUser } from "../axios"
+// import { loginUser } from "../axios"
 import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogin } from "@/Redux/slices/Auth/auth";
+import SpringLoader from "./SpringLoader";
 
 const Login = () => {
   const navigate = useNavigate()
-  // const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch()
+  const { authData, loading, error} = useSelector((state) => state.auth)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
 
-  const onSubmit = async (data) => {
+  // const onSubmit = async (data) => {
+  //   try {
+  //     alert("Please Wait")
+  //     const response = await loginUser(data)
+  //     navigate("/")
+  //     console.log("Login successful:", response)
+  //   } catch (error) {
+  //     console.error("Error logging in:", error)
+  //     if(error.status === 404) alert("Username not Found ( 404 )")
+  //   }
+  // }
+
+
+  const onSubmit =  (data) => {
+    
     try {
-      const response = await loginUser(data)
-      alert("Please Wait")
-      navigate("/")
-      console.log("Login successful:", response)
+      dispatch(fetchLogin(data)).then((result) => {
+        
+        navigate("/")
+      })
     } catch (error) {
       console.error("Error logging in:", error)
-      if(error.status === 404) alert("Username not Found ( 404 )")
+      if(error.status === 404) alert(error.message)
     }
   }
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
+      {
+        loading ? <div className="absolute flex justify-center items-center bg-slate-950 opacity-50 h-full w-full">
+          <SpringLoader />
+          </div>: " "
+      }
       <div className="w-full max-w-sm">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <h2 className="text-2xl font-bold mb-2">Login</h2>
             <p className="text-gray-600 text-sm">Enter your username and password to login to your account</p>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} >
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                 Username
@@ -58,7 +81,7 @@ const Login = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="password"
                 type="password"
-                placeholder="******************"
+                placeholder="Enter your password"
                 {...register("password", { required: "Password is required" })}
               />
               {errors.password && <p className="text-red-500 text-xs italic">{errors.password.message}</p>}

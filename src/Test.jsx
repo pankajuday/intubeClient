@@ -1,4 +1,4 @@
-// import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 // import ReactPlayer from 'react-player';
 
 // const VideoPlayer = () => {
@@ -244,38 +244,70 @@
 // }
 
 
-// Test.jsx
-import React, { useEffect } from "react";
-import { fetchAllVideos, fetchVideoByIdSlice } from "./Redux/slices/video/videoSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 
-export default function Test() {
-  const {videoId} = useParams()
-    const dispatch = useDispatch();
-    const { selectedVideo, loading, error } = useSelector((state) => state.video);
+// import React, { useEffect } from "react";
+// import { fetchAllVideos, fetchVideoByIdSlice } from "./Redux/slices/video/videoSlice";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useParams } from "react-router-dom";
 
-    useEffect(async() => {
-        await dispatch(fetchVideoByIdSlice(videoId));
-    }, [dispatch]);
+// export default function Test() {
+//   const {videoId} = useParams()
+//     const dispatch = useDispatch();
+//     const { selectedVideo, loading, error } = useSelector((state) => state.video);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+//     useEffect(async() => {
+//         await dispatch(fetchVideoByIdSlice(videoId));
+//     }, [dispatch]);
 
-    // 1. Check if content is an array before mapping
-    // if (Array.isArray(content) && content.length > 0) {  // <-- Crucial check
-        return (
-            // <div className="h-96 w-96 justify-center items-center">
-            //     {content.data.docs.map((video) => (
-            //         <div key={video._id || video.id || nanoid()}>
-            //             <p>{video.title}</p>
-            //             {video.thumbnail && <img src={video.thumbnail} alt={video.title} />}
-            //             {/* ... other video properties ... */}
-            //         </div>
-            //     ))}
-            // </div>
-            <div>
-              {selectedVideo}
-            </div>
-        );
+//     if (loading) return <p>Loading...</p>;
+//     if (error) return <p>Error: {error}</p>;
+
+//     // 1. Check if content is an array before mapping
+//     // if (Array.isArray(content) && content.length > 0) {  // <-- Crucial check
+//         return (
+//             // <div className="h-96 w-96 justify-center items-center">
+//             //     {content.data.docs.map((video) => (
+//             //         <div key={video._id || video.id || nanoid()}>
+//             //             <p>{video.title}</p>
+//             //             {video.thumbnail && <img src={video.thumbnail} alt={video.title} />}
+//             //             {/* ... other video properties ... */}
+//             //         </div>
+//             //     ))}
+//             // </div>
+//             <div>
+//               {selectedVideo}
+//             </div>
+//         );
+// }
+
+
+
+
+///////////////////////////////////////////////////
+
+
+// likes 
+
+{/* <span onClick={handleLikeToggle} className="cursor-pointer">
+{video.likes}{" "}
+{liked ? <Heart fill="red" color="red" /> : <Heart />}
+</span> */}
+
+
+// data 
+// <span>
+// {new Date(video.createdAt).toLocaleDateString("en-US", {
+//   year: "numeric",
+//   month: "long",
+//   day: "numeric",
+// })}
+// </span>
+
+
+import SpringLoader from "./components/SpringLoader";
+
+export default function Test (){
+    return(
+        <SpringLoader />
+    )
 }

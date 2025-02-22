@@ -1,56 +1,29 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
-import { fetchVideoById, likedVideo, likesToggle } from "../axios";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Heart } from "lucide-react";
-import { useDispatch,useSelector } from "react-redux";
-import { fetchVideoByIdSlice } from "@/Redux/slices/video/videoSlice";
+import { useDispatch, useSelector } from "react-redux";
 import VideoPlayer from "@/components/VideoPlayer";
-
- 
 
 
 const VideoPlayerPage = () => {
-
-
-  
-
-  const [value, setValue] = useState(50);
-  const [video, setVideo] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading]  = useState(false)
   const [liked, setLiked] = useState(false);
-  
- 
-  
+  const {videoId} = useParams();
+  const dispatch = useDispatch()
+  const {likeData, isLoading, error} = useSelector((state)=>state.like);
+
+
   // useEffect( () => {
 
+  // let isMounted = true;
 
-    // setVideo(selectedVideo.data[0])
 
-    let isMounted = true;
-    // const fetchVideoDetails = async () => {
-    //   try {
-    //     const response = await fetchVideoById(videoId);
-    //     if (isMounted) {
-    //       setVideo(response.data[0]);
-    //       setLoading(false);
-    //     }
-    //   } catch (error) {
-    //     if (isMounted) {
-    //       console.error("Error fetching video details:", error);
-    //       setLoading(false);
-    //     }
-    //   }
-    // };
-
-  //   const isLikedOnVideo = async () => {
+  //   const isLikedOnVideo =  () => {
   //     try {
-  //       const fetchLikedVideo = await likedVideo();
-  //       if (isMounted && fetchLikedVideo.data.some(video => video._id === videoId)) {
-  //         setLiked(true);
-  //       }
+        
   //     } catch (error) {
   //       if (isMounted) {
   //         console.error("Error fetching Likes details:", error);
@@ -66,103 +39,49 @@ const VideoPlayerPage = () => {
   //   };
   // }, [dispatch, videoId]);
 
-  // const handleLikeToggle = useCallback(async () => {
-  //   setLiked(prevLiked => !prevLiked);
-  //   try {
-  //     await likesToggle(videoId);
-  //   } catch (error) {
-  //     console.error("Error toggling like:", error);
-  //     setLiked(prevLiked => !prevLiked); // Revert the like state if the API call fails
-  //   }
-  // }, []);
+
+
+  const handleLikeToggle = useCallback(async () => {
+    setLiked(prevLiked => !prevLiked);
+    try {
+      await likesToggle(videoId);
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      setLiked(prevLiked => !prevLiked); // Revert the like state if the API call fails
+    }
+  }, []);
 
   return (
-    // <div className="p-6 max-w-4xl mx-auto">
-    //   {/* Video Player Section */}
-    //   <div className="aspect-video bg-black rounded-xl overflow-hidden">
-    //     {loading ? (
-    //       <Skeleton height="100%" />
-    //     ) : (
-    //       // <ReactPlayer
-    //       //   url={video.videoFile}
-    //       //   pip ={true}
-    //       //   playIcon
-    //       //   playing
-    //       //   loop
-    //       //   controls
-    //       //   width="100%"
-    //       //   height="100%"
-    //       //   config={{
-    //       //     file: {
-    //       //       attributes: {
-    //       //         controlsList: "nodownload",
-    //       //         type: "video/3gpp",
-    //       //       },
-    //       //     },
-    //       //   }}
-    //       // />
-    //       // <VideoPlayer content={selectedVideo.data[0].videoFile} />
+    <div className="sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px]  mx-auto">
+      {/* Video Player Section */}
+      <div className="relative ">
+        {loading ? (
+          <Skeleton height="100%" className="m-0 relative sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px] "/>
+        ) : (
           
-    //     <div>{selectedVideo}</div>
-    //     )}
-    //   </div>
+            <VideoPlayer />
+        )}
+      </div>
 
-    //   {/* Video Info Section */}
-    //   <div className="mt-6 space-y-4">
-    //     {loading ? (
-    //       <>
-    //         <Skeleton width={480} height={32} />
-    //         <Skeleton width={360} height={24} />
-    //         <Skeleton count={3} />
-    //       </>
-    //     ) : (
-    //       <>
-    //         {/* <h1 className="text-2xl font-bold text-gray-900">{selectedVideo.data[0].title}</h1> */}
-    //         <div className="flex items-center space-x-4 text-gray-600">
-    //           <span>{video.views} </span>
-    //           <span>•</span>
-    //           <span onClick={handleLikeToggle} className="cursor-pointer">
-    //             {video.likes}{" "}
-    //             {liked ? <Heart fill="red" color="red" /> : <Heart />}
-    //           </span>
-    //           <span>•</span>
-    //           <span>
-    //             {new Date(video.createdAt).toLocaleDateString("en-US", {
-    //               year: "numeric",
-    //               month: "long",
-    //               day: "numeric",
-    //             })}
-    //           </span>
-    //         </div>
-    //         <p className="text-gray-800 leading-relaxed">{video.description}</p>
-    //       </>
-    //     )}
-    //   </div>
+      {/* Video Info Section */}
+      <div className="mt-6 space-y-4">
+        {loading ? (
+          <>
+            <Skeleton width={480} height={32} />
+            <Skeleton width={360} height={24} />
+            <Skeleton count={3} />
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
 
-    //   {/* Comments Section (Optional) */}
-    //   <div className="mt-8">
-    //     <h2 className="text-xl font-semibold mb-4">Comments</h2>
-    //     {/* Add comments implementation here */}
-      
-    
-            
-            
-            
-    //   </div>
-    // </div>
-
-   
-     
-
-
-
-    <div className="m-0 relative sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px] ">
-      
-      
-    <VideoPlayer />
+      {/* Comments Section (Optional) */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-4">Comments</h2>
+        {/* Add comments implementation here */}
+      </div>
     </div>
-
-
   );
 };
 
