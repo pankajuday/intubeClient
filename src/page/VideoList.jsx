@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
-import VideoCard from './VideoCard';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { fetchVideos } from '../axios';
+import VideoCard from '@/components/VideoCard';
 
 const VideoList = () => {
   const [videos, setVideos] = useState([]);

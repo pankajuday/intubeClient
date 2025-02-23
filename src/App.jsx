@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import VideoList from "./components/VideoList";
 import VideoPlayerPage from "./page/VideoPlayerPage";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -14,8 +13,9 @@ import "./App.css";
 import Logout from "./components/Logout";
 import History from "./components/History";
 import LikedVideo from "./components/LikedVideo";
-import Test from "./Test";
+import Test from "./Test";   
 import VideoPlayer from "./components/VideoPlayer";
+import VideoList from "./page/VideoList";
 
 
 const MainLayout = () => {
@@ -50,7 +50,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
-        {/* <Route path="/video/:videoId" element={<Test />} /> */}
+        <Route path="/test" element={<Test />} />
 
       </Routes>
       

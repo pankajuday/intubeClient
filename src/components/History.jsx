@@ -43,10 +43,15 @@ const History = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 ">
         {loading ? (
           Array(6).fill().map((_, i) => (
-            <div key={i} className="bg-white rounded-lg overflow-hidden shadow">
+            <div key={i} className="bg-white rounded-lg overflow-hidden shadow flex  flex-col items-center">
               <Skeleton height={200} width={300} />
               <div className="p-3">
-                <Skeleton count={3} width={300} />
+                <Skeleton  width={300} />
+                <div className='flex items-center justify-around'>
+                <Skeleton  width={30} height={30}  />
+                <Skeleton  width={250} />
+                </div>
+                <Skeleton  width={300} />
               </div>
             </div>
           ))

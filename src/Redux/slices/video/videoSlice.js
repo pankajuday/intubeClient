@@ -1,21 +1,21 @@
 // import { createSlice, createAsyncThunk, nanoid } from "@reduxjs/toolkit";
 // import { fetchVideos } from "@/axios";
 
-// // ✅ Rename function for better readability
+// //  Rename function for better readability
 // export const fetchAllVideos = createAsyncThunk("video/fetchAllVideos", async () => {
 //     const response = await fetchVideos();
 //     console.log("API Response:", response);
-//     return response.data.docs; // ✅ Extract only the necessary data
+//     return response.data.docs; //  Extract only the necessary data
 // });
 
 // console.log(" fetchAllVideos Response ",fetchAllVideos)
 
-// // ✅ Video Slice
+// //  Video Slice
 // const videoSlice = createSlice({
 //     name: "video",
 //     initialState: {
 //         content: [],
-//         selectedVideo: null, // ✅ Fixed typo
+//         selectedVideo: null, //  Fixed typo
 //         loading: false,
 //         error: null
 //     },
@@ -46,13 +46,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchVideos, fetchVideoById } from "@/axios";
 
+
+// fetcing all videos with pagenation 
 export const fetchAllVideos = createAsyncThunk(
   "video/fetchAllVideos",
   async (_, thunkAPI) => {
     // Added thunkAPI
     try {
       const response = await fetchVideos();
-      console.log("API Response:", response);
+      // console.log("API Response:", response);
       return response;
     } catch (error) {
       console.error("Error fetching videos:", error);
@@ -61,13 +63,15 @@ export const fetchAllVideos = createAsyncThunk(
   }
 );
 
+
+// for fetching video by id
 export const fetchVideoByIdSlice = createAsyncThunk(
   "video/fetchVideoById",
   async (videoId, thunkAPI ) => {
     try {
       const response = await fetchVideoById(videoId);
-      console.log("API Response fetch video by id:", response);
-      console.log("from fvbi ", videoId);
+      // console.log("API Response fetch video by id:", response);
+      // console.log("from fvbi ", videoId);
 
       return response.data[0];
     } catch (error) {
