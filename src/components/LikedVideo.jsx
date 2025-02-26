@@ -53,7 +53,7 @@ const LikedVideo = () => {
                   <div className="p-3">
                     <Skeleton width={300} />
                     <div className="flex items-center justify-around">
-                      <Skeleton width={30} height={30} />
+                      <Skeleton width={30} height={30} circle />
                       <Skeleton width={250} />
                     </div>
                     <Skeleton width={300} />

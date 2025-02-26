@@ -130,4 +130,13 @@ export const getAllCommentsOnVideo = async(videoId) =>{
   }
 }
 
+export const userDetail = async ()=>{
+  try {
+    const response = await axiosInstance.get("/users/current-user");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export default axiosInstance;
