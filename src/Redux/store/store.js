@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { videoReducer,authReducer,likeReducer } from "..";
+import { videoReducer,authReducer,likeReducer, commentReducer } from "..";
 
 const store = configureStore({
     reducer:{
         video:videoReducer,
         auth:authReducer,
-        like:likeReducer
+        like:likeReducer,
+        comment: commentReducer
+
     }
     ,
     // middleware: (getDefaultMiddleware) =>

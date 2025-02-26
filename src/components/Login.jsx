@@ -1,19 +1,19 @@
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 // import { loginUser } from "../axios"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogin } from "@/Redux/slices/Auth/auth";
 import SpringLoader from "./SpringLoader";
 
 const Login = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { authData, loading, error} = useSelector((state) => state.auth)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { authData, isLoading, error } = useSelector((state) => state.auth);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   // const onSubmit = async (data) => {
   //   try {
@@ -27,36 +27,40 @@ const Login = () => {
   //   }
   // }
 
-
-  const onSubmit =  (data) => {
-    
+  const onSubmit = (data) => {
     try {
       dispatch(fetchLogin(data)).then((result) => {
-        
-        navigate("/")
-      })
+        navigate("/");
+      });
     } catch (error) {
-      console.error("Error logging in:", error)
-      if(error.status === 404) alert(error.message)
+      console.error("Error logging in:", error);
+      if (error.status === 404) alert(error.message);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
-      {
-        loading ? <div className="absolute flex justify-center items-center bg-slate-950 opacity-50 h-full w-full">
+      {isLoading ? (
+        <div className="absolute flex justify-center items-center bg-slate-950 opacity-50 h-full w-full">
           <SpringLoader />
-          </div>: " "
-      }
+        </div>
+      ) : (
+        " "
+      )}
       <div className="w-full max-w-sm">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <h2 className="text-2xl font-bold mb-2">Login</h2>
-            <p className="text-gray-600 text-sm">Enter your username and password to login to your account</p>
+            <p className="text-gray-600 text-sm">
+              Enter your username and password to login to your account
+            </p>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} >
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="username"
+              >
                 Username
               </label>
               <input
@@ -66,14 +70,24 @@ const Login = () => {
                 placeholder="Enter your username"
                 {...register("username", { required: "Username is required" })}
               />
-              {errors.username && <p className="text-red-500 text-xs italic">{errors.username.message}</p>}
+              {errors.username && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-gray-700 text-sm font-bold" htmlFor="password">
+                <label
+                  className="block text-gray-700 text-sm font-bold"
+                  htmlFor="password"
+                >
                   Password
                 </label>
-                <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                <a
+                  className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                  href="#"
+                >
                   Forgot Password?
                 </a>
               </div>
@@ -84,7 +98,11 @@ const Login = () => {
                 placeholder="Enter your password"
                 {...register("password", { required: "Password is required" })}
               />
-              {errors.password && <p className="text-red-500 text-xs italic">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-4">
               <button
@@ -102,7 +120,10 @@ const Login = () => {
             </div>
             <div className="text-center mt-4 text-sm">
               Don't have an account?{" "}
-              <a className="font-bold text-blue-500 hover:text-blue-800" href="/signup">
+              <a
+                className="font-bold text-blue-500 hover:text-blue-800"
+                href="/signup"
+              >
                 Sign up
               </a>
             </div>
@@ -110,7 +131,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

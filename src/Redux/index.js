@@ -1,13 +1,18 @@
-import likeReducer ,{ likesToggleSlice, likesVideoSlice } from "./slices/video/likeSlice";
+import likeReducer ,{ likeToggleSlice, likedVideoSlice } from "./slices/video/likeSlice";
 import videoReducer,{ fetchAllVideos, fetchVideoByIdSlice } from "./slices/video/videoSlice";
 import authReducer,{ fetchLogin, fetchLogout } from "./slices/Auth/auth";
+import commentReducer, { fetchCommentsOnVideo } from "./slices/video/commentSlice";
+
 
 
 export {
-    likesToggleSlice,
-    likesVideoSlice,
+    likeToggleSlice,
+    likedVideoSlice,
     fetchAllVideos, fetchVideoByIdSlice ,
     fetchLogin, fetchLogout ,
-    likeReducer,videoReducer,authReducer
+    likeReducer,videoReducer,authReducer,
+    fetchCommentsOnVideo,
+    commentReducer,
+    
 
 }

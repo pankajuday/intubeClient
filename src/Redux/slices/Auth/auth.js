@@ -29,7 +29,7 @@ const authSlice = createSlice({
     name:"auth",
     initialState:{
         authData:{},
-        loading:false,
+        isLoading:false,
         error:null
     },
     extraReducers:(builder)=>{

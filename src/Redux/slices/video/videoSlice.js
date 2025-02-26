@@ -86,35 +86,35 @@ const videoSlice = createSlice({
   initialState: {
     content: [],
     selectedVideo: null,
-    loading: false,
+    isLoading: false,
     error: null,
   },
-  reducers: {},
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllVideos.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
         state.error = null;
       })
       .addCase(fetchAllVideos.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.content = action.payload;
       })
       .addCase(fetchAllVideos.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.error = action.payload; // Access the payload from rejectWithValue
         state.content = [];
       })
       .addCase(fetchVideoByIdSlice.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
         state.error = null;
       })
       .addCase(fetchVideoByIdSlice.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.selectedVideo = action.payload;
       })
       .addCase(fetchVideoByIdSlice.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.error = action.payload; // Access the payload from rejectWithValue
         state.selectedVideo = [];
       });
