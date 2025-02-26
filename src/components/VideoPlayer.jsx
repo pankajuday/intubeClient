@@ -84,11 +84,11 @@ const VideoPlayer = () => {
   // console.log(error);
 
 
-  // Fetch liked videos and current video on mount/videoId change
+  
   useEffect(() => {
     if (videoId) {
-      dispatch(likedVideoSlice()); // Get all liked videos
-      dispatch(fetchVideoByIdSlice(videoId)); // Fetch current video
+      dispatch(likedVideoSlice()); 
+      dispatch(fetchVideoByIdSlice(videoId)); 
     }
   }, [videoId, dispatch]);
 
