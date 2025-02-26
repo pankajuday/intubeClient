@@ -16,6 +16,7 @@ import LikedVideo from "./components/LikedVideo";
 import Test from "./Test";   
 import VideoPlayer from "./components/VideoPlayer";
 import VideoList from "./page/VideoList";
+import ErrorPage from "./Error/ErrorPage";
 
 
 const MainLayout = () => {
@@ -51,6 +52,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/error" element={<ErrorPage />} />
+
 
       </Routes>
       

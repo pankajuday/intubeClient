@@ -21,7 +21,7 @@ import {
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchVideoByIdSlice } from "@/Redux/slices/video/videoSlice";
 import SpringLoader from "./SpringLoader";
 import Skeleton from "react-loading-skeleton";
@@ -43,8 +43,9 @@ const getRandomColor = () => {
 };
 
 const VideoPlayer = () => {
+  const navigate = useNavigate()
   const videoRef = useRef(null);
-  const likeRef = useRef(false)
+  const likeRef = useRef(false);
   const progressRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
@@ -81,14 +82,12 @@ const VideoPlayer = () => {
 
   // console.log(mediaLoader);
   // console.log(loading);
-  // console.log(error);
+  console.log(videoError);
 
-
-  
   useEffect(() => {
     if (videoId) {
-      dispatch(likedVideoSlice()); 
-      dispatch(fetchVideoByIdSlice(videoId)); 
+      dispatch(likedVideoSlice());
+      dispatch(fetchVideoByIdSlice(videoId));
     }
   }, [videoId, dispatch]);
 
@@ -99,8 +98,6 @@ const VideoPlayer = () => {
     }
   }, [likeData, videoId]);
 
-  
-
   const handleLikeToggle = () => {
     dispatch(likeToggleSlice(videoId))
       .unwrap()
@@ -108,7 +105,7 @@ const VideoPlayer = () => {
         dispatch(likedVideoSlice());
       })
       .catch((error) => {
-        console.error('Like toggle failed:', error);
+        console.error("Like toggle failed:", error);
       });
   };
 
@@ -127,6 +124,11 @@ const VideoPlayer = () => {
   //     videoRef.current.msRequestFullscreen();
   //   }
   // };
+
+  if(videoError){
+    navigate("/error", { state: { error: videoError.message } });
+
+  }
 
   const handleFullScreen = () => {
     if (videoRef.current) {
@@ -234,7 +236,15 @@ const VideoPlayer = () => {
   return (
     <div>
       {videoLoading ? (
-        <Skeleton className="  sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px] " />
+        <div>
+          <Skeleton className="  sm:h-[574px] sm:w-[1020px] xl:h-[574px] xl:w-[1020px] h-[360px] w-[640px] " />
+          <Skeleton className=" h-10 w-full  " />
+          <div className="flex items-center justify-around">
+            <Skeleton height={50} width={50} circle />
+            <Skeleton height={50} width={900} />
+          </div>
+          <Skeleton className=" h-10 w-full" />
+        </div>
       ) : (
         <div className="">
           <AspectRatio
@@ -275,7 +285,7 @@ const VideoPlayer = () => {
             {/* Main window which contain all components */}
             <div className=" h-full w-full absolute justify-center items-center flex">
               {mediaLoader ? <SpringLoader text-green-400 h-24 w-24 /> : ""}
-              {videoError ? <div>{videoError.message}</div> : ""}
+              
             </div>
 
             <div
@@ -375,11 +385,11 @@ const VideoPlayer = () => {
           {/* Video Info Section */}
           <div className="mt-6 space-y-4">
             {videoLoading ? (
-              <>
+              <div>
                 <Skeleton width={480} height={32} />
                 <Skeleton width={360} height={24} />
                 <Skeleton count={3} />
-              </>
+              </div>
             ) : (
               <div>
                 <div className="h-8  w-full  ">
@@ -412,13 +422,17 @@ const VideoPlayer = () => {
                   </div>
 
                   <div className="h-14 w-[60%] flex  items-center justify-around flex-row">
-                    <button onClick={handleLikeToggle}>
-                      {isLiked ? (
-                        <Heart className="fill-red-500 text-red-500" />
-                      ) : (
-                        <Heart  className="hover:fill-slate-300 hover:text-slate-300" />
-                      )}
-                    </button>
+                    {likeLoading ? (
+                      <SpringLoader />
+                    ) : (
+                      <button onClick={handleLikeToggle}>
+                        {isLiked ? (
+                          <Heart className="fill-red-500 text-red-500" />
+                        ) : (
+                          <Heart className="hover:fill-slate-300 hover:text-slate-300" />
+                        )}
+                      </button>
+                    )}
                     <Share />
                     <Bookmark className="hover:fill-slate-300 hover:text-slate-300" />
                     <EllipsisVertical />
