@@ -3,35 +3,37 @@ import VideoCard from "./VideoCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { likedVideo } from "../axios";
+import { useDispatch, useSelector } from "react-redux";
+import { likedVideoSlice } from "@/Redux";
+import { useParams } from "react-router-dom";
+import SpringLoader from "./SpringLoader";
 
 const LikedVideo = () => {
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [videos, setVideos] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { likeData, isLoading, error } = useSelector((state) => state.like);
+  const { videoId } = useParams();
 
   useEffect(() => {
+    console.log("remounting")
     let isMounted = true;
     const fetchLikedVideo = async () => {
       try {
-        const response = await likedVideo();
-
         if (isMounted) {
-          setVideos(response.data);
-          setLoading(false);
-        } else {
-          console.error("Unexpected response format:", response.data);
-          setLoading(false);
+          dispatch(likedVideoSlice(videoId));
         }
       } catch (error) {
         if (isMounted) {
-          console.error("Error fetching videos:", error);
-          setLoading(false);
+          return error.message;
         }
       }
     };
 
     fetchLikedVideo();
     return () => {
-      isMounted = false;
+
+      isMounted = !isMounted;
     };
   }, []);
 
@@ -39,7 +41,7 @@ const LikedVideo = () => {
     <div className="video-container relative">
       {/* Video Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 ">
-        {loading
+        {isLoading
           ? Array(6)
               .fill()
               .map((_, i) => (
@@ -58,8 +60,8 @@ const LikedVideo = () => {
                   </div>
                 </div>
               ))
-          : Array.isArray(videos) &&
-            videos.map((video) => <VideoCard key={video._id} video={video} />)}
+          : Array.isArray(likeData.data) &&
+          likeData.data.map((video) => video === undefined || video === null ?"" : <VideoCard key={video?._id} video={video} />)}
       </div>
     </div>
   );

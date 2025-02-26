@@ -5,16 +5,19 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use((config) => {
-  if (config.url.includes("/users/register")) {
-    config.headers['Content-Type'] = 'multipart/form-data';
-  } else {
-    config.headers['Content-Type'] = 'application/json';
+axiosInstance.interceptors.request.use(
+  (config) => {
+    if (config.url.includes("/users/register")) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    } else {
+      config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+);
 
 axiosInstance.interceptors.response.use(
   (response) => {
@@ -78,51 +81,53 @@ export const logoutUser = async () => {
   }
 };
 
-export const  fetchVideoById = async (videoId)=>{
+export const fetchVideoById = async (videoId) => {
   try {
     const response = await axiosInstance.get(`/videos/${videoId}`);
-    
-    
+
     return response.data;
-    
   } catch (error) {
     throw error;
   }
-}
+};
 
-export const likesToggle = async(videoId)=>{
+export const likeToggle = async (videoId) => {
   try {
     const response = await axiosInstance.post(`/likes/toggle/v/${videoId}`);
     return response.data;
   } catch (error) {
-    throw error;
+    return error.message;
   }
-}
+};
 
-export const  fetchCommentsOnVideo = async (videoId)=>{
+export const fetchCommentsOnVideo = async (videoId) => {
   try {
     const response = await axiosInstance.get(`/comments/${videoId}`);
     return response.data;
-  } catch (error) {
-    
-  }
-}
-export const  history = async ()=>{
+  } catch (error) {return error.message;}
+};
+export const history = async () => {
   try {
     const response = await axiosInstance.get("/users/history");
     return response.data;
   } catch (error) {
-    
+    return error.message;
   }
-}
-export const  likedVideo = async ()=>{
+};
+export const likedVideo = async () => {
   try {
     const response = await axiosInstance.get("/likes/videos");
     return response.data;
+  } catch (error) {return error.message;}
+};
+
+export const getAllCommentsOnVideo = async(videoId) =>{
+  try {
+    const response = await axiosInstance.get(`/comments/${videoId}`);
+    return response.data;
   } catch (error) {
-    
+    return error.message;
   }
 }
-
 
 export default axiosInstance;

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -38,7 +37,7 @@ const VideoList = () => {
       {/* Video Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 ">
         {loading ? (
-          Array(8).fill().map((_, i) => (
+          Array(6).fill().map((_, i) => (
             <div key={i} className="bg-white rounded-lg overflow-hidden shadow">
               <Skeleton height={200} width={300} />
               <div className="p-3">
