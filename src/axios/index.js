@@ -104,7 +104,9 @@ export const fetchCommentsOnVideo = async (videoId) => {
   try {
     const response = await axiosInstance.get(`/comments/${videoId}`);
     return response.data;
-  } catch (error) {return error.message;}
+  } catch (error) {
+    return error.message;
+  }
 };
 export const history = async () => {
   try {
@@ -118,21 +120,32 @@ export const likedVideo = async () => {
   try {
     const response = await axiosInstance.get("/likes/videos");
     return response.data;
-  } catch (error) {return error.message;}
+  } catch (error) {
+    return error.message;
+  }
 };
 
-export const getAllCommentsOnVideo = async(videoId) =>{
+export const getAllCommentsOnVideo = async (videoId) => {
   try {
     const response = await axiosInstance.get(`/comments/${videoId}`);
     return response.data;
   } catch (error) {
     return error.message;
   }
-}
+};
 
-export const userDetail = async ()=>{
+export const userDetail = async () => {
   try {
     const response = await axiosInstance.get("/users/current-user");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const channelVideos = async ()=>{
+  try {
+    const response = await axiosInstance.get('/dashboard/videos');
     return response.data;
   } catch (error) {
     return error;

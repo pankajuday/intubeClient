@@ -25,10 +25,10 @@ const VideoCard = ({ video }) => {
   }, []);
 
   return (
-    <>
+    <div>
      
 
-      <Card className="w-96 h-72  rounded-sm shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105 ">
+      <Card className="w-96 h-72 min-h-42 min-w-60 grid rounded-sm shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105 ">
         <Link to={`/video/${video?._id}`} className="block">
           {/* video thumbnail */}
           <AspectRatio ratio={16 / 8} className="w-full h-48  object-cover bg-slate-700 ">
@@ -72,7 +72,7 @@ const VideoCard = ({ video }) => {
           </CardContent>
         </Link>
       </Card>
-    </>
+    </div>
   );
 };
 

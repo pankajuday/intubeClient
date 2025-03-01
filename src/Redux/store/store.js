@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { videoReducer,authReducer,likeReducer, commentReducer } from "..";
+import { videoReducer,authReducer,likeReducer, commentReducer, userReducer, dashboardReducer } from "..";
 
 const store = configureStore({
     reducer:{
         video:videoReducer,
         auth:authReducer,
         like:likeReducer,
-        comment: commentReducer
+        comment: commentReducer,
+        user:userReducer,
+        dashboard: dashboardReducer,
 
     }
     ,

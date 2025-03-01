@@ -85,6 +85,7 @@ const VideoPlayer = () => {
   console.log(videoError);
 
   useEffect(() => {
+    getRandomColor();
     if (videoId) {
       dispatch(likedVideoSlice());
       dispatch(fetchVideoByIdSlice(videoId));
@@ -93,9 +94,12 @@ const VideoPlayer = () => {
 
   // Check if the video is liked
   useEffect(() => {
-    if (Array.isArray(likeData?.data)) {
-      setIsLiked(likeData.data.some((item) => item?._id === videoId));
+    function toggleLike(){
+      if (Array.isArray(likeData?.data)) {
+        setIsLiked(likeData.data.some((item) => item?._id === videoId));
+      }
     }
+    toggleLike()
   }, [likeData, videoId]);
 
   const handleLikeToggle = () => {
