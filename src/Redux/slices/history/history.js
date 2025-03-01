@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchHistory } from '@/axios';
+import { history } from '@/axios';
 
 
 export const fetchHistoryDetail = createAsyncThunk('history/fetchHistoryDetail', async (_, thunkAPI) => {
     try {
-        const response = await fetchHistory();
+        const response = await history();
         return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.message);

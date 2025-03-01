@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import logo from "../assets/logo.png"
 import {
   Home,
   LayoutDashboard,
@@ -26,21 +27,13 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 fixed left-0 top-0 h-full bg-white shadow-lg z-50  items-center">
+    <div className="w-64 fixed left-0 top-0 h-full bg-white shadow-lg z-50  items-center hidden sm:block">
       {/* Logo Section */}
-      {/* <div className="p-4 border-b">
-        <div className="flex items-center gap-2">
-          <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-          </svg>
-          <span className="text-xl font-bold">MyTube</span>
-        </div>
-      </div> */}
 
       <div className="flex items-center space-x-4 justify-center ">
         <Link to="/" className="flex items-center space-x-2">
           {/* Replace with your logo */}
-          <svg
+          {/* <svg
             className="h-14 w-14 text-red-600"
             fill="currentColor"
             viewBox="0 0 24 24"
@@ -58,8 +51,9 @@ const Sidebar = () => {
             >
               InTube
             </text>
-          </svg>
+          </svg> */}
 
+          <img src={logo} alt="" className="h-20 w-36"/>
           <span className="text-xl font-bold text-gray-900">InTube</span>
         </Link>
       </div>

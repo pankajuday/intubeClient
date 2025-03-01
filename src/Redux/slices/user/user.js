@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userDetail } from '@/axios';
 
-export const fetchUserDetail = createAsyncThunk('user/fetchUserDetail', async (userId, thunkAPI) => {
+export const fetchUserDetail = createAsyncThunk('user/fetchUserDetail', async (_, thunkAPI) => {
     try {
-        const response = await userDetail(userId);
+        const response = await userDetail();
         return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.message);
@@ -13,7 +13,7 @@ export const fetchUserDetail = createAsyncThunk('user/fetchUserDetail', async (u
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        userDetail: null,
+        userDetail: [],
         isLoading:false,
         error: null,
     },
@@ -21,15 +21,15 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchUserDetail.pending, (state) => {
-                state.status = 'loading';
+                state.isLoading = true;
             })
             .addCase(fetchUserDetail.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.user = action.payload;
+                state.isLoading = false;
+                state.userDetail = action.payload;
             })
             .addCase(fetchUserDetail.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
+                state.isLoading = false;
+                state.error = action.payload;
             });
     },
 });

@@ -13,11 +13,11 @@ import "./App.css";
 import Logout from "./components/Logout";
 import History from "./components/History";
 import LikedVideo from "./components/LikedVideo";
-import Test from "./Test";   
+import Test from "./Test";
 import VideoPlayer from "./components/VideoPlayer";
 import VideoList from "./page/VideoList";
 import ErrorPage from "./Error/ErrorPage";
-
+import UserProfile from "./components/userProfile";
 
 const MainLayout = () => {
   return (
@@ -29,7 +29,7 @@ const MainLayout = () => {
         <Sidebar />
       </div>
       <div className="flex flex-1">
-        <main className=" ml-64 p-6 flex relative">
+        <main className=" sm:ml-64 p-6 flex relative ">
           <Outlet />
         </main>
       </div>
@@ -46,17 +46,15 @@ function App() {
           <Route path="/video/:videoId" element={<VideoPlayerPage />} />
           <Route path="/history" element={<History />} />
           <Route path="/likedvideos" element={<LikedVideo />} />
-
+          <Route path="/profile" element={<UserProfile />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/test" element={<Test />} />
         <Route path="/error" element={<ErrorPage />} />
-
-
+        
       </Routes>
-      
     </Router>
   );
 }
