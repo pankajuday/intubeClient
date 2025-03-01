@@ -22,7 +22,7 @@ const Signup = () => {
       formData.append('coverImage', data.coverImage[0]);
 
 
-      console.log(formData);
+
       
 
       const response = await signUp(formData);
