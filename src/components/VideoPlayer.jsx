@@ -28,6 +28,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { likedVideoSlice, likeToggleSlice } from "@/Redux";
+import ShareCard from "./ShareCard";
 
 const getRandomColor = () => {
   const colors = [
@@ -43,7 +44,7 @@ const getRandomColor = () => {
 };
 
 const VideoPlayer = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const likeRef = useRef(false);
   const progressRef = useRef(null);
@@ -62,6 +63,7 @@ const VideoPlayer = () => {
   const [fallbackColor, setFallbackColor] = useState("");
   const [descriptionToggle, setDescriptionToggle] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const {
     likeData,
     isLoading: likeLoading,
@@ -94,12 +96,12 @@ const VideoPlayer = () => {
 
   // Check if the video is liked
   useEffect(() => {
-    function toggleLike(){
+    function toggleLike() {
       if (Array.isArray(likeData?.data)) {
         setIsLiked(likeData.data.some((item) => item?._id === videoId));
       }
     }
-    toggleLike()
+    toggleLike();
   }, [likeData, videoId]);
 
   const handleLikeToggle = () => {
@@ -129,9 +131,8 @@ const VideoPlayer = () => {
   //   }
   // };
 
-  if(videoError){
+  if (videoError) {
     navigate("/error", { state: { error: videoError.message } });
-
   }
 
   const handleFullScreen = () => {
@@ -274,8 +275,8 @@ const VideoPlayer = () => {
               muted={isMuted}
               pip={isPip}
               onDuration={(duration) => setDuration(duration)}
-              onBuffer={onMediaLoader}
-              onBufferEnd={onMediaLoader}
+              onBuffer={() => setMediaLoader(!mediaLoader)}
+              onBufferEnd={() => setMediaLoader(!mediaLoader)}
               config={{
                 file: {
                   attributes: {
@@ -289,9 +290,8 @@ const VideoPlayer = () => {
             {/* Main window which contain all components */}
             <div className=" h-full w-full absolute justify-center items-center flex">
               {mediaLoader ? <SpringLoader text-green-400 h-24 w-24 /> : ""}
-              
             </div>
-
+            
             <div
               className=" h-full w-full text-white absolute"
               onMouseEnter={() => setDisplayTrigger(!displayTrigger)}
@@ -437,7 +437,11 @@ const VideoPlayer = () => {
                         )}
                       </button>
                     )}
-                    <Share />
+                    <Share onClick={() => setIsOpen(!isOpen)} />
+                    <div className="absolute bottom-0 flex  justify-center items-center ">
+                      {isOpen ? <ShareCard videoId={videoId} /> : ""}
+                    </div>
+
                     <Bookmark className="hover:fill-slate-300 hover:text-slate-300" />
                     <EllipsisVertical />
                   </div>

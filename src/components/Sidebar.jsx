@@ -13,8 +13,8 @@ import {
 const Sidebar = () => {
   const menuItems = [
     { name: "Home", icon: Home, path: "/" },
-    { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    { name: "Subscriptions", icon: Tv, path: "/subscriptions" },
+    // { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+    // { name: "Subscriptions", icon: Tv, path: "/subscriptions" },
     { name: "History", icon: Clock, path: "/history" },
     { name: "Liked Videos", icon: ThumbsUp, path: "/likedvideos" },
     { name: "Playlists", icon: Library, path: "/playlists" },
