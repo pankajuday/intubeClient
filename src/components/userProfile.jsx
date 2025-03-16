@@ -3,6 +3,7 @@ import VideoCard from "./VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllChannelVideos, fetchUserDetail } from "@/Redux";
 import Skeleton from "react-loading-skeleton";
+import EmptyContent from "@/Error/EmptyContent";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -88,10 +89,15 @@ const UserProfile = () => {
                     </div>
                   </div>
                 ))
-            : Array.isArray(dashboardData) &&
+            : Array.isArray(dashboardData) && dashboardData.length > 0 ? (
               dashboardData.map((video) =>
-                video ? <VideoCard key={video?._id} video={video} /> : null
-              )}
+                video ? <VideoCard key={video?._id} video={video} /> : ""
+              )
+            ) : (
+              <div className="col-span-3 flex justify-center items-center">
+                <EmptyContent />
+              </div>
+            )}
         </div>
       </div>
     </div>
