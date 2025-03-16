@@ -4,6 +4,7 @@ import defaultImg from "../assets/playlist.png";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Link } from "react-router-dom";
+import { Library } from "lucide-react";
 
 const getRandomColor = () => {
   const colors = [
@@ -41,7 +42,9 @@ const PlaylistCard = ({ data }) => {
             {/* video duration */}
             
               <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+              <Library/> 
                 {data?.total}
+
               </span>
             
           </AspectRatio>
