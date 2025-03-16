@@ -53,8 +53,8 @@ const Sidebar = () => {
             </text>
           </svg> */}
 
-          <img src={logo} alt="" className="h-20 w-36"/>
-          <span className="text-xl font-bold text-gray-900">InTube</span>
+          <img src={logo} alt="" className="h-10 w-40 m-2"/>
+          {/* <span className="text-xl font-bold text-gray-900">InTube</span> */}
         </Link>
       </div>
 

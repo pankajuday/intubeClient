@@ -1,7 +1,7 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { signUp } from '../axios';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { signUp } from "../axios";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -14,22 +14,18 @@ const Signup = () => {
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
-      formData.append('fullName', data.fullName);
-      formData.append('email', data.email);
-      formData.append('username', data.username);
-      formData.append('password', data.password);
-      formData.append('avatar', data.avatar[0]);
-      formData.append('coverImage', data.coverImage[0]);
-
-
-
-      
+      formData.append("fullName", data.fullName);
+      formData.append("email", data.email);
+      formData.append("username", data.username);
+      formData.append("password", data.password);
+      formData.append("avatar", data.avatar[0]);
+      formData.append("coverImage", data.coverImage[0]);
 
       const response = await signUp(formData);
-      console.log('Signup successful:', response);
-      navigate('/');
+
+      navigate("/");
     } catch (error) {
-      console.error('Error signing up:', error);
+      console.error("Error signing up:", error);
     }
   };
 
@@ -39,11 +35,16 @@ const Signup = () => {
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
-            <p className="text-gray-600 text-sm">Fill in the details to create your account</p>
+            <p className="text-gray-600 text-sm">
+              Fill in the details to create your account
+            </p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullName">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="fullName"
+              >
                 Full Name
               </label>
               <input
@@ -51,12 +52,19 @@ const Signup = () => {
                 id="fullName"
                 type="text"
                 placeholder="Enter your full name"
-                {...register('fullName', { required: 'Full Name is required' })}
+                {...register("fullName", { required: "Full Name is required" })}
               />
-              {errors.fullName && <p className="text-red-500 text-xs italic">{errors.fullName.message}</p>}
+              {errors.fullName && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.fullName.message}
+                </p>
+              )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -64,12 +72,19 @@ const Signup = () => {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                {...register('email', { required: 'Email is required' })}
+                {...register("email", { required: "Email is required" })}
               />
-              {errors.email && <p className="text-red-500 text-xs italic">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="username"
+              >
                 Username
               </label>
               <input
@@ -77,12 +92,19 @@ const Signup = () => {
                 id="username"
                 type="text"
                 placeholder="Enter your username"
-                {...register('username', { required: 'Username is required' })}
+                {...register("username", { required: "Username is required" })}
               />
-              {errors.username && <p className="text-red-500 text-xs italic">{errors.username.message}</p>}
+              {errors.username && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input
@@ -90,33 +112,53 @@ const Signup = () => {
                 id="password"
                 type="password"
                 placeholder="Enter your password"
-                {...register('password', { required: 'Password is required' })}
+                {...register("password", { required: "Password is required" })}
               />
-              {errors.password && <p className="text-red-500 text-xs italic">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="avatar">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="avatar"
+              >
                 Avatar
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="avatar"
                 type="file"
-                {...register('avatar', { required: 'Avatar is required' })}
+                {...register("avatar", { required: "Avatar is required" })}
               />
-              {errors.avatar && <p className="text-red-500 text-xs italic">{errors.avatar.message}</p>}
+              {errors.avatar && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.avatar.message}
+                </p>
+              )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="coverImage">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="coverImage"
+              >
                 Cover Image
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="coverImage"
                 type="file"
-                {...register('coverImage', { required: 'Cover Image is required' })}
+                {...register("coverImage", {
+                  required: "Cover Image is required",
+                })}
               />
-              {errors.coverImage && <p className="text-red-500 text-xs italic">{errors.coverImage.message}</p>}
+              {errors.coverImage && (
+                <p className="text-red-500 text-xs italic">
+                  {errors.coverImage.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-4">
               <button
@@ -127,8 +169,11 @@ const Signup = () => {
               </button>
             </div>
             <div className="text-center mt-4 text-sm">
-              Already have an account?{' '}
-              <a className="font-bold text-blue-500 hover:text-blue-800" href="/login">
+              Already have an account?{" "}
+              <a
+                className="font-bold text-blue-500 hover:text-blue-800"
+                href="/login"
+              >
                 Login
               </a>
             </div>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../axios";
 import SpringLoader from "./SpringLoader";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogout } from "@/Redux/slices/Auth/auth";
+import { fetchLogout } from "@/Redux/Slices/Auth";
 
 const Logout = () => {
   const navigate = useNavigate();

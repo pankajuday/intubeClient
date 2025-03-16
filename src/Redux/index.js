@@ -1,24 +1,44 @@
-import likeReducer ,{ likeToggleSlice, likedVideoSlice } from "./slices/video/likeSlice";
-import videoReducer,{ fetchAllVideos, fetchVideoByIdSlice } from "./slices/video/videoSlice";
-import authReducer,{ fetchLogin, fetchLogout } from "./slices/Auth/auth";
-import commentReducer, { fetchCommentsOnVideo } from "./slices/video/commentSlice";
-import historyReducer, { fetchHistoryDetail } from "./slices/history/history";
-import userReducer,{ fetchUserDetail } from "./slices/user/user";
-import dashboardReducer,{ fetchAllChannelVideos, } from "./slices/Dashboard/dashboard";
-
-
+import likeReducer, { likeToggleSlice, likedVideoSlice } from "./Slices/Like";
+import videoReducer, { fetchAllVideos, fetchVideoById } from "./Slices/Video";
+import authReducer, { fetchLogin, fetchLogout } from "./Slices/Auth";
+import commentReducer, { fetchCommentsOnVideo } from "./Slices/Comment";
+import historyReducer, { fetchHistoryDetail } from "./Slices/History";
+import userReducer, { fetchUserDetail } from "./Slices/User";
+import dashboardReducer, { fetchAllChannelVideos } from "./Slices/Dashboard";
+import playlistReducer, {
+  fetchUserPlaylist,
+  fetchCreatePlaylist,
+  fetchAddVideoOnPlaylist,
+  fetchRemoveVideoFromPlaylist,
+  fetchDeletePlaylistById,
+  fetchGetPlaylistById,
+  fetchUpdatePlaylistById,
+} from "./Slices/Playlist";
 
 export {
-    likeToggleSlice,
-    likedVideoSlice,
-    fetchAllVideos, fetchVideoByIdSlice ,
-    fetchLogin, fetchLogout ,
-    likeReducer,videoReducer,authReducer,
-    fetchCommentsOnVideo,
-    commentReducer,
-    historyReducer,fetchHistoryDetail,
-    userReducer, fetchUserDetail,
-    dashboardReducer, fetchAllChannelVideos
-    
-
-}
+  likeToggleSlice,
+  likedVideoSlice,
+  fetchAllVideos,
+  fetchVideoById,
+  fetchLogin,
+  fetchLogout,
+  likeReducer,
+  videoReducer,
+  authReducer,
+  fetchCommentsOnVideo,
+  commentReducer,
+  historyReducer,
+  fetchHistoryDetail,
+  userReducer,
+  fetchUserDetail,
+  dashboardReducer,
+  fetchAllChannelVideos,
+  playlistReducer,
+  fetchUserPlaylist,
+  fetchCreatePlaylist,
+  fetchAddVideoOnPlaylist,
+  fetchRemoveVideoFromPlaylist,
+  fetchDeletePlaylistById,
+  fetchGetPlaylistById,
+  fetchUpdatePlaylistById,
+};

@@ -8,9 +8,9 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 w-[84%] bg-white shadow-sm z-50  right-0">
-      <div className=" h-10 w-full bg-slate-950 text-cyan-500 z-50 text-center items-center justify-center">
+      {/* <div className=" h-10 w-full bg-slate-950 text-cyan-500 z-50 text-center items-center justify-center">
       🔧 This site is currently under development. Some features may not work as expected. Stay tuned for updates! 🚀
-      </div>
+      </div> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left Section - Logo and Menu */}
@@ -69,7 +69,7 @@ const Navbar = () => {
 
             <button className="p-2 hover:bg-gray-100 rounded-full relative">
               <Bell className="h-6 w-6 text-gray-700" />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0
                 {/* TODO : WRITE HERE CODE FOR CALCULATE AND SHOW NOTIFICATION ON NOTIFICATION BUTTON ON NAVIGATION BAR */}
               </span>
             </button>

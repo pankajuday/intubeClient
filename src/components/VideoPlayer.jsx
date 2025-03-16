@@ -22,7 +22,7 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchVideoByIdSlice } from "@/Redux/slices/video/videoSlice";
+import { fetchVideoById } from "@/Redux/Slices/Video";
 import SpringLoader from "./SpringLoader";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -84,13 +84,13 @@ const VideoPlayer = () => {
 
   // console.log(mediaLoader);
   // console.log(loading);
-  console.log(videoError);
+  // console.log(videoError);
 
   useEffect(() => {
     getRandomColor();
     if (videoId) {
       dispatch(likedVideoSlice());
-      dispatch(fetchVideoByIdSlice(videoId));
+      dispatch(fetchVideoById(videoId));
     }
   }, [videoId, dispatch]);
 
@@ -131,9 +131,9 @@ const VideoPlayer = () => {
   //   }
   // };
 
-  if (videoError) {
-    navigate("/error", { state: { error: videoError.message } });
-  }
+  // if (videoError) {
+  //   navigate("/error", { state: { error: videoError.message } });
+  // }
 
   const handleFullScreen = () => {
     if (videoRef.current) {
