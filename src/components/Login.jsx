@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 // import { loginUser } from "../axios"
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogin } from "@/Redux/slices/Auth/auth";
+import { fetchLogin } from "@/Redux/Slices/Auth";
 import SpringLoader from "./SpringLoader";
 
 const Login = () => {

@@ -44,16 +44,21 @@
 // export default videoSlice.reducer;
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchVideos, fetchVideoById } from "@/axios";
+import {
+  deleteVideoById,
+  getAllVideos,
+  getVideoById,
+  postVideo,
+  updateVideoById,
+} from "@/axios";
 
-
-// fetcing all videos with pagenation 
+// fetcing all videos with pagenation
 export const fetchAllVideos = createAsyncThunk(
-  "video/fetchAllVideos",
+  "video/get",
   async (_, thunkAPI) => {
     // Added thunkAPI
     try {
-      const response = await fetchVideos();
+      const response = await getAllVideos();
       // console.log("API Response:", response);
       return response;
     } catch (error) {
@@ -63,19 +68,54 @@ export const fetchAllVideos = createAsyncThunk(
   }
 );
 
-
 // for fetching video by id
-export const fetchVideoByIdSlice = createAsyncThunk(
-  "video/fetchVideoById",
-  async (videoId, thunkAPI ) => {
+export const fetchVideoById = createAsyncThunk(
+  "video/getById",
+  async (videoId, thunkAPI) => {
     try {
-      const response = await fetchVideoById(videoId);
+      const response = await getVideoById(videoId);
       // console.log("API Response fetch video by id:", response);
       // console.log("from fvbi ", videoId);
 
       return response.data[0];
     } catch (error) {
       console.error("Error fetching videos:", error);
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchPostVideo = createAsyncThunk(
+  "video/post",
+  async (data, thunkAPI) => {
+    try {
+      const response = await postVideo(data);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchDeleteVideoById = createAsyncThunk(
+  "video/delete",
+  async (videoId, thunkAPI) => {
+    try {
+      const response = await deleteVideoById(videoId);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchUpdateVideoById = createAsyncThunk(
+  "video/update",
+  async (videoId, thunkAPI) => {
+    try {
+      const response = await updateVideoById(videoId);
+      return response;
+    } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -105,15 +145,58 @@ const videoSlice = createSlice({
         state.error = action.payload; // Access the payload from rejectWithValue
         state.content = [];
       })
-      .addCase(fetchVideoByIdSlice.pending, (state) => {
+
+      .addCase(fetchVideoById.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchVideoByIdSlice.fulfilled, (state, action) => {
+      .addCase(fetchVideoById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.selectedVideo = action.payload;
       })
-      .addCase(fetchVideoByIdSlice.rejected, (state, action) => {
+      .addCase(fetchVideoById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload; // Access the payload from rejectWithValue
+        state.selectedVideo = [];
+      })
+
+      .addCase(fetchPostVideo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPostVideo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedVideo = action.payload;
+      })
+      .addCase(fetchPostVideo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload; // Access the payload from rejectWithValue
+        state.selectedVideo = [];
+      })
+
+      .addCase(fetchDeleteVideoById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchDeleteVideoById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedVideo = action.payload;
+      })
+      .addCase(fetchDeleteVideoById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload; // Access the payload from rejectWithValue
+        state.selectedVideo = [];
+      })
+
+      .addCase(fetchUpdateVideoById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchUpdateVideoById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedVideo = action.payload;
+      })
+      .addCase(fetchUpdateVideoById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload; // Access the payload from rejectWithValue
         state.selectedVideo = [];

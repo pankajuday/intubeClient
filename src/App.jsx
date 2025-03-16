@@ -18,8 +18,27 @@ import VideoPlayer from "./components/VideoPlayer";
 import VideoList from "./page/VideoList";
 import ErrorPage from "./Error/ErrorPage";
 import UserProfile from "./components/userProfile";
+import Playlist from "./components/Playlist";
+import NotFound from "./Error/NotFound";
+import NoInternetConnected from "./Error/NoInternetConnected";
+import { useEffect, useState } from "react";
 
 const MainLayout = () => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   return (
     <div className="flex w-full flex-col min-h-screen items-center">
       <div className="right-0">
@@ -29,8 +48,8 @@ const MainLayout = () => {
         <Sidebar />
       </div>
       <div className="flex flex-1">
-        <main className=" sm:ml-64 p-6 flex relative ">
-          <Outlet />
+        <main className=" sm:ml-64 p-6 flex relative">
+          {isOnline ? <Outlet /> : <NoInternetConnected />}
         </main>
       </div>
     </div>
@@ -47,13 +66,14 @@ function App() {
           <Route path="/history" element={<History />} />
           <Route path="/likedvideos" element={<LikedVideo />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/playlists" element={<Playlist />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="/not-found" element={<NotFound />}/>
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/test" element={<Test />} />
-        <Route path="/error" element={<ErrorPage />} />
-        
       </Routes>
     </Router>
   );

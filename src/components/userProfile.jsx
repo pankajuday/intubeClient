@@ -23,7 +23,7 @@ const UserProfile = () => {
   }, [dispatch]);
 
   return (
-    <div className="max-w-7xl grid mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="max-w-7xl bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Cover Image */}
       <div className="relative h-64 w-full">
         <img

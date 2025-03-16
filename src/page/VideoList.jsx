@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { fetchVideos } from '../axios';
+import { getAllVideos } from '../axios';
 import VideoCard from '@/components/VideoCard';
+import ErrorPage from '@/Error/ErrorPage';
 
 const VideoList = () => {
   const [videos, setVideos] = useState([]);
@@ -15,13 +16,13 @@ const VideoList = () => {
   useEffect(() => {
     const fetchVideosFn = async () => {
       try {
-        const response = await fetchVideos(page);
+        const response = await getAllVideos(page);
         const data = response.data;
         
-        setVideos(data.docs);
-        setTotalPages(data.totalPages);
-        setHasPrevPage(data.hasPrevPage);
-        setHasNextPage(data.hasNextPage);
+        setVideos(data?.docs);
+        setTotalPages(data?.totalPages);
+        setHasPrevPage(data?.hasPrevPage);
+        setHasNextPage(data?.hasNextPage);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching videos:', error);
@@ -46,7 +47,7 @@ const VideoList = () => {
             </div>
           ))
         ) : (
-          videos.map(video => (
+          videos?.map(video => (
             <VideoCard key={video._id} video={video} />
           ))
         )}

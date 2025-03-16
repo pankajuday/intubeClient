@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { videoReducer,authReducer,likeReducer, commentReducer, userReducer, dashboardReducer } from "..";
+import { videoReducer,authReducer,likeReducer, commentReducer, userReducer, dashboardReducer, playlistReducer } from "..";
 
 const store = configureStore({
     reducer:{
@@ -9,6 +9,7 @@ const store = configureStore({
         comment: commentReducer,
         user:userReducer,
         dashboard: dashboardReducer,
+        playlist: playlistReducer,
 
     }
     ,

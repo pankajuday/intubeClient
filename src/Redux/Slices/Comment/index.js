@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllCommentsOnVideo } from "@/axios";
+import { getAllCommentsOnVideo,getCommentsOnVideo } from "@/axios";
 
 
 export const fetchCommentsOnVideo = createAsyncThunk("comment/fetchCommentsOnVideo",async (videoId, thunkApi)=>{

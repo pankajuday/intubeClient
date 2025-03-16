@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { userDetail } from '@/axios';
 
-export const fetchUserDetail = createAsyncThunk('user/fetchUserDetail', async (_, thunkAPI) => {
+export const fetchUserDetail = createAsyncThunk('user/get', async (_, thunkAPI) => {
     try {
         const response = await userDetail();
         return response.data;

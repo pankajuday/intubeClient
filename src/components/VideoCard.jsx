@@ -47,8 +47,8 @@ const VideoCard = ({ video }) => {
           <CardContent className="flex gap-3 p-2  ">
             <Avatar>
               <AvatarImage src={video?.avatar} />
-              <AvatarFallback className={`${fallbackColor}`}>
-                {video?.owner}
+              <AvatarFallback className={`${fallbackColor} text-white text-3xl text-center font-bold`}>
+                {video?.owner[0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
 

@@ -16,7 +16,7 @@ const LikedVideo = () => {
   const { videoId } = useParams();
 
   useEffect(() => {
-    console.log("remounting")
+
     let isMounted = true;
     const fetchLikedVideo = async () => {
       try {
@@ -42,6 +42,8 @@ const LikedVideo = () => {
   return (
     <div className="video-container relative">
       {/* Video Grid */}
+      <h1 className="sm:xl:text-4xl font-bold h-auto w-full border-b-2 border-gray-500 pb-3 mb-3 ">Your Liked Videos</h1>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 ">
         {isLoading
           ? Array(6)

@@ -27,20 +27,66 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       window.location.href = "/login";
     }
+    if(error.response && error.response.status === 404){
+      window.location.href = "/not-found";
+    }
     return Promise.reject(error);
   }
 );
 
-export const fetchVideos = async (page) => {
-  const response = await axiosInstance.get(`/videos?page=${page}`);
-  return response.data;
+// Video
+export const getAllVideos = async (page) => {
+  try {
+    const response = await axiosInstance.get(`/videos?page=${page}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 };
 
-export const fetchVideoDetails = async (videoId) => {
-  const response = await axiosInstance.get(`/videos/${videoId}`);
-  return response.data;
+// export const getVideoDetails = async (videoId) => {
+//   const response = await axiosInstance.get(`/videos/${videoId}`);
+//   return response.data;
+// };
+
+export const getVideoById = async (videoId) => {
+  try {
+    const response = await axiosInstance.get(`/videos/${videoId}`);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
+export const postVideo = async (data) => {
+  try {
+    const response = await axiosInstance.post(`/videos`,data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteVideoById = async (videoId) => {
+  try {
+    const response = await axiosInstance.delete(`/videos/${videoId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateVideoById = async(videoId)=>{
+  try {
+    const response = await axiosInstance.patch(`/videos/${videoId}`)
+    return response.data;
+  } catch (error) {
+    return error 
+  }
+}
+
+// Auth
 export const isLogin = async () => {
   try {
     const response = await axiosInstance.get("/users/islogin");
@@ -81,16 +127,7 @@ export const logoutUser = async () => {
   }
 };
 
-export const fetchVideoById = async (videoId) => {
-  try {
-    const response = await axiosInstance.get(`/videos/${videoId}`);
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
+// Like
 export const likeToggle = async (videoId) => {
   try {
     const response = await axiosInstance.post(`/likes/toggle/v/${videoId}`);
@@ -100,22 +137,6 @@ export const likeToggle = async (videoId) => {
   }
 };
 
-export const fetchCommentsOnVideo = async (videoId) => {
-  try {
-    const response = await axiosInstance.get(`/comments/${videoId}`);
-    return response.data;
-  } catch (error) {
-    return error.message;
-  }
-};
-export const history = async () => {
-  try {
-    const response = await axiosInstance.get("/users/history");
-    return response.data;
-  } catch (error) {
-    return error.message;
-  }
-};
 export const likedVideo = async () => {
   try {
     const response = await axiosInstance.get("/likes/videos");
@@ -124,6 +145,27 @@ export const likedVideo = async () => {
     return error.message;
   }
 };
+
+export const history = async () => {
+  try {
+    const response = await axiosInstance.get("/users/history");
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+// Comment
+
+export const getCommentsOnVideo = async (videoId) => {
+  try {
+    const response = await axiosInstance.get(`/comments/${videoId}`);
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 
 export const getAllCommentsOnVideo = async (videoId) => {
   try {
@@ -143,13 +185,81 @@ export const userDetail = async () => {
   }
 };
 
-export const channelVideos = async ()=>{
+export const channelVideos = async () => {
   try {
-    const response = await axiosInstance.get('/dashboard/videos');
+    const response = await axiosInstance.get("/dashboard/videos");
     return response.data;
   } catch (error) {
     return error;
   }
-}
+};
+
+// below all functions work for playlist functionality
+
+export const createPlaylist = async (data) => {
+  try {
+    const response = await axiosInstance.post(`/`,data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const userPlaylist = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/playlist/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getPlaylistById = async (playlistId) => {
+  try {
+    const response = await axiosInstance.get(`/playlist/${playlistId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const updatePlaylistById = async (playlistId) => {
+  try {
+    const response = await axiosInstance.patch(`/playlist/${playlistId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const deletePlaylistById = async (playlistId) => {
+  try {
+    const response = await axiosInstance.delete(`/playlist/${playlistId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const addVideoOnPlaylist = async (videoId, playlistId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/playlist/add/${videoId}/${playlistId}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const removeVideoFromPlaylist = async (videoId, playlistId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/playlist/remove/${videoId}/${playlistId}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+//
 
 export default axiosInstance;
