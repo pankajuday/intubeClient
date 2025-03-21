@@ -248,9 +248,7 @@ const { userDetail, isLoading } = useSelector((state) => state.user);
 
   const toggleChannelSubscription = () => {
     dispatch(fetchToggleSubscription(selectedVideo.owner?._id)).then(()=>{
-      if (userDetail?._id) {
-        dispatch(fetchSubscribedChannels(userDetail._id));
-      }
+        dispatch(fetchSubscribedChannels(userDetail?._id));
     })
   };
 
