@@ -253,12 +253,11 @@ const { userDetail, isLoading } = useSelector((state) => state.user);
   };
 
   useEffect(() => {
-    async function checkChannelIsSubscribed() {
-      setIsSubscribed(
-        await subscribedChannels.some(
-          (itm) => itm?._id === selectedVideo.owner?._id
-        )
+    function checkChannelIsSubscribed() {
+      const isSubscribedToChannel = subscribedChannels.some(
+        (itm) => itm?._id === selectedVideo?.owner?._id
       );
+      setIsSubscribed(isSubscribedToChannel);
     }
     checkChannelIsSubscribed();
   }, [selectedVideo, subscribedChannels]);
