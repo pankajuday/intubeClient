@@ -18,10 +18,6 @@ function Playlist() {
   const { userDetail, isLoading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(fetchUserDetail());
-  }, [dispatch]);
-
-  useEffect(() => {
     if (userDetail?._id) {
       dispatch(fetchUserPlaylist(userDetail._id));
     }

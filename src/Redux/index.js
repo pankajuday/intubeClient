@@ -14,6 +14,8 @@ import playlistReducer, {
   fetchGetPlaylistById,
   fetchUpdatePlaylistById,
 } from "./Slices/Playlist";
+import subscriptionReducer, { fetchSubscribedChannels, fetchChannelSubscribers, fetchToggleSubscription } from "./Slices/Subscription";
+import channelReducer , { fetchChannelDetail } from "./Slices/Channel";
 
 export {
   likeToggleSlice,
@@ -41,4 +43,6 @@ export {
   fetchDeletePlaylistById,
   fetchGetPlaylistById,
   fetchUpdatePlaylistById,
+  subscriptionReducer, fetchChannelSubscribers, fetchSubscribedChannels, fetchToggleSubscription,
+  channelReducer, fetchChannelDetail
 };
