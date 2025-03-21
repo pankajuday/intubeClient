@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       window.location.href = "/login";
     }
-    if(error.response && error.response.status === 404){
+    if (error.response && error.response.status === 404) {
       window.location.href = "/not-found";
     }
     return Promise.reject(error);
@@ -61,7 +61,7 @@ export const getVideoById = async (videoId) => {
 
 export const postVideo = async (data) => {
   try {
-    const response = await axiosInstance.post(`/videos`,data);
+    const response = await axiosInstance.post(`/videos`, data);
     return response.data;
   } catch (error) {
     return error;
@@ -77,14 +77,14 @@ export const deleteVideoById = async (videoId) => {
   }
 };
 
-export const updateVideoById = async(videoId)=>{
+export const updateVideoById = async (videoId) => {
   try {
-    const response = await axiosInstance.patch(`/videos/${videoId}`)
+    const response = await axiosInstance.patch(`/videos/${videoId}`);
     return response.data;
   } catch (error) {
-    return error 
+    return error;
   }
-}
+};
 
 // Auth
 export const isLogin = async () => {
@@ -166,7 +166,6 @@ export const getCommentsOnVideo = async (videoId) => {
   }
 };
 
-
 export const getAllCommentsOnVideo = async (videoId) => {
   try {
     const response = await axiosInstance.get(`/comments/${videoId}`);
@@ -198,7 +197,7 @@ export const channelVideos = async () => {
 
 export const createPlaylist = async (data) => {
   try {
-    const response = await axiosInstance.post(`/`,data);
+    const response = await axiosInstance.post(`/`, data);
     return response.data;
   } catch (error) {
     return error;
@@ -260,6 +259,40 @@ export const removeVideoFromPlaylist = async (videoId, playlistId) => {
   }
 };
 
-//
+// Subscriptions
+
+export const getSubscribedChannels = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/subscriptions/u/${userId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const getUserChannelSubscribers = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/subscriptions/c/${userId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const toggleSubscription = async (userId) => {
+  try {
+    const response = await axiosInstance.post(`/subscriptions/c/${userId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const getChannel = async (username) => {
+  try {
+    const response = await axiosInstance.get(`/users/c/${username}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 
 export default axiosInstance;

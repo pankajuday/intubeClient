@@ -22,6 +22,7 @@ import Playlist from "./components/Playlist";
 import NotFound from "./Error/NotFound";
 import NoInternetConnected from "./Error/NoInternetConnected";
 import { useEffect, useState } from "react";
+import ChannelProfile from "./components/ChannelProfile";
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -69,6 +70,7 @@ function App() {
           <Route path="/playlists" element={<Playlist />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/not-found" element={<NotFound />}/>
+          <Route path="/profile/:username" element={<ChannelProfile/>} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

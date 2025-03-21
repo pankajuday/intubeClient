@@ -27,7 +27,13 @@ import SpringLoader from "./SpringLoader";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { likedVideoSlice, likeToggleSlice } from "@/Redux";
+import {
+  fetchSubscribedChannels,
+  fetchToggleSubscription,
+  fetchUserDetail,
+  likedVideoSlice,
+  likeToggleSlice,
+} from "@/Redux";
 import ShareCard from "./ShareCard";
 
 const getRandomColor = () => {
@@ -41,6 +47,29 @@ const getRandomColor = () => {
     "bg-orange-500",
   ];
   return colors[Math.floor(Math.random() * colors.length)];
+};
+
+const convertCreatedAt = (date) => {
+  const _date = new Date(date);
+  const day = String(_date.getUTCDate()).padStart(2, "0"); // Get day (02)
+  const month = String(_date.getUTCMonth() + 1).padStart(2, "0"); // Get month (02)
+  const year = _date.getUTCFullYear(); // Get year (2025)
+  const months = {
+    1: "Jan",
+    2: "Feb",
+    3: "Mar",
+    4: "Apr",
+    5: "May",
+    6: "Jun",
+    7: "Jul",
+    8: "Aug",
+    9: "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
+
+  return `${day} ${months[parseInt(month)]} ${year}`;
 };
 
 const VideoPlayer = () => {
@@ -64,11 +93,16 @@ const VideoPlayer = () => {
   const [descriptionToggle, setDescriptionToggle] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const {
     likeData,
     isLoading: likeLoading,
     error: likeError,
   } = useSelector((state) => state.like);
+  const { subscribedChannels, subscriptionIsLoading, subscriptionError } =
+  useSelector((state) => state.subscription);
+
+const { userDetail, isLoading } = useSelector((state) => state.user);
 
   const { videoId } = useParams();
   const dispatch = useDispatch();
@@ -80,11 +114,6 @@ const VideoPlayer = () => {
   } = useSelector((state) => state.video);
 
   console.log("MyComponent is rendering... from videoPlayer REdux");
-  // console.log(toggleLike);
-
-  // console.log(mediaLoader);
-  // console.log(loading);
-  // console.log(videoError);
 
   useEffect(() => {
     getRandomColor();
@@ -215,28 +244,27 @@ const VideoPlayer = () => {
     setDescriptionToggle(!descriptionToggle);
   };
 
-  const convertCreatedAt = (date) => {
-    const _date = new Date(date);
-    const day = String(_date.getUTCDate()).padStart(2, "0"); // Get day (02)
-    const month = String(_date.getUTCMonth() + 1).padStart(2, "0"); // Get month (02)
-    const year = _date.getUTCFullYear(); // Get year (2025)
-    const months = {
-      1: "Jan",
-      2: "Feb",
-      3: "Mar",
-      4: "Apr",
-      5: "May",
-      6: "Jun",
-      7: "Jul",
-      8: "Aug",
-      9: "Sep",
-      10: "Oct",
-      11: "Nov",
-      12: "Dec",
-    };
 
-    return `${day} ${months[parseInt(month)]} ${year}`;
+
+  const toggleChannelSubscription = () => {
+    dispatch(fetchToggleSubscription(selectedVideo.owner?._id)).then(()=>{
+      if (userDetail?._id) {
+        dispatch(fetchSubscribedChannels(userDetail._id));
+      }
+    })
   };
+
+  useEffect(() => {
+    async function checkChannelIsSubscribed() {
+      setIsSubscribed(
+        await subscribedChannels.some(
+          (itm) => itm?._id === selectedVideo.owner?._id
+        )
+      );
+    }
+    checkChannelIsSubscribed();
+  }, [selectedVideo, subscribedChannels]);
+
 
   return (
     <div>
@@ -291,7 +319,7 @@ const VideoPlayer = () => {
             <div className=" h-full w-full absolute justify-center items-center flex">
               {mediaLoader ? <SpringLoader text-green-400 h-24 w-24 /> : ""}
             </div>
-            
+
             <div
               className=" h-full w-full text-white absolute"
               onMouseEnter={() => setDisplayTrigger(!displayTrigger)}
@@ -420,9 +448,20 @@ const VideoPlayer = () => {
                   </div>
                   {/* subscription button */}
                   <div className="w-[15%] justify-center items-center flex ">
-                    <button className="border-2 rounded-4xl cursor-pointer bg-slate-950 h-10 w-36 text-white outline-2 outline-slate-900 hover:bg-slate-700">
-                      <span>Subscribe</span>
-                    </button>
+                    {subscriptionIsLoading ? (
+                      <SpringLoader />
+                    ) : (
+                      <button
+                        className="border-2 rounded-4xl cursor-pointer bg-slate-950 h-10 w-36 text-white outline-2 outline-slate-900 hover:bg-slate-700"
+                        onClick={toggleChannelSubscription}
+                      >
+                        {isSubscribed ? (
+                          <span>unsubscribe</span>
+                        ) : (
+                          <span>Subscribe</span>
+                        )}
+                      </button>
+                    )}
                   </div>
 
                   <div className="h-14 w-[60%] flex  items-center justify-around flex-row">

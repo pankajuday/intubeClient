@@ -1,25 +1,27 @@
 import React, { useEffect } from "react";
 import VideoCard from "./VideoCard";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllChannelVideos, fetchUserDetail } from "@/Redux";
+import { fetchAllChannelVideos, fetchChannelDetail } from "@/Redux";
 import Skeleton from "react-loading-skeleton";
 import EmptyContent from "@/Error/EmptyContent";
+import { useParams } from "react-router-dom";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
   const {
-    userDetail,
-    isLoading: userLoading,
-    error: userError,
-  } = useSelector((state) => state.user);
+    channelData, channelIsLoading, channelError
+  } = useSelector((state) => state.channel);
+
   const {
     dashboardData,
     isLoading: dashboardLoading,
     error: dashboardError,
   } = useSelector((state) => state.dashboard);
 
+  const {userDetail, isLoading} = useSelector(state => state.user)
+
   useEffect(() => {
-    dispatch(fetchUserDetail());
+    dispatch(fetchChannelDetail(userDetail?.username));
     dispatch(fetchAllChannelVideos());
   }, [dispatch]);
 
@@ -28,14 +30,14 @@ const UserProfile = () => {
       {/* Cover Image */}
       <div className="relative h-64 w-full">
         <img
-          src={userDetail.coverImage}
+          src={channelData?.coverImage}
           alt="Cover"
           className="w-full h-full object-cover"
         />
         {/* Avatar */}
         <div className="absolute bottom-[-50px] left-10">
           <img
-            src={userDetail.avatar}
+            src={channelData?.avatar}
             alt="Avatar"
             className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
           />
@@ -46,21 +48,21 @@ const UserProfile = () => {
       <div className="grid grid-cols-12 gap-6 p-8 pt-14">
         {/* User Info */}
         <div className="col-span-4 flex flex-col items-center">
-          <h2 className="text-2xl font-semibold">{userDetail.fullName}</h2>
+          <h2 className="text-2xl font-semibold">{channelData?.fullName}</h2>
           <p className="text-gray-600 text-center">
             <span>@</span>
-            {userDetail.username}
+            {channelData?.username}
           </p>
         </div>
 
         {/* Stats */}
         <div className="col-span-8 flex justify-around items-center">
           <div className="text-center">
-            <h4 className="text-lg font-bold">10k</h4>
+            <h4 className="text-lg font-bold">{channelData?.subscribersCount}</h4>
             <p className="text-gray-500 text-sm">Subscribers</p>
           </div>
           <div className="text-center">
-            <h4 className="text-lg font-bold">10k</h4>
+            <h4 className="text-lg font-bold">{channelData?.subscribedToCount}</h4>
             <p className="text-gray-500 text-sm">Subscribed</p>
           </div>
         </div>

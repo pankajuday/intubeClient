@@ -63,9 +63,9 @@ const Navbar = () => {
               <Plus className="h-6 w-6 text-gray-700" />
             </button>
 
-            <button className="p-2 hover:bg-gray-100 rounded-full">
+            {/* <button className="p-2 hover:bg-gray-100 rounded-full">
               <Video className="h-6 w-6 text-gray-700" />
-            </button>
+            </button> */}
 
             <button className="p-2 hover:bg-gray-100 rounded-full relative">
               <Bell className="h-6 w-6 text-gray-700" />
@@ -87,19 +87,19 @@ const Navbar = () => {
 
               {/* Dropdown Menu */}
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-xl py-2">
                   <Link
                     to="/profile"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
                     Your Profile
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/settings"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
                     Settings
-                  </Link>
+                  </Link> */}
                   <Link
                     to="/logout"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-t border-gray-100"

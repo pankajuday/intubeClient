@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { videoReducer,authReducer,likeReducer, commentReducer, userReducer, dashboardReducer, playlistReducer } from "..";
+import { videoReducer,authReducer,likeReducer, commentReducer, userReducer, dashboardReducer, playlistReducer, subscriptionReducer, channelReducer } from "..";
 
 const store = configureStore({
     reducer:{
@@ -10,6 +10,8 @@ const store = configureStore({
         user:userReducer,
         dashboard: dashboardReducer,
         playlist: playlistReducer,
+        subscription: subscriptionReducer,
+        channel:channelReducer
 
     }
     ,
