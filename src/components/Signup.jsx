@@ -22,7 +22,7 @@ const Signup = () => {
       formData.append("coverImage", data.coverImage[0]);
 
       const response = await signUp(formData);
-
+      console.log(data)
       navigate("/");
     } catch (error) {
       console.error("Error signing up:", error);

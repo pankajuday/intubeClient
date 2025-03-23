@@ -166,12 +166,10 @@ const videoSlice = createSlice({
       })
       .addCase(fetchPostVideo.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.selectedVideo = action.payload;
       })
       .addCase(fetchPostVideo.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload; // Access the payload from rejectWithValue
-        state.selectedVideo = [];
+        state.error = action.payload; 
       })
 
       .addCase(fetchDeleteVideoById.pending, (state) => {
