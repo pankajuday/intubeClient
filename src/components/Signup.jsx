@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSignUp, resetAuthState } from "@/Redux";
+import SpringLoader from "./SpringLoader";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { authIsLoading, authError, success } = useSelector((state) => state.auth);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
+
     try {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
@@ -21,13 +28,22 @@ const Signup = () => {
       formData.append("avatar", data.avatar[0]);
       formData.append("coverImage", data.coverImage[0]);
 
-      const response = await signUp(formData);
-      console.log(data)
-      navigate("/");
+      // const response = await signUp(formData);
+      dispatch(fetchSignUp(formData));
     } catch (error) {
       console.error("Error signing up:", error);
     }
   };
+
+  useEffect(() => {
+    if (success) {
+      alert("Signup successful!");
+      reset(); // Reset the form
+      dispatch(resetAuthState()); // Reset the auth state
+      navigate("/"); // Redirect to the home page
+    }
+  }, [success, dispatch, navigate, reset]);
+
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
@@ -161,12 +177,15 @@ const Signup = () => {
               )}
             </div>
             <div className="flex flex-col gap-4">
-              <button
+              {
+                authIsLoading ? <SpringLoader/> : <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                 type="submit"
+                disabled={authIsLoading}
               >
                 Sign Up
               </button>
+              }
             </div>
             <div className="text-center mt-4 text-sm">
               Already have an account?{" "}
