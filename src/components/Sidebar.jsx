@@ -46,12 +46,13 @@ const Sidebar = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (userDetail?._id) {
-      dispatch(fetchSubscribedChannels(userDetail._id));
+    if (userDetail?._id ) {
+      dispatch(fetchSubscribedChannels(userDetail?._id));
       setFallbackColor(getRandomColor());
       console.log("Fetching subscribed channels...");
     }
-  }, [dispatch, userDetail]);
+  }, [ userDetail, dispatch]);
+
 
 
 
@@ -122,9 +123,13 @@ const Sidebar = () => {
             Subscriptions
           </h3>
           <div className="space-y-1 h-96 w-full  overflow-y-scroll relative scrollbar-custom">
-            {subscriptionIsLoading ? (
+            {subscriptionIsLoading  ? (
               <SpringLoader />
-            ) : (
+            ): subscribedChannels?.length === 0 ? (
+              <p className="text-gray-500 text-sm text-center mt-4">
+                You haven't subscribed to any channels yet.
+              </p>
+            )  : (
               subscribedChannels?.map((channel) => (
                 <NavLink key={channel?._id} to={`/profile/${channel?.username}`}>
                   <button className="flex items-center space-x-3 p-2 w-full rounded-lg hover:bg-gray-100 text-gray-700 ">

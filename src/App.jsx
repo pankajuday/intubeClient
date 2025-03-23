@@ -23,6 +23,7 @@ import NotFound from "./Error/NotFound";
 import NoInternetConnected from "./Error/NoInternetConnected";
 import { useEffect, useState } from "react";
 import ChannelProfile from "./components/ChannelProfile";
+import PublishVideo from "./components/PublishVideo";
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -71,11 +72,12 @@ function App() {
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/not-found" element={<NotFound />}/>
           <Route path="/profile/:username" element={<ChannelProfile/>} />
+          <Route path="/publish-video" element={<PublishVideo />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/test" element={<Test />} />
+        <Route path="/test" element={<Test/>} />
       </Routes>
     </Router>
   );

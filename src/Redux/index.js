@@ -1,5 +1,5 @@
 import likeReducer, { likeToggleSlice, likedVideoSlice } from "./Slices/Like";
-import videoReducer, { fetchAllVideos, fetchVideoById } from "./Slices/Video";
+import videoReducer, { fetchAllVideos, fetchVideoById, fetchDeleteVideoById,fetchPostVideo, fetchUpdateVideoById } from "./Slices/Video";
 import authReducer, { fetchLogin, fetchLogout } from "./Slices/Auth";
 import commentReducer, { fetchCommentsOnVideo } from "./Slices/Comment";
 import historyReducer, { fetchHistoryDetail } from "./Slices/History";
@@ -22,6 +22,7 @@ export {
   likedVideoSlice,
   fetchAllVideos,
   fetchVideoById,
+  fetchDeleteVideoById,fetchPostVideo, fetchUpdateVideoById,
   fetchLogin,
   fetchLogout,
   likeReducer,

@@ -6,8 +6,6 @@ export const fetchLogin = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await loginUser(data);
-      console.log(data);
-      console.log(response);
       return response;
     } catch (error) {
       thunkApi.rejectWithValue(error.message);
