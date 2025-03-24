@@ -8,7 +8,7 @@ import SpringLoader from "./SpringLoader";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { authData, isLoading, error } = useSelector((state) => state.auth);
+  const { authData, authIsLoading, error } = useSelector((state) => state.auth);
   const {
     register,
     handleSubmit,
@@ -40,7 +40,7 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
-      {isLoading ? (
+      {authIsLoading ? (
         <div className="absolute flex justify-center items-center bg-slate-950 opacity-50 h-full w-full">
           <SpringLoader />
         </div>

@@ -38,9 +38,9 @@ const Signup = () => {
   useEffect(() => {
     if (success) {
       alert("Signup successful!");
-      reset(); // Reset the form
-      dispatch(resetAuthState()); // Reset the auth state
-      navigate("/"); // Redirect to the home page
+      reset(); 
+      dispatch(resetAuthState()); 
+      navigate("/login"); 
     }
   }, [success, dispatch, navigate, reset]);
 
