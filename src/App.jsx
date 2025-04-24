@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,6 +25,7 @@ import NoInternetConnected from "./Error/NoInternetConnected";
 import { useEffect, useState } from "react";
 import ChannelProfile from "./components/ChannelProfile";
 import PublishVideo from "./components/PublishVideo";
+import CookiePermission from './components/Permission/cookies.permission';
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -60,26 +62,29 @@ const MainLayout = () => {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<VideoList />} />
-          <Route path="/video/:videoId" element={<VideoPlayerPage />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/likedvideos" element={<LikedVideo />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/playlists" element={<Playlist />} />
-          <Route path="/error" element={<ErrorPage />} />
-          <Route path="/not-found" element={<NotFound />}/>
-          <Route path="/profile/:username" element={<ChannelProfile/>} />
-          <Route path="/publish-video" element={<PublishVideo />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/test" element={<Test/>} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <Router>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<VideoList />} />
+            <Route path="/video/:videoId" element={<VideoPlayerPage />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/likedvideos" element={<LikedVideo />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/playlists" element={<Playlist />} />
+            <Route path="/error" element={<ErrorPage />} />
+            <Route path="/not-found" element={<NotFound />}/>
+            <Route path="/profile/:username" element={<ChannelProfile/>} />
+            <Route path="/publish-video" element={<PublishVideo />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/test" element={<Test/>} />
+        </Routes>
+      </Router>
+      <CookiePermission />
+    </div>
   );
 }
 
