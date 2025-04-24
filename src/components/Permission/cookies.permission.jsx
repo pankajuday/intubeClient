@@ -13,11 +13,11 @@ const CookiePermission = () => {
   const checkCookiePermission = () => {
     try {
       // Try to set a test cookie
-      const testCookieName = 'cookiePermissionTest';
-      document.cookie = `${testCookieName}=1; SameSite=None; Secure`;
+      const isCookieAllowed = 'cookiePermissionAllowed';
+      document.cookie = `${isCookieAllowed}=1; SameSite=None; Secure`;
       
       // Check if cookie was set
-      const cookieSet = document.cookie.indexOf(testCookieName) !== -1;
+      const cookieSet = document.cookie.indexOf(isCookieAllowed) !== -1;
       
       if (!cookieSet) {
         setCookiesBlocked(true);
@@ -32,8 +32,8 @@ const CookiePermission = () => {
 
         try {
           // Try to set a cookie in the iframe
-          iframe.contentDocument.cookie = `${testCookieName}Iframe=1; SameSite=None; Secure`;
-          const iframeCookieSet = iframe.contentDocument.cookie.indexOf(`${testCookieName}Iframe`) !== -1;
+          iframe.contentDocument.cookie = `${isCookieAllowed}Iframe=1; SameSite=None; Secure`;
+          const iframeCookieSet = iframe.contentDocument.cookie.indexOf(`${isCookieAllowed}Iframe`) !== -1;
           
           if (!iframeCookieSet) {
             setCookiesBlocked(true);
