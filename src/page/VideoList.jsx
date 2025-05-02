@@ -4,6 +4,8 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { getAllVideos } from '../axios';
 import VideoCard from '@/components/VideoCard';
 import ErrorPage from '@/Error/ErrorPage';
+import "../App.css"
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const VideoList = () => {
   const [videos, setVideos] = useState([]);
@@ -34,21 +36,23 @@ const VideoList = () => {
   }, [page]);
 
   return (
-    <div className="video-container relative">
-      {/* Video Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 ">
+    <div className="video-container relative w-full pl-3 pr-3 ">
+      {/* Video Grid - replaced with flexbox */}
+      <div className="flex flex-wrap justify-center gap-4">
         {loading ? (
           Array(6).fill().map((_, i) => (
-            <div key={i} className="bg-white rounded-lg overflow-hidden shadow">
-              <Skeleton height={200} width={300} />
+            <div key={i} className="bg-white rounded-lg overflow-hidden shadow w-full max-w-sm mb-4">
+              <Skeleton height={200} width="100%" />
               <div className="p-3">
-                <Skeleton count={3} width={300} />
+                <Skeleton count={3} width="100%" />
               </div>
             </div>
           ))
         ) : (
           videos?.map(video => (
-            <VideoCard key={video._id} video={video} />
+            <div key={video._id} className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] xl:w-[calc(33.333%-11px)]">
+              <VideoCard video={video} />
+            </div>
           ))
         )}
       </div>
@@ -60,7 +64,7 @@ const VideoList = () => {
           disabled={!hasPrevPage}
           className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
         >
-          Previous
+          <ChevronLeft />
         </button>
         <span className="text-gray-600">
           Page {page} of {totalPages}
@@ -70,7 +74,7 @@ const VideoList = () => {
           disabled={!hasNextPage}
           className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
         >
-          Next
+          <ChevronRight />
         </button>
       </div>
     </div>

@@ -9,14 +9,11 @@ import { useParams } from "react-router-dom";
 import SpringLoader from "./SpringLoader";
 
 const LikedVideo = () => {
-  // const [videos, setVideos] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const { likeData, isLoading, error } = useSelector((state) => state.like);
   const { videoId } = useParams();
 
   useEffect(() => {
-
     let isMounted = true;
     const fetchLikedVideo = async () => {
       try {
@@ -32,40 +29,46 @@ const LikedVideo = () => {
 
     fetchLikedVideo();
     return () => {
-
-      isMounted = !isMounted;
+      isMounted = false;
     };
   }, []);
 
-
-
   return (
-    <div className="video-container relative">
-      {/* Video Grid */}
-      <h1 className="sm:xl:text-4xl font-bold h-auto w-full border-b-2 border-gray-500 pb-3 mb-3 ">Your Liked Videos</h1>
+    <div className="video-container relative w-full">
+      {/* Title */}
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold h-auto w-full border-b-2 border-gray-500 pb-3 mb-6">Your Liked Videos</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 ">
+      {/* Video list */}
+      <div className="flex flex-wrap  gap-4">
         {isLoading
           ? Array(6)
               .fill()
               .map((_, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-lg overflow-hidden shadow flex  flex-col items-center"
+                  className="bg-white rounded-lg overflow-hidden shadow w-full max-w-sm mb-4 p-3"
                 >
-                  <Skeleton height={200} width={300} />
-                  <div className="p-3">
-                    <Skeleton width={300} />
-                    <div className="flex items-center justify-around">
+                  <Skeleton height={200} width="100%" />
+                  <div className="mt-3">
+                    <Skeleton width="100%" />
+                    <div className="flex items-center gap-2 my-2">
                       <Skeleton width={30} height={30} circle />
-                      <Skeleton width={250} />
+                      <Skeleton width="calc(100% - 40px)" />
                     </div>
-                    <Skeleton width={300} />
+                    <Skeleton width="100%" />
                   </div>
                 </div>
               ))
           : Array.isArray(likeData.data) &&
-          likeData.data.map((video) => video === undefined || video === null ?"" : <VideoCard key={video?._id} video={video} />)}
+            likeData.data.map((video) => (
+              video === undefined || video === null 
+              ? null 
+              : (
+                <div key={video?._id} className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] xl:w-[calc(33.333%-11px)]">
+                  <VideoCard video={video} />
+                </div>
+              )
+            ))}
       </div>
     </div>
   );
