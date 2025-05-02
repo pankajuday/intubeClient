@@ -1,7 +1,14 @@
 import likeReducer, { likeToggleSlice, likedVideoSlice } from "./Slices/Like";
-import videoReducer, { fetchAllVideos, fetchVideoById, fetchDeleteVideoById,fetchPostVideo, fetchUpdateVideoById } from "./Slices/Video";
+import videoReducer, { 
+  fetchAllVideos, 
+  fetchVideoById, 
+  fetchDeleteVideoById,
+  fetchPostVideo, 
+  fetchUpdateVideoById,
+  fetchRelatedVideos 
+} from "./Slices/Video";
 import authReducer, { fetchLogin, fetchLogout, fetchSignUp, resetAuthState } from "./Slices/Auth";
-import commentReducer, { fetchCommentsOnVideo } from "./Slices/Comment";
+import commentReducer, { fetchCommentsOnVideo, createVideoComment,fetchLikeOnComment,fetchToggleLikeOnComment } from "./Slices/Comment";
 import historyReducer, { fetchHistoryDetail } from "./Slices/History";
 import userReducer, { fetchUserDetail } from "./Slices/User";
 import dashboardReducer, { fetchAllChannelVideos } from "./Slices/Dashboard";
@@ -22,13 +29,17 @@ export {
   likedVideoSlice,
   fetchAllVideos,
   fetchVideoById,
-  fetchDeleteVideoById,fetchPostVideo, fetchUpdateVideoById,
+  fetchRelatedVideos,
+  fetchDeleteVideoById,
+  fetchPostVideo,
+  fetchUpdateVideoById,
   fetchLogin,
   fetchLogout,
   likeReducer,
   videoReducer,
   authReducer,
   fetchCommentsOnVideo,
+  createVideoComment,fetchLikeOnComment,fetchToggleLikeOnComment,
   commentReducer,
   historyReducer,
   fetchHistoryDetail,
@@ -45,5 +56,5 @@ export {
   fetchGetPlaylistById,
   fetchUpdatePlaylistById,
   subscriptionReducer, fetchChannelSubscribers, fetchSubscribedChannels, fetchToggleSubscription,
-  channelReducer, fetchChannelDetail,fetchSignUp, resetAuthState
+  channelReducer, fetchChannelDetail,fetchSignUp, resetAuthState,
 };

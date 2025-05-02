@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogin } from "@/Redux/Slices/Auth";
 import SpringLoader from "./SpringLoader";
+import CookiePermission from "./Permission/CookiePermission";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,6 +41,9 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">
+      {/* Cookie permission notification - will only show when third-party cookies are blocked */}
+      <CookiePermission />
+
       {authIsLoading ? (
         <div className="absolute flex justify-center items-center bg-slate-950 opacity-50 h-full w-full">
           <SpringLoader />

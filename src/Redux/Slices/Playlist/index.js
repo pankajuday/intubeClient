@@ -14,7 +14,7 @@ export const fetchUserPlaylist = createAsyncThunk(
   async (userId, thunkApi) => {
     try {
       const response = await userPlaylist(userId);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -23,10 +23,10 @@ export const fetchUserPlaylist = createAsyncThunk(
 
 export const fetchCreatePlaylist = createAsyncThunk(
   "playlist/create",
-  async (_, thunkApi) => {
+  async (data, thunkApi) => {
     try {
-      const response = await createPlaylist();
-      return response;
+      const response = await createPlaylist(data);
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -38,7 +38,7 @@ export const fetchAddVideoOnPlaylist = createAsyncThunk(
   async (videoId, playlistId, thunkApi) => {
     try {
       const response = await addVideoOnPlaylist(videoId, playlistId);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -49,7 +49,7 @@ export const fetchRemoveVideoFromPlaylist = createAsyncThunk(
   async (videoId, playlistId, thunkApi) => {
     try {
       const response = await removeVideoFromPlaylist(videoId, playlistId);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -61,7 +61,7 @@ export const fetchUpdatePlaylistById = createAsyncThunk(
   async (playlistId, thunkApi) => {
     try {
       const response = await updatePlaylistById(playlistId);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -73,7 +73,7 @@ export const fetchDeletePlaylistById = createAsyncThunk(
   async (playlistId, thunkApi) => {
     try {
       const response = await deletePlaylistById(playlistId);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -85,7 +85,7 @@ export const fetchGetPlaylistById = createAsyncThunk(
   async (playlistId, thunkApi) => {
     try {
       const response = await getPlaylistById(playlistId);
-      return response;
+      return response.data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
@@ -101,7 +101,7 @@ const playlistSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      
+
       .addCase(fetchUserPlaylist.pending, (state) => {
         state.playlistIsLoading = true;
       })
@@ -114,20 +114,16 @@ const playlistSlice = createSlice({
         state.playlistError = action.payload;
       })
 
-
-      
       .addCase(fetchCreatePlaylist.pending, (state) => {
         state.playlistIsLoading = true;
       })
       .addCase(fetchCreatePlaylist.fulfilled, (state, action) => {
         state.playlistIsLoading = false;
-        state.playlistData = action.payload;
       })
       .addCase(fetchCreatePlaylist.rejected, (state, action) => {
         state.playlistIsLoading = false;
         state.error = action.payload;
       })
-
 
       .addCase(fetchAddVideoOnPlaylist.pending, (state) => {
         state.playlistIsLoading = true;
@@ -141,7 +137,6 @@ const playlistSlice = createSlice({
         state.error = action.payload;
       })
 
-
       .addCase(fetchRemoveVideoFromPlaylist.pending, (state) => {
         state.playlistIsLoading = true;
       })
@@ -153,7 +148,6 @@ const playlistSlice = createSlice({
         state.playlistIsLoading = false;
         state.error = action.payload;
       })
-
 
       .addCase(fetchUpdatePlaylistById.pending, (state) => {
         state.playlistIsLoading = true;
@@ -167,7 +161,6 @@ const playlistSlice = createSlice({
         state.error = action.payload;
       })
 
-
       .addCase(fetchDeletePlaylistById.pending, (state) => {
         state.playlistIsLoading = true;
       })
@@ -180,7 +173,6 @@ const playlistSlice = createSlice({
         state.error = action.payload;
       })
 
-
       .addCase(fetchGetPlaylistById.pending, (state) => {
         state.playlistIsLoading = true;
       })
@@ -191,10 +183,7 @@ const playlistSlice = createSlice({
       .addCase(fetchGetPlaylistById.rejected, (state, action) => {
         state.playlistIsLoading = false;
         state.error = action.payload;
-      })
-
-
-
+      });
   },
 });
 

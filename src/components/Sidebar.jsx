@@ -1,159 +1,242 @@
-import { Link, NavLink } from "react-router-dom";
-import "../App.css"
-import logo from "../assets/logo.png";
-import {
-  Home,
-  LayoutDashboard,
-  Clock,
-  ThumbsUp,
-  Library,
-  Users,
-  Tv,
-} from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchChannelSubscribers,
-  fetchSubscribedChannels,
-  fetchUserDetail,
-} from "@/Redux";
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { 
+  HomeIcon, 
+  ClockIcon, 
+  ThumbsUpIcon, 
+  ListVideoIcon, 
+  UsersIcon, 
+  Settings,
+  LogOutIcon
+} from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import SpringLoader from "./SpringLoader";
-
-const getRandomColor = () => {
-  const colors = [
-    "bg-red-500",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-orange-500",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
-};
+import { fetchUserDetail } from "../Redux/Slices/User";
+import { fetchSubscribedChannels } from "../Redux/Slices/Subscription";
+import { getRandomColor } from "@/lib/utils";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const { userDetail, isLoading } = useSelector((state) => state.user);
+  const { subscribedChannels, subscriptionIsLoading, subscriptionError } = useSelector((state) => state.subscription);
+  const [isOpen, setIsOpen] = useState(false);
   const [fallbackColor, setFallbackColor] = useState("");
 
-  const dispatch = useDispatch();
-  const { subscribedChannels, subscriptionIsLoading, subscriptionError } =
-    useSelector((state) => state.subscription);
-  const { userDetail, isLoading } = useSelector((state) => state.user);
+  // Listen for toggle sidebar events from Navbar component
+  useEffect(() => {
+    const handleToggleSidebar = () => {
+      setIsOpen(prev => !prev);
+    };
 
+    document.addEventListener('toggleSidebar', handleToggleSidebar);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('toggleSidebar', handleToggleSidebar);
+    };
+  });
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Only run this in mobile view
+      if (window.innerWidth >= 768) return;
+      
+      // Check if click is outside sidebar
+      if (isOpen && !e.target.closest('#sidebar') && !e.target.closest('[aria-label="Toggle menu"]')) {
+        setIsOpen(false);
+      }
+    };
+
+    // Listen for clicks on the document
+    document.addEventListener('click', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Handle window resize - automatically open sidebar on larger screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    };
+
+    // Set initial state
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Fetch user details
   useEffect(() => {
     dispatch(fetchUserDetail());
   }, [dispatch]);
 
+  // Fetch subscribed channels when user detail is available
   useEffect(() => {
-    if (userDetail?._id ) {
+    if (userDetail?._id) {
       dispatch(fetchSubscribedChannels(userDetail?._id));
       setFallbackColor(getRandomColor());
       console.log("Fetching subscribed channels...");
     }
-  }, [ userDetail, dispatch]);
-
-
-
+  }, [userDetail, dispatch]);
 
   const menuItems = [
-    { name: "Home", icon: Home, path: "/" },
-    // { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    // { name: "Subscriptions", icon: Tv, path: "/subscriptions" },
-    { name: "History", icon: Clock, path: "/history" },
-    { name: "Liked Videos", icon: ThumbsUp, path: "/likedvideos" },
-    { name: "Playlists", icon: Library, path: "/playlists" },
+    { icon: <HomeIcon size={20} />, text: "Home", to: "/" },
+    { icon: <ClockIcon size={20} />, text: "History", to: "/history" },
+    { icon: <ThumbsUpIcon size={20} />, text: "Liked Videos", to: "/likedvideos" },
+    { icon: <ListVideoIcon size={20} />, text: "Playlists", to: "/playlists" },
   ];
 
-
   return (
-    <div className="w-64 fixed left-0 top-0 h-full bg-white shadow-lg z-50  items-center hidden sm:block">
-      {/* Logo Section */}
+    <>
+      {/* Mobile Overlay - only visible when sidebar is open on mobile */}
+      {isOpen && window.innerWidth < 768 && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden" 
+          onClick={() => setIsOpen(false)} 
+          aria-hidden="true"
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside 
+        id="sidebar"
+        className={`fixed left-0 top-16 bottom-0 z-40 w-64 bg-white shadow-lg transition-transform duration-200 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        } md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:z-0 md:shadow-none overflow-y-auto`}
+      >
+        <div className="py-4 px-2 h-full flex flex-col">
+          {/* Navigation Links */}
+          <nav className="space-y-1 mb-6">
+            {menuItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                    isActive
+                      ? "bg-gray-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`
+                }
+                onClick={() => {
+                  // Close sidebar on mobile after navigation
+                  if (window.innerWidth < 768) {
+                    setIsOpen(false);
+                  }
+                }}
+              >
+                <span className="mr-3">{item.icon}</span>
+                {item.text}
+              </NavLink>
+            ))}
+          </nav>
 
-      <div className="flex items-center space-x-4 justify-center ">
-        <Link to="/" className="flex items-center space-x-2">
-          {/* Replace with your logo */}
-          {/* <svg
-            className="h-14 w-14 text-red-600"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect width="24" height="16" x="0" y="4" rx="4" fill="red" />
-            <text
-              x="12"
-              y="14"
-              font-size="5"
-              font-weight="bold"
-              fill="white"
-              text-anchor="middle"
-              font-family="Arial"
-            >
-              InTube
-            </text>
-          </svg> */}
-
-          <img src={logo} alt="" className="h-10 w-40 m-2" />
-          {/* <span className="text-xl font-bold text-gray-900">InTube</span> */}
-        </Link>
-      </div>
-
-      {/* Main Menu */}
-      <div className="p-4">
-        <nav className="space-y-1">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 text-blue-600" : "text-gray-700"
-                }`
-              }
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="text-sm font-medium">{item.name}</span>
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* Subscriptions Section */}
-        <div className="mt-6 pt-4 border-t">
-          <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase mb-2">
-            Subscriptions
-          </h3>
-          <div className="space-y-1 h-96 w-full  overflow-y-scroll relative scrollbar-custom">
-            {subscriptionIsLoading  ? (
-              <SpringLoader />
-            ): subscribedChannels?.length === 0 ? (
-              <p className="text-gray-500 text-sm text-center mt-4">
-                You haven't subscribed to any channels yet.
-              </p>
-            )  : (
-              subscribedChannels?.map((channel) => (
-                <NavLink key={channel?._id} to={`/profile/${channel?.username}`}>
-                  <button className="flex items-center space-x-3 p-2 w-full rounded-lg hover:bg-gray-100 text-gray-700 ">
-                    <Avatar>
-                      <AvatarImage src={channel?.avatar} />
-                      <AvatarFallback
-                        className={`${fallbackColor} text-white text-3xl text-center font-bold`}
-                      >
-                        {channel?.username[0].toUpperCase()}
+          {/* Subscriptions Section */}
+          <div className="mt-2 mb-2">
+            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              SUBSCRIPTIONS
+            </h3>
+            
+            <div className="mt-2 space-y-1 max-h-64 overflow-y-auto">
+              {subscribedChannels && subscribedChannels.length > 0 ? (
+                subscribedChannels.map((subscription) => (
+                  <NavLink
+                    key={subscription?._id}
+                    to={`/profile/${subscription?.username}`}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-2 text-sm font-medium rounded-lg ${
+                        isActive
+                          ? "bg-gray-100 text-blue-600"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`
+                    }
+                    onClick={() => {
+                      if (window.innerWidth < 768) {
+                        setIsOpen(false);
+                      }
+                    }}
+                  >
+                    <Avatar className="h-6 w-6 mr-3">
+                      <AvatarImage src={subscription?.avatar} />
+                      <AvatarFallback>
+                        {subscription?.username?.charAt(0)?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-
-                    <span className="text-sm font-bold">
-                      {channel?.fullName}
-                    </span>
-                  </button>
-                </NavLink>
-                
-              ))
-            )}
+                    <span className="truncate">{subscription?.fullName}</span>
+                  </NavLink>
+                ))
+              ) : (
+                <p className="px-4 py-2 text-sm text-gray-500 italic">
+                  No subscriptions yet
+                </p>
+              )}
+            </div>
           </div>
+
+          {/* Footer Section */}
+          {userDetail && (
+            <div className="mt-auto border-t border-gray-200 pt-4">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                    isActive
+                      ? "bg-gray-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`
+                }
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    setIsOpen(false);
+                  }
+                }}
+              >
+                <span className="mr-3">
+                  <UsersIcon size={20} />
+                </span>
+                Your Channel
+              </NavLink>
+            </div>
+          )}
+
+          {userDetail && (
+            <div className="border-t border-gray-200 mt-2">
+              <NavLink
+                to="/logout"
+                className={({ isActive }) =>
+                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                    isActive
+                      ? "bg-gray-100 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`
+                }
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    setIsOpen(false);
+                  }
+                }}
+              >
+                <span className="mr-3">
+                  <LogOutIcon size={20} />
+                </span>
+                Logout
+              </NavLink>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 };
 

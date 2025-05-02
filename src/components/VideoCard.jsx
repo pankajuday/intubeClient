@@ -3,19 +3,7 @@ import { Link } from "react-router-dom";
 import { CardContent, Card, CardTitle } from "./ui/card";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-
-const getRandomColor = () => {
-  const colors = [
-    "bg-red-500",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-orange-500",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
-};
+import { formatDate, getRandomColor } from "@/lib/utils";
 
 const VideoCard = ({ video }) => {
   const [fallbackColor, setFallbackColor] = useState("");
@@ -24,55 +12,57 @@ const VideoCard = ({ video }) => {
     setFallbackColor(getRandomColor()); // Set random color on mount
   }, []);
 
+  // Format duration for display
+  const formatDuration = (seconds) => {
+    if (!seconds) return "00:00";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+  };
+
   return (
-    <div>
-     
+    <Card className="w-full h-full rounded-sm shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105">
+      <Link to={`/video/${video?._id}`} className="block">
+        {/* Video thumbnail */}
+        <AspectRatio ratio={16 / 9} className="w-full bg-slate-700">
+          <img
+            src={video?.thumbnail}
+            alt={video?.title}
+            className="rounded-sm object-cover w-full h-full"
+          />
+          {/* Video duration */}
+          {video?.duration && (
+            <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+              {formatDuration(video?.duration)}
+            </span>
+          )}
+        </AspectRatio>
+        <CardContent className="flex gap-3 p-2">
+          <Avatar className="h-8 w-8 flex-shrink-0">
+            <AvatarImage src={video?.avatar} />
+            <AvatarFallback className={`${fallbackColor} text-white text-center font-bold`}>
+              {video?.owner?.[0]?.toUpperCase() || "V"}
+            </AvatarFallback>
+          </Avatar>
 
-      <Card className="w-96 h-72 min-h-42 min-w-60 grid rounded-sm shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105 ">
-        <Link to={`/video/${video?._id}`} className="block">
-          {/* video thumbnail */}
-          <AspectRatio ratio={16 / 8} className="w-full h-48  object-cover bg-slate-700 ">
-            <img
-              src={video?.thumbnail}
-              alt={video?.title}
-              className="rounded-sm object-cover w-full h-full"
-            />
-            {/* video duration */}
-            {video?.duration && (
-              <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-                {(video?.duration / 60).toFixed(2)}
-              </span>
-            )}
-          </AspectRatio>
-          <CardContent className="flex gap-3 p-2  ">
-            <Avatar>
-              <AvatarImage src={video?.avatar} />
-              <AvatarFallback className={`${fallbackColor} text-white text-3xl text-center font-bold`}>
-                {video?.owner[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-
-            {/* Video Details */}
-            <div>
-            <CardTitle className="text-sm font-semibold leading-tight h-10">
-                {video?.title}
+          {/* Video Details */}
+          <div className="w-full">
+            <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 mb-1">
+              {video?.title}
             </CardTitle>
 
-            <p className="text-gray-400 text-sm flex items-center gap-1 h-5">
+            <p className="text-gray-400 text-xs flex items-center gap-1">
               {video?.owner}
             </p>
-            <div className="flex space-x-2 h-5">
-            <p className="text-gray-500 text-xs">{video?.views} {"views"}</p>
-            <span className="text-gray-500 text-xs">•</span>
-            <p className="text-gray-500 text-xs">{video?.createdAt}</p>
+            <div className="flex space-x-2">
+              <p className="text-gray-500 text-xs">{video?.views || 0} views</p>
+              <span className="text-gray-500 text-xs">•</span>
+              <p className="text-gray-500 text-xs">{formatDate(video?.createdAt)}</p>
             </div>
-            </div>
-            
-            
-          </CardContent>
-        </Link>
-      </Card>
-    </div>
+          </div>
+        </CardContent>
+      </Link>
+    </Card>
   );
 };
 

@@ -1,120 +1,154 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Search, Plus, Video, Bell, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+import logo from "../assets/logo.png";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { BellIcon, MenuIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserDetail } from "@/Redux";
+import { useEffect, useState } from "react";
+import { getRandomColor } from "@/lib/utils";
 
 const Navbar = () => {
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [fallbackColor, setFallbackColor] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userDetail, isLoading } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(fetchUserDetail());
+    dispatch(fetchUserDetail());
+    setFallbackColor(getRandomColor());
+  }, [dispatch]);
+  
+
+  const handleToggleSidebar = () => {
+    // Use a custom event to communicate with the Sidebar component
+    const event = new CustomEvent('toggleSidebar');
+    document.dispatchEvent(event);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/videos?query=${searchTerm}`);
+      setSearchTerm("");
+      setShowMobileSearch(false);
+    }
+  };
+
+  // Handle mobile search toggle
+  const toggleMobileSearch = () => {
+    setShowMobileSearch(!showMobileSearch);
+  };
 
   return (
-    <nav className="fixed top-0 w-[84%] bg-white shadow-sm z-50  right-0">
-      {/* <div className=" h-10 w-full bg-slate-950 text-cyan-500 z-50 text-center items-center justify-center">
-      🔧 This site is currently under development. Some features may not work as expected. Stay tuned for updates! 🚀
-      </div> */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Left Section - Logo and Menu */}
-          {/* <div className="flex items-center space-x-4">
-            <Link to="/" className="flex items-center space-x-2">
-              Replace with your logo
-              <svg
-                className="h-14 w-14 text-red-600"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="24" height="16" x="0" y="4" rx="4" fill="red" />
-                <text
-                  x="12"
-                  y="14"
-                  font-size="5"
-                  font-weight="bold"
-                  fill="white"
-                  text-anchor="middle"
-                  font-family="Arial"
-                >
-                  InTube
-                </text>
-              </svg>
+    <header className="fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-50 flex items-center justify-between px-4">
+      {/* Left Section: Logo and sidebar toggle */}
+      <div className="flex items-center">
+        {/* Mobile menu toggle button */}
+        <button 
+          className="mr-3 p-2 rounded-full hover:bg-gray-100 sm:hidden" 
+          onClick={handleToggleSidebar}
+          aria-label="Toggle menu"
+        >
+          <MenuIcon className="h-6 w-6" />
+        </button>
 
-              <span className="text-xl font-bold text-gray-900">InTube</span>
-            </Link>
-          </div> */}
+        {/* Logo - hidden when mobile search is active */}
+        <Link to="/" className={`flex items-center ${showMobileSearch ? 'hidden sm:flex' : ''} hidden md:block `}>
+          <img src={logo} alt="Pin Tube Logo" className="h-8 w-auto " />
+        </Link>
+      </div>
 
-          {/* Center Section - Search Bar */}
-          <div className="flex-1 max-w-2xl mx-4">
-            <div className="relative flex items-center">
-              <input
-                type="text"
-                placeholder="Search videos..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className="absolute right-3 p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-                <Search className="h-5 w-5 text-gray-600" />
-              </button>
-            </div>
+      {/* Center Section: Search (responsive) */}
+      <div className={`flex-1 max-w-2xl mx-4 ${showMobileSearch ? 'flex' : 'hidden sm:flex'}`}>
+        <form onSubmit={handleSearch} className="relative w-full">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+            className="w-full h-10 pl-4 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <button
+            type="submit"
+            className="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100"
+          >
+            <SearchIcon className="h-5 w-5 text-gray-500" />
+          </button>
+        </form>
+      </div>
+
+      {/* Right Section: Actions and Profile (conditionally rendered) */}
+      <div className="flex items-center space-x-2">
+        {/* Mobile search toggle button - visible only on mobile when search is not active */}
+        <button
+          className={`p-2 rounded-full hover:bg-gray-100 sm:hidden ${showMobileSearch ? 'hidden' : ''}`}
+          onClick={toggleMobileSearch}
+          aria-label="Search"
+        >
+          <SearchIcon className="h-6 w-6" />
+        </button>
+        
+        {/* Close search button - only on mobile when search is active */}
+        {showMobileSearch && (
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 sm:hidden"
+            onClick={toggleMobileSearch}
+            aria-label="Close search"
+          >
+            <span className="text-xl font-bold">&times;</span>
+          </button>
+        )}
+
+        {/* Create button - hidden on mobile when search is active */}
+        <Link 
+          to="/publish-video"
+          className={`${showMobileSearch ? 'hidden sm:flex' : ''}`}
+        >
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <PlusIcon className="h-5 w-5" />
+          </Button>
+        </Link>
+
+        {/* Notifications - hidden on mobile when search is active */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className={`rounded-full ${showMobileSearch ? 'hidden sm:flex' : ''}`}
+        >
+          <div className="relative">
+            <BellIcon className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              0
+            </span>
           </div>
+        </Button>
 
-          {/* Right Section - Actions and Profile */}
-          <div className="flex items-center space-x-4">
-            <Link to={"/publish-video"}>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Plus className="h-6 w-6 text-gray-700" />
-            </button>
+        {/* Profile - hidden on mobile when search is active */}
+        <div className={`${showMobileSearch ? 'hidden sm:block' : ''}`}>
+          {userDetail ? (
+            <Link to="/profile">
+              <Avatar>
+                <AvatarImage src={userDetail?.avatar} alt={userDetail?.fullName} />
+                
+                <AvatarFallback className={`${fallbackColor} text-white`}>
+                    {userDetail?.fullName?.[0]?.toUpperCase() || "?"}
+                  </AvatarFallback>
+              </Avatar>
             </Link>
-
-            {/* <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Video className="h-6 w-6 text-gray-700" />
-            </button> */}
-
-            <button className="p-2 hover:bg-gray-100 rounded-full relative">
-              <Bell className="h-6 w-6 text-gray-700" />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0
-                {/* TODO : WRITE HERE CODE FOR CALCULATE AND SHOW NOTIFICATION ON NOTIFICATION BUTTON ON NAVIGATION BAR */}
-              </span>
-            </button>
-
-            {/* Profile Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center space-x-2 hover:bg-gray-100 p-2 rounded-full"
-              >
-                <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <User className="h-5 w-5 text-gray-600" />
-                </div>
-              </button>
-
-              {/* Dropdown Menu */}
-              {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-xl py-2">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Your Profile
-                  </Link>
-                  {/* <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Settings
-                  </Link> */}
-                  <Link
-                    to="/logout"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-t border-gray-100"
-                  >
-                    Sign Out
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
+          ) : (
+            <Link to="/login">
+              <Button size="sm" variant="outline">
+                Sign In
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

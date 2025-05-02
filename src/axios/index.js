@@ -7,7 +7,13 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    if (config.url.includes("/users/register")) {
+    const multipartEndpoints = [
+      "/users/register",
+      "/videos",
+    ];
+
+    
+    if (multipartEndpoints.some(endpoint => config.url.includes(endpoint))) {
       config.headers["Content-Type"] = "multipart/form-data";
     } else {
       config.headers["Content-Type"] = "application/json";
@@ -28,11 +34,23 @@ axiosInstance.interceptors.response.use(
       window.location.href = "/login";
     }
     if (error.response && error.response.status === 404) {
-      window.location.href = "/not-found";
+      console.log(error)
+      // window.location.href = "/not-found";
     }
     return Promise.reject(error);
   }
 );
+
+// Health Check
+
+export const healthCheck = async ()=>{
+  try {
+    const response = await axiosInstance.get('/healthcheck');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 // Video
 export const getAllVideos = async (page) => {
@@ -41,6 +59,27 @@ export const getAllVideos = async (page) => {
     return response.data;
   } catch (error) {
     return error;
+  }
+};
+
+export const getVideosBySearch = async (query = "", page = 1, sortBy = "createdAt", sortType = "desc") => {
+  try {
+    
+    const queryParams = new URLSearchParams({
+      page,
+      sortBy,
+      sortType,
+    });
+    
+    // Only add query parameter if it exists
+    if (query) {
+      queryParams.append("query", query);
+    }
+    
+    const response = await axiosInstance.get(`/videos?${queryParams}`);
+    return response.data;
+  } catch (error) {
+    throw error; 
   }
 };
 
@@ -86,8 +125,6 @@ export const updateVideoById = async (videoId) => {
   }
 };
 
-
-
 // Auth
 export const isLogin = async () => {
   try {
@@ -99,7 +136,7 @@ export const isLogin = async () => {
 };
 
 export const signUp = async (data) => {
-  console.log(data);
+  
   try {
     const response = await axiosInstance.post("/users/register", data);
     return response.data;
@@ -176,6 +213,38 @@ export const getAllCommentsOnVideo = async (videoId) => {
     return error.message;
   }
 };
+export const createComment = async (videoId, data) => {
+  try {
+    const response = await axiosInstance.post(`/comments/${videoId}`, data);
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const getLikedComment = async (commentId)=>{
+  try {
+    const response = await axiosInstance.get(`/likes/comment/${commentId}`);
+    
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+}
+
+export const likeToggleOnComment = async(commentId)=>{
+  try {
+    const response = await axiosInstance.post(`/likes/toggle/c/${commentId}`);
+    return response.data;
+  } catch (error) {
+     return error.message;
+  }
+}
+
+
+
+
+// USER
 
 export const userDetail = async () => {
   try {
@@ -186,9 +255,9 @@ export const userDetail = async () => {
   }
 };
 
-export const channelVideos = async () => {
+export const channelVideos = async (username) => {
   try {
-    const response = await axiosInstance.get("/dashboard/videos");
+    const response = await axiosInstance.get(`/dashboard/videos/${username}`);
     return response.data;
   } catch (error) {
     return error;
@@ -199,7 +268,7 @@ export const channelVideos = async () => {
 
 export const createPlaylist = async (data) => {
   try {
-    const response = await axiosInstance.post(`/`, data);
+    const response = await axiosInstance.post(`/playlist`, data);
     return response.data;
   } catch (error) {
     return error;
@@ -295,6 +364,5 @@ export const getChannel = async (username) => {
     return error;
   }
 };
-
 
 export default axiosInstance;

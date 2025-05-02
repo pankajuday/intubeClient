@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { channelVideos } from "@/axios";
 
-export const  fetchAllChannelVideos = createAsyncThunk("deshboard/fetchAllChannelVideos", async (_,thunkApi)=>{
+export const  fetchAllChannelVideos = createAsyncThunk("deshboard/fetchAllChannelVideos", async (username,thunkApi)=>{
     try {
-        const response = await channelVideos();
+        const response = await channelVideos(username);
         return response.data;
     } catch (error) {
         thunkApi.rejectWithValue(error.message)
@@ -14,21 +14,21 @@ const deshboardSlice = createSlice({
     name:"deshboard",
     initialState:{
         dashboardData :[],
-        isLoading:false,
-        error:null
+        dashboardLoading:false,
+        dashboardError:null
     },
     extraReducers:(builder)=>{
         builder
         .addCase(fetchAllChannelVideos.pending, (state)=>{
-            state.isLoading = true
+            state.dashboardLoading = true
         })
         .addCase(fetchAllChannelVideos.fulfilled, (state,action)=>{
-            state.isLoading = false
+            state.dashboardLoading = false
             state.dashboardData = action.payload;
         })
         .addCase(fetchAllChannelVideos.rejected, (state, action)=>{
-            state.isLoading = false
-            state.error = action.payload
+            state.dashboardLoading = false
+            state.dashboardError = action.payload
 
         })
     }

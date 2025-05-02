@@ -25,7 +25,14 @@ import NoInternetConnected from "./Error/NoInternetConnected";
 import { useEffect, useState } from "react";
 import ChannelProfile from "./components/ChannelProfile";
 import PublishVideo from "./components/PublishVideo";
-import CookiePermission from './components/Permission/cookies.permission';
+import CookiePermission from './components/Permission/CookiePermission';
+import ShareCard from './components/ShareCard';
+import SpringLoader from './components/SpringLoader';
+import VideoCommentCard from './components/VideoCommentCard';
+import VideoComments from './components/VideoComments';
+import PlaylistCreate from './components/PlaylistCreate';
+import PlaylistVideo from './components/PlaylistVideo';
+import HealthCheck from './components/HealthCheck';
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -44,15 +51,11 @@ const MainLayout = () => {
   }, []);
 
   return (
-    <div className="flex w-full flex-col min-h-screen items-center">
-      <div className="right-0">
-        <Navbar />
-      </div>
-      <div className="">
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <div className="flex flex-1 "> {/* Add padding for navbar */}
         <Sidebar />
-      </div>
-      <div className="flex flex-1">
-        <main className=" sm:ml-64 p-6 flex relative">
+        <main className="w-full pl-0 sm:pl-64 py-4 px-0 md:px-6 transition-all duration-300 justify-center ">
           {isOnline ? <Outlet /> : <NoInternetConnected />}
         </main>
       </div>
@@ -62,29 +65,36 @@ const MainLayout = () => {
 
 function App() {
   return (
-    <div className="App">
-      <Router>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<VideoList />} />
-            <Route path="/video/:videoId" element={<VideoPlayerPage />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/likedvideos" element={<LikedVideo />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/playlists" element={<Playlist />} />
-            <Route path="/error" element={<ErrorPage />} />
-            <Route path="/not-found" element={<NotFound />}/>
-            <Route path="/profile/:username" element={<ChannelProfile/>} />
-            <Route path="/publish-video" element={<PublishVideo />} />
-          </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/test" element={<Test/>} />
-        </Routes>
-      </Router>
-      <CookiePermission />
-    </div>
+    <>
+      {/* CookiePermission component can be uncommented when needed */}
+      {/* <CookiePermission /> */}
+      
+      <div className="App">
+        <Router>
+          <Routes>
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<VideoList />} />
+              <Route path="/video/:videoId" element={<VideoPlayerPage />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/likedvideos" element={<LikedVideo />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/playlists" element={<Playlist />} />
+              <Route path="/error" element={<ErrorPage />} />
+              <Route path="/not-found" element={<NotFound />}/>
+              <Route path="/profile/:username" element={<ChannelProfile/>} />
+              <Route path="/publish-video" element={<PublishVideo />} />
+              <Route path='/plylist/:playlistId' element={<PlaylistVideo/>}/>
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path='/test' element={<PlaylistVideo />}/>
+            <Route path='/healthcheck' element={<HealthCheck />}/>
+          </Routes>
+        </Router>
+      </div>
+    </>
   );
 }
 

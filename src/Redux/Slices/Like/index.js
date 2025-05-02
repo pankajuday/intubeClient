@@ -23,8 +23,8 @@ const likeSlice = createSlice({
     name:"like",
     initialState:{
         likeData:[],
-        isLoading:false,
-        error:null
+        likeLoading:false,
+        likeError:null
     },
     extraReducers:(builder)=>{
             builder
