@@ -5,13 +5,61 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+// Check if we're running in a browser that needs special handling
+const isMobileBrowser = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
+// Detect browser type for specific compatibility handling
+const getBrowserType = () => {
+  const userAgent = navigator.userAgent;
+  if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Brave") === -1) {
+    return "chrome";
+  } else if (userAgent.indexOf("Brave") > -1) {
+    return "brave";
+  } else if (userAgent.indexOf("Safari") > -1) {
+    return "safari";
+  } else if (userAgent.indexOf("Firefox") > -1) {
+    return "firefox";
+  }
+  return "other";
+};
+
+// Add token to localStorage backup if supported
+const backupAuthToken = (token) => {
+  try {
+    if (token) {
+      localStorage.setItem("authBackupToken", token);
+    }
+  } catch (e) {
+    console.warn("localStorage not available for token backup");
+  }
+};
+
+// Get backup token if cookies fail
+const getBackupToken = () => {
+  try {
+    return localStorage.getItem("authBackupToken");
+  } catch (e) {
+    return null;
+  }
+};
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const multipartEndpoints = [
       "/users/register",
       "/videos",
     ];
-
+    
+    // Add specific cookie handling for Chrome
+    const browserType = getBrowserType();
+    if ((browserType === "chrome" || isMobileBrowser()) && config.url !== "/users/login") {
+      const backupToken = getBackupToken();
+      if (backupToken) {
+        config.headers["Authorization"] = `Bearer ${backupToken}`;
+      }
+    }
     
     if (multipartEndpoints.some(endpoint => config.url.includes(endpoint))) {
       config.headers["Content-Type"] = "multipart/form-data";
@@ -27,14 +75,46 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
+    // Check for authentication token in response headers
+    const authToken = response.headers?.authorization || 
+                      response.headers?.["x-auth-token"] || 
+                      response.headers?.["access-token"];
+    
+    if (authToken) {
+      backupAuthToken(authToken);
+    }
+    
+    // If this was a successful login, check for token in response body as fallback
+    if (response.config.url === "/users/login" && response.data?.token) {
+      backupAuthToken(response.data.token);
+    }
+    
     return response;
   },
   (error) => {
+    // Handle 401 errors with a more browser-compatible approach
     if (error.response && error.response.status === 401) {
-      window.location.href = "/login";
+      // Clear backup token
+      try {
+        localStorage.removeItem("authBackupToken");
+      } catch (e) {
+        console.warn("Could not clear localStorage token");
+      }
+      
+      // Don't redirect immediately for API calls that expect 401 responses
+      const isApiCall = error.config.url.includes("/api/") || 
+                        error.config.headers["Accept"] === "application/json";
+      
+      if (!isApiCall) {
+        // Use a more compatible way to navigate
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+      }
     }
+    
     if (error.response && error.response.status === 404) {
-      console.log(error)
+      console.log(error);
       // window.location.href = "/not-found";
     }
     return Promise.reject(error);
@@ -43,7 +123,7 @@ axiosInstance.interceptors.response.use(
 
 // Health Check
 
-export const healthCheck = async ()=>{
+export const healthCheck = async ()=> {
   try {
     const response = await axiosInstance.get('/healthcheck');
     return response.data;
@@ -82,11 +162,6 @@ export const getVideosBySearch = async (query = "", page = 1, sortBy = "createdA
     throw error; 
   }
 };
-
-// export const getVideoDetails = async (videoId) => {
-//   const response = await axiosInstance.get(`/videos/${videoId}`);
-//   return response.data;
-// };
 
 export const getVideoById = async (videoId) => {
   try {
@@ -222,7 +297,7 @@ export const createComment = async (videoId, data) => {
   }
 };
 
-export const getLikedComment = async (commentId)=>{
+export const getLikedComment = async (commentId)=> {
   try {
     const response = await axiosInstance.get(`/likes/comment/${commentId}`);
     
@@ -232,7 +307,7 @@ export const getLikedComment = async (commentId)=>{
   }
 }
 
-export const likeToggleOnComment = async(commentId)=>{
+export const likeToggleOnComment = async(commentId)=> {
   try {
     const response = await axiosInstance.post(`/likes/toggle/c/${commentId}`);
     return response.data;
@@ -240,9 +315,6 @@ export const likeToggleOnComment = async(commentId)=>{
      return error.message;
   }
 }
-
-
-
 
 // USER
 
