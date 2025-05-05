@@ -67,7 +67,7 @@ function App() {
   return (
     <>
       {/* CookiePermission component can be uncommented when needed */}
-      {/* <CookiePermission /> */}
+      <CookiePermission />
       
       <div className="App">
         <Router>
