@@ -5,13 +5,11 @@ const CookiePermission = () => {
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    // Check cookies on mount and periodically
+    
     checkAndSetupCookies();
     
-    // Check again after a short delay for browsers that are slow to handle cookie operations
     const delayedCheck = setTimeout(checkAndSetupCookies, 1000);
     
-    // Periodic check every 30 seconds in case user changes settings
     const intervalCheck = setInterval(checkAndSetupCookies, 30000);
     
     return () => {

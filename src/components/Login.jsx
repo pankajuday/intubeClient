@@ -16,17 +16,6 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  // const onSubmit = async (data) => {
-  //   try {
-  //     alert("Please Wait")
-  //     const response = await loginUser(data)
-  //     navigate("/")
-  //     console.log("Login successful:", response)
-  //   } catch (error) {
-  //     console.error("Error logging in:", error)
-  //     if(error.status === 404) alert("Username not Found ( 404 )")
-  //   }
-  // }
 
   const onSubmit = (data) => {
     try {
