@@ -149,6 +149,9 @@ const videoSlice = createSlice({
       .addCase(fetchRelatedVideos.fulfilled, (state, action) => {
         state.videoLoading = false;
         state.relatedVideos = action.payload;
+        if(state.selectedVideo){
+          state.currentVideoIndex = state.relatedVideos.findIndex((video)=>video._id === state.selectedVideo._id)
+        }
       })
       .addCase(fetchRelatedVideos.rejected, (state, action) => {
         state.videoLoading = false;

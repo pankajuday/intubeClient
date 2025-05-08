@@ -4,6 +4,8 @@ import { CardContent, Card, CardTitle } from "./ui/card";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { formatDate, getRandomColor } from "@/lib/utils";
+import { Dot, MoreHorizontal, MoreVertical } from "lucide-react";
+import { Button } from "./ui/button";
 
 const VideoCard = ({ video }) => {
   const [fallbackColor, setFallbackColor] = useState("");
@@ -56,9 +58,21 @@ const VideoCard = ({ video }) => {
             </p>
             <div className="flex space-x-2">
               <p className="text-gray-500 text-xs">{video?.views || 0} views</p>
-              <span className="text-gray-500 text-xs">•</span>
+              <span className="text-gray-500 text-xs"><Dot size={20}/></span>
               <p className="text-gray-500 text-xs">{formatDate(video?.createdAt)}</p>
             </div>
+          </div>
+          {/* More option button this button will contain some options like share, save in playlist, etc... */}
+          <div className=" w-7 flex justify-center items-center ">
+          <button className="h-full w-full">
+          <MoreVertical height={50}  className="" />
+          </button>
+          </div>
+          {/* more option -> pop up */}
+          <div className="">
+            <li>
+              <ul></ul>
+            </li>
           </div>
         </CardContent>
       </Link>

@@ -17,6 +17,7 @@ import {
   ChevronLeft,
   Ellipsis,
   EllipsisVertical,
+  X,
 } from "lucide-react";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import ReactPlayer from "react-player";
@@ -72,9 +73,12 @@ const VideoPlayer = () => {
 
   const {
     selectedVideo,
+    relatedVideos,
+    currentVideoIndex,
     videoLoading,
     videoError,
   } = useSelector((state) => state.video);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (videoId) {
@@ -109,7 +113,8 @@ const VideoPlayer = () => {
     setIsMuted(!isMuted);
   };
 
-  const handleFullScreen = () => {
+  const handleFullScreen = (e) => {
+    e.preventDefault();
     if (videoRef.current) {
       if (!document.fullscreenElement) {
         videoRef.current.requestFullscreen();
@@ -181,8 +186,26 @@ const VideoPlayer = () => {
     toggleLike();
   }, [likeData, videoId]);
 
+  const handleNextVideo = () => {
+    if (relatedVideos && currentVideoIndex !== undefined && currentVideoIndex < relatedVideos.length - 1) {
+      const nextVideo = relatedVideos[currentVideoIndex + 1];
+      navigate(`/video/${nextVideo._id}`);
+    }
+  };
+
+  const handlePrevVideo = () => {
+    if (relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0) {
+      const prevVideo = relatedVideos[currentVideoIndex - 1];
+      navigate(`/video/${prevVideo._id}`);
+    }
+  };
+
+  const hasNextVideo = relatedVideos && currentVideoIndex !== undefined && currentVideoIndex < relatedVideos.length - 1;
+  const hasPrevVideo = relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0;
+
+
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full max-w-7xl mx-auto overflow-hidden z-0">
       {videoLoading ? (
         <div>
           <Skeleton className="w-full aspect-video" />
@@ -297,10 +320,19 @@ const VideoPlayer = () => {
                     </div>
 
                     {/* Skip buttons */}
-                    <button>
+                    <button
+                    onClick={handlePrevVideo}
+                    disabled={!hasPrevVideo} 
+                    className={!hasPrevVideo ? "opacity-50 cursor-not-allowed" : ""}
+                    >
                       <SkipBack size={20} />
                     </button>
-                    <button>
+                    <button 
+                    onClick={handleNextVideo}
+                    disabled={!hasNextVideo}
+                    className={!hasNextVideo ? "opacity-50 cursor-not-allowed" : ""}
+                  >
+                    
                       <SkipForward size={20} />
                     </button>
                   </div>
@@ -401,17 +433,44 @@ const VideoPlayer = () => {
                   <span className="text-sm">{selectedVideo?.likes}</span>
                 </button>
 
-                <div className="relative ">
-                  <button onClick={() => setIsOpen(!isOpen)}>
+                <div className="relative">
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsOpen(!isOpen);
+                    }}
+                  >
                     <Share size={20} className="hover:text-gray-600" />
                   </button>
+                  
                   {isOpen && (
-                    <div className="absolute bottom-full right-0 mb-2">
-                      <ShareCard videoId={videoId} />
+                    <div 
+                      className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <div 
+                        className="bg-white dark:bg-slate-800 rounded-lg p-4 mx-4 w-full max-w-md"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="font-medium text-lg text-gray-800 dark:text-white">Share Video</h3>
+                          <button 
+                            onClick={() => setIsOpen(false)}
+                            className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                          >
+                            <X/>
+                          </button>
+                        </div>
+                        <ShareCard videoId={videoId} />
+                      </div>
                     </div>
                   )}
                 </div>
-
+                  
                 <button>
                   <Bookmark size={20} className="hover:text-gray-600" />
                 </button>

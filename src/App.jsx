@@ -33,6 +33,7 @@ import VideoComments from './components/VideoComments';
 import PlaylistCreate from './components/PlaylistCreate';
 import PlaylistVideo from './components/PlaylistVideo';
 import HealthCheck from './components/HealthCheck';
+import { ToastContainer } from './Notification/Toast';
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -68,6 +69,9 @@ function App() {
     <>
       {/* CookiePermission component can be uncommented when needed */}
       <CookiePermission />
+      
+      {/* Toast container for application-wide notifications */}
+      <ToastContainer />
       
       <div className="App">
         <Router>

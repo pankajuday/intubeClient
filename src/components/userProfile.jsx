@@ -34,6 +34,8 @@ const UserProfile = () => {
           alt="Cover"
           className="w-full h-full object-cover"
         />
+        <div className="h-10 w-60 absolute top-0 right-0  rounded-bl-lg bg-white">
+        </div>
         {/* Avatar */}
         <div className="absolute bottom-[-50px] left-5 md:left-10">
           <img
