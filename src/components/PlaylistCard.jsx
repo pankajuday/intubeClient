@@ -3,8 +3,9 @@ import { Card, CardContent, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Link } from "react-router-dom";
-import { formatDate, getRandomColor } from "@/lib/utils";
+import {  getRandomColor } from "@/utils/getRandomColor";
 import defaultImg from "../assets/playlist.png";
+import { getTimeAgo } from "@/utils/formateDate";
 
 const PlaylistCard = ({ data }) => {
   const [fallbackColor, setFallbackColor] = useState("");
@@ -51,7 +52,7 @@ const PlaylistCard = ({ data }) => {
               </p>
               <div className="flex space-x-2">
                 <p className="text-gray-500 text-xs">
-                  {formatDate(data?.createdAt)}
+                  {getTimeAgo(data?.createdAt)}
                 </p>
               </div>
             </div>

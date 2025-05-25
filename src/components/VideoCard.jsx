@@ -3,16 +3,20 @@ import { Link } from "react-router-dom";
 import { CardContent, Card, CardTitle } from "./ui/card";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { formatDate, getRandomColor } from "@/lib/utils";
-import { Dot, MoreHorizontal, MoreVertical } from "lucide-react";
+import { formatDate,getTimeAgo } from "@/utils/formateDate";
+import { getRandomColor } from "@/utils/getRandomColor";
+import { Dot, MoreHorizontal, MoreVertical, Share2 } from "lucide-react";
 import { Button } from "./ui/button";
+
 
 const VideoCard = ({ video }) => {
   const [fallbackColor, setFallbackColor] = useState("");
+  const [toggleMoreOpt, setToggleMoreOpt] = useState(false)
 
   useEffect(() => {
-    setFallbackColor(getRandomColor()); // Set random color on mount
+    setFallbackColor(getRandomColor()); 
   }, []);
+
 
   // Format duration for display
   const formatDuration = (seconds) => {
@@ -39,6 +43,7 @@ const VideoCard = ({ video }) => {
             </span>
           )}
         </AspectRatio>
+        </Link>
         <CardContent className="flex gap-3 p-2">
           <Avatar className="h-8 w-8 flex-shrink-0">
             <AvatarImage src={video?.avatar} />
@@ -59,23 +64,25 @@ const VideoCard = ({ video }) => {
             <div className="flex space-x-2">
               <p className="text-gray-500 text-xs">{video?.views || 0} views</p>
               <span className="text-gray-500 text-xs"><Dot size={20}/></span>
-              <p className="text-gray-500 text-xs">{formatDate(video?.createdAt)}</p>
+              <p className="text-gray-500 text-xs">{getTimeAgo(video?.createdAt)}</p>
             </div>
           </div>
           {/* More option button this button will contain some options like share, save in playlist, etc... */}
-          <div className=" w-7 flex justify-center items-center ">
-          <button className="h-full w-full">
+          <div className=" w-10 flex justify-center items-center ">
+          <button className="h-full w-full cursor-pointer" onClick={()=>setToggleMoreOpt(!toggleMoreOpt)}>
           <MoreVertical height={50}  className="" />
           </button>
           </div>
           {/* more option -> pop up */}
-          <div className="">
+          {toggleMoreOpt && (
+            <div className="inset-0 ">
             <li>
-              <ul></ul>
+              <ul><Share2/> Share</ul>
             </li>
           </div>
+          )}
         </CardContent>
-      </Link>
+      
     </Card>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { formatDate } from "@/lib/utils";
-import { getRandomColor } from "@/lib/utils";
+import { getTimeAgo } from "@/utils/formateDate";
+import { getRandomColor } from "@/utils/getRandomColor";
 import defAvatar from "../assets/defaultAvatar.png";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -93,7 +93,7 @@ function VideoCommentCard({ data, videoId }) {
                 {data?.owner?.username}
               </span>
               <span className="text-xs text-muted-foreground">
-                {data?.createdAt ? formatDate(data?.createdAt) : ""}
+                {data?.createdAt ? getTimeAgo(data?.createdAt) : ""}
               </span>
             </div>
 

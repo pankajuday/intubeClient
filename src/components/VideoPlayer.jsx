@@ -19,7 +19,6 @@ import {
   EllipsisVertical,
   X,
 } from "lucide-react";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -36,7 +35,8 @@ import {
   likeToggleSlice,
 } from "@/Redux";
 import ShareCard from "./ShareCard";
-import { formatDate, getRandomColor } from "@/lib/utils";
+import { getRandomColor } from "@/utils/getRandomColor";
+import { formatDate, getTimeAgo } from "@/utils/formateDate";
 
 const VideoPlayer = () => {
   const [progress, setProgress] = useState(0);
@@ -465,10 +465,12 @@ const VideoPlayer = () => {
                             <X/>
                           </button>
                         </div>
-                        <ShareCard videoId={videoId} />
+                        <ShareCard propId={videoId} type="video" />
                       </div>
                     </div>
                   )}
+
+                  
                 </div>
                   
                 <button>
@@ -493,7 +495,7 @@ const VideoPlayer = () => {
                   <span>•</span>
                   <span>
                     {selectedVideo?.createdAt
-                      ? formatDate(selectedVideo.createdAt)
+                      ? getTimeAgo(selectedVideo.createdAt)
                       : ""}
                   </span>
                 </div>
@@ -519,4 +521,4 @@ const VideoPlayer = () => {
   );
 };
 
-export default memo(VideoPlayer);
+export default VideoPlayer;
