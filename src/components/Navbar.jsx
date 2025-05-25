@@ -6,7 +6,7 @@ import { BellIcon, MenuIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserDetail } from "@/Redux";
 import { useEffect, useState } from "react";
-import { getRandomColor } from "@/lib/utils";
+import { getRandomColor } from "@/utils/getRandomColor";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -108,13 +108,13 @@ const Navbar = () => {
           to="/publish-video"
           className={`${showMobileSearch ? 'hidden sm:flex' : ''}`}
         >
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <PlusIcon className="h-5 w-5" />
+          <Button variant="ghost"  className="rounded-lg">
+            <PlusIcon className="h-5 w-5" /> <span>Create</span>
           </Button>
         </Link>
 
         {/* Notifications - hidden on mobile when search is active */}
-        <Button 
+        {/* <Button 
           variant="ghost" 
           size="icon" 
           className={`rounded-full ${showMobileSearch ? 'hidden sm:flex' : ''}`}
@@ -125,7 +125,7 @@ const Navbar = () => {
               0
             </span>
           </div>
-        </Button>
+        </Button> */}
 
         {/* Profile - hidden on mobile when search is active */}
         <div className={`${showMobileSearch ? 'hidden sm:block' : ''}`}>

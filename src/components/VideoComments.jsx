@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { useDispatch, useSelector } from "react-redux";
-import { getRandomColor } from "@/lib/utils";
+import { getRandomColor } from "@/utils/getRandomColor";
 import { fetchUserDetail } from "@/Redux";
 import { useParams } from "react-router-dom";
 import { createVideoComment } from "@/Redux/Slices/Comment";

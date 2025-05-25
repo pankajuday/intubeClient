@@ -96,6 +96,7 @@ const playlistSlice = createSlice({
   name: "playlist",
   initialState: {
     playlistData: [],
+    selectedPlaylist:[],
     playlistIsLoading: false,
     playlistError: null,
   },
@@ -178,7 +179,7 @@ const playlistSlice = createSlice({
       })
       .addCase(fetchGetPlaylistById.fulfilled, (state, action) => {
         state.playlistIsLoading = false;
-        state.playlistData = action.payload;
+        state.selectedPlaylist = action.payload;
       })
       .addCase(fetchGetPlaylistById.rejected, (state, action) => {
         state.playlistIsLoading = false;

@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { fetchUserDetail } from "../Redux/Slices/User";
 import { fetchSubscribedChannels } from "../Redux/Slices/Subscription";
-import { getRandomColor } from "@/lib/utils";
+import { getRandomColor } from "@/utils/getRandomColor";
 
 const Sidebar = () => {
   const dispatch = useDispatch();

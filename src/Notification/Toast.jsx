@@ -1,7 +1,7 @@
 import React from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 
-// Export the Toaster component for use in App.jsx
+
 export const ToastContainer = () => (
   <Toaster 
     position="top-center"
@@ -32,7 +32,7 @@ export const ToastContainer = () => (
   />
 );
 
-// Helper functions for consistent toast styling
+
 export const showSuccessToast = (message) => {
   toast.success(message);
 };

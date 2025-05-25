@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -25,15 +25,16 @@ import NoInternetConnected from "./Error/NoInternetConnected";
 import { useEffect, useState } from "react";
 import ChannelProfile from "./components/ChannelProfile";
 import PublishVideo from "./components/PublishVideo";
-import CookiePermission from './components/Permission/CookiePermission';
-import ShareCard from './components/ShareCard';
-import SpringLoader from './components/SpringLoader';
-import VideoCommentCard from './components/VideoCommentCard';
-import VideoComments from './components/VideoComments';
-import PlaylistCreate from './components/PlaylistCreate';
-import PlaylistVideo from './components/PlaylistVideo';
-import HealthCheck from './components/HealthCheck';
-import { ToastContainer } from './Notification/Toast';
+import CookiePermission from "./components/Permission/CookiePermission";
+import ShareCard from "./components/ShareCard";
+import SpringLoader from "./components/SpringLoader";
+import VideoCommentCard from "./components/VideoCommentCard";
+import VideoComments from "./components/VideoComments";
+import PlaylistCreate from "./components/PlaylistCreate";
+import PlaylistVideo from "./components/PlaylistVideo";
+import HealthCheck from "./components/HealthCheck";
+import { ToastContainer } from "./Notification/Toast";
+import { precacheImportantImages } from "./utils/imageCache";
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -54,7 +55,9 @@ const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex flex-1 "> {/* Add padding for navbar */}
+      <div className="flex flex-1 ">
+        {" "}
+        {/* Add padding for navbar */}
         <Sidebar />
         <main className="w-full pl-0 sm:pl-64 py-4 px-0 md:px-6 transition-all duration-300 justify-center ">
           {isOnline ? <Outlet /> : <NoInternetConnected />}
@@ -65,14 +68,21 @@ const MainLayout = () => {
 };
 
 function App() {
+  useEffect(() => {
+    try {
+      precacheImportantImages();
+    } catch (error) {
+      console.error("Failed to precache images:", error);
+    }
+  });
   return (
     <>
       {/* CookiePermission component can be uncommented when needed */}
       <CookiePermission />
-      
+
       {/* Toast container for application-wide notifications */}
       <ToastContainer />
-      
+
       <div className="App">
         <Router>
           <Routes>
@@ -84,17 +94,17 @@ function App() {
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/playlists" element={<Playlist />} />
               <Route path="/error" element={<ErrorPage />} />
-              <Route path="/not-found" element={<NotFound />}/>
-              <Route path="/profile/:username" element={<ChannelProfile/>} />
+              <Route path="/not-found" element={<NotFound />} />
+              <Route path="/profile/:username" element={<ChannelProfile />} />
               <Route path="/publish-video" element={<PublishVideo />} />
-              <Route path='/plylist/:playlistId' element={<PlaylistVideo/>}/>
+              <Route path="/playlist/:playlistId" element={<PlaylistVideo />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path='/test' element={<PlaylistVideo />}/>
-            <Route path='/healthcheck' element={<HealthCheck />}/>
+            <Route path="/healthcheck" element={<HealthCheck />} />
+            <Route path="/test" element={<PlaylistVideo />} />
           </Routes>
         </Router>
       </div>
