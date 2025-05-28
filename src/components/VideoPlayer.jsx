@@ -499,7 +499,7 @@ const VideoPlayer = () => {
                 </div>{" "}
                 <button onClick={() => setIsPlaylistModalOpen(true)}>
                   <Bookmark size={20} className={`${
-                        isLiked
+                        selectedVideo?.isAddedInPlaylist
                           ? "fill-gray-800 text-gray-800"
                           : "hover:text-gray-600"
                       }`} />
