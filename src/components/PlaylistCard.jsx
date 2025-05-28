@@ -25,12 +25,13 @@ const PlaylistCard = ({ data }) => {
               alt={data?.name}
               className="object-cover w-full h-full"
             />
+            {/* Video Count */}
+          <div className="absolute right-2  bg-black/80 text-white text-xs px-2 py-1 rounded">
+            {data?.totalVideos || 0} videos
+          </div>
           </AspectRatio>
 
-          {/* Video Count */}
-          {/* <div className="absolute top-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-            {data?.videos?.length || 0} videos
-          </div> */}
+          
 
           {/* Author Info */}
           <div className="flex gap-3 p-2">

@@ -18,11 +18,14 @@ import {
   Ellipsis,
   EllipsisVertical,
   X,
+  Dot,
 } from "lucide-react";
 import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchVideoById } from "@/Redux/Slices/Video";
+import { fetchAddVideoOnPlaylist } from "@/Redux/Slices/Playlist";
+import { showErrorToast } from "@/Notification/Toast";
 import SpringLoader from "./SpringLoader";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -37,6 +40,8 @@ import {
 import ShareCard from "./ShareCard";
 import { getRandomColor } from "@/utils/getRandomColor";
 import { formatDate, getTimeAgo } from "@/utils/formateDate";
+import { useDebounceClick } from "@/Hooks/useDebounceClick";
+import AddToPlaylist from "./AddToPlaylist";
 
 const VideoPlayer = () => {
   const [progress, setProgress] = useState(0);
@@ -58,6 +63,7 @@ const VideoPlayer = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
 
   const { likeData, likeLoading, likeError } = useSelector(
     (state) => state.like
@@ -82,7 +88,6 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     if (videoId) {
-      
       if (videoId) {
         dispatch(likedVideoSlice());
         dispatch(fetchVideoById(videoId));
@@ -169,13 +174,13 @@ const VideoPlayer = () => {
     }
   };
 
-  const handleLikeToggle = () => {
+  const handleLikeToggle = useDebounceClick(() => {
     if (selectedVideo?._id) {
       dispatch(likeToggleSlice(selectedVideo?._id)).then(() => {
         setIsLiked(!isLiked);
       });
     }
-  };
+  }, 500);
 
   useEffect(() => {
     function toggleLike() {
@@ -187,21 +192,33 @@ const VideoPlayer = () => {
   }, [likeData, videoId]);
 
   const handleNextVideo = () => {
-    if (relatedVideos && currentVideoIndex !== undefined && currentVideoIndex < relatedVideos.length - 1) {
+    if (
+      relatedVideos &&
+      currentVideoIndex !== undefined &&
+      currentVideoIndex < relatedVideos.length - 1
+    ) {
       const nextVideo = relatedVideos[currentVideoIndex + 1];
       navigate(`/video/${nextVideo._id}`);
     }
   };
 
   const handlePrevVideo = () => {
-    if (relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0) {
+    if (
+      relatedVideos &&
+      currentVideoIndex !== undefined &&
+      currentVideoIndex > 0
+    ) {
       const prevVideo = relatedVideos[currentVideoIndex - 1];
       navigate(`/video/${prevVideo._id}`);
     }
   };
 
-  const hasNextVideo = relatedVideos && currentVideoIndex !== undefined && currentVideoIndex < relatedVideos.length - 1;
-  const hasPrevVideo = relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0;
+  const hasNextVideo =
+    relatedVideos &&
+    currentVideoIndex !== undefined &&
+    currentVideoIndex < relatedVideos.length - 1;
+  const hasPrevVideo =
+    relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0;
 
 
   return (
@@ -219,8 +236,9 @@ const VideoPlayer = () => {
       ) : (
         <div>
           {/* Video Player */}
-          <div className="relative bg-black aspect-video w-full text-white overflow-hidden"
-           ref={videoRef}
+          <div
+            className="relative bg-black aspect-video w-full text-white overflow-hidden"
+            ref={videoRef}
           >
             <ReactPlayer
               ref={progressRef}
@@ -267,9 +285,9 @@ const VideoPlayer = () => {
                 onDoubleClick={handleFullScreen}
               >
                 {isPlaying ? (
-                  <Pause className="text-green-400 h-16 w-16 md:h-24 md:w-24" />
+                  <Pause className="text-red-500 h-16 w-16 md:h-24 md:w-24" />
                 ) : (
-                  <Play className="text-green-400 h-16 w-16 md:h-24 md:w-24" />
+                  <Play className="text-blue-500 h-16 w-16 md:h-24 md:w-24" />
                 )}
               </div>
 
@@ -285,7 +303,7 @@ const VideoPlayer = () => {
                   onChange={handleSeek}
                   className="w-full h-1.5 bg-gray-600 rounded-full appearance-none cursor-pointer focus:outline-none"
                   style={{
-                    background: `linear-gradient(to right, #10B981 ${
+                    background: `linear-gradient(to right, #ef4444 ${
                       (progress / (duration || 100)) * 100
                     }%, #4B5563 ${(progress / (duration || 100)) * 100}%)`,
                   }}
@@ -316,23 +334,31 @@ const VideoPlayer = () => {
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
                         className="w-16 h-1 bg-gray-600 rounded-full appearance-none cursor-pointer"
+                        style={{
+                          background: `linear-gradient(to right, #ef4444 ${
+                            (isMuted ? 0 : volume) * 100
+                          }%, #4B5563 ${(isMuted ? 0 : volume) * 100}%)`,
+                        }}
                       />
                     </div>
 
                     {/* Skip buttons */}
                     <button
-                    onClick={handlePrevVideo}
-                    disabled={!hasPrevVideo} 
-                    className={!hasPrevVideo ? "opacity-50 cursor-not-allowed" : ""}
+                      onClick={handlePrevVideo}
+                      disabled={!hasPrevVideo}
+                      className={
+                        !hasPrevVideo ? "opacity-50 cursor-not-allowed" : ""
+                      }
                     >
                       <SkipBack size={20} />
                     </button>
-                    <button 
-                    onClick={handleNextVideo}
-                    disabled={!hasNextVideo}
-                    className={!hasNextVideo ? "opacity-50 cursor-not-allowed" : ""}
-                  >
-                    
+                    <button
+                      onClick={handleNextVideo}
+                      disabled={!hasNextVideo}
+                      className={
+                        !hasNextVideo ? "opacity-50 cursor-not-allowed" : ""
+                      }
+                    >
                       <SkipForward size={20} />
                     </button>
                   </div>
@@ -395,7 +421,7 @@ const VideoPlayer = () => {
                 {selectedVideo?.owner?._id !== userDetail?._id && (
                   <button
                     onClick={toggleSubscription}
-                    className={`ml-3 px-4 py-2 rounded-md text-sm font-medium ${
+                    className={`ml-3 px-4 py-2 rounded-sm text-sm font-medium ${
                       isSubscribed
                         ? "bg-gray-200 hover:bg-gray-300"
                         : "bg-slate-950 text-white hover:bg-slate-800"
@@ -432,9 +458,8 @@ const VideoPlayer = () => {
                   )}
                   <span className="text-sm">{selectedVideo?.likes}</span>
                 </button>
-
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -443,43 +468,61 @@ const VideoPlayer = () => {
                   >
                     <Share size={20} className="hover:text-gray-600" />
                   </button>
-                  
+
                   {isOpen && (
-                    <div 
+                    <div
                       className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsOpen(false);
                       }}
                     >
-                      <div 
-                        className="bg-white dark:bg-slate-800 rounded-lg p-4 mx-4 w-full max-w-md"
+                      <div
+                        className="bg-white dark:bg-slate-800 rounded-sm p-4 mx-4 w-full max-w-md"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex justify-between items-center mb-4">
-                          <h3 className="font-medium text-lg text-gray-800 dark:text-white">Share Video</h3>
-                          <button 
+                          <h3 className="font-medium text-lg text-gray-800 dark:text-white">
+                            Share Video
+                          </h3>
+                          <button
                             onClick={() => setIsOpen(false)}
                             className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                           >
-                            <X/>
+                            <X />
                           </button>
                         </div>
                         <ShareCard propId={videoId} type="video" />
                       </div>
                     </div>
                   )}
-
-                  
-                </div>
-                  
-                <button>
-                  <Bookmark size={20} className="hover:text-gray-600" />
+                </div>{" "}
+                <button onClick={() => setIsPlaylistModalOpen(true)}>
+                  <Bookmark size={20} className={`${
+                        isLiked
+                          ? "fill-gray-800 text-gray-800"
+                          : "hover:text-gray-600"
+                      }`} />
                 </button>
 
-                <button>
-                  <EllipsisVertical size={20} className="hover:text-gray-600" />
-                </button>
+                {isPlaylistModalOpen && (
+                  <div
+                    className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsPlaylistModalOpen(false);
+                    }}
+                  >
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <AddToPlaylist
+                        videoId={selectedVideo?._id}
+                        userId={userDetail?._id}
+                        onClose={() => setIsPlaylistModalOpen(false)}
+                        
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -492,7 +535,9 @@ const VideoPlayer = () => {
               <div className="flex justify-between items-center mb-2">
                 <div className="flex gap-3 text-sm">
                   <span>{selectedVideo?.views || 0} views</span>
-                  <span>•</span>
+                  <span>
+                    <Dot />
+                  </span>
                   <span>
                     {selectedVideo?.createdAt
                       ? getTimeAgo(selectedVideo.createdAt)

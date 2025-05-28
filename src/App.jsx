@@ -35,6 +35,7 @@ import PlaylistVideo from "./components/PlaylistVideo";
 import HealthCheck from "./components/HealthCheck";
 import { ToastContainer } from "./Notification/Toast";
 import { precacheImportantImages } from "./utils/imageCache";
+import AddToPlaylist from "./components/AddToPlaylist";
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -69,12 +70,19 @@ const MainLayout = () => {
 
 function App() {
   useEffect(() => {
-    try {
-      precacheImportantImages();
-    } catch (error) {
-      console.error("Failed to precache images:", error);
-    }
-  });
+    // Run the image precaching asynchronously with proper error handling
+    const cacheImages = async () => {
+      try {
+        await precacheImportantImages();
+        console.log("Successfully precached important images");
+      } catch (error) {
+        console.error("Failed to precache images:", error);
+      }
+    };
+
+    cacheImages();
+  }, []); // Add empty dependency array to run only once on mount
+
   return (
     <>
       {/* CookiePermission component can be uncommented when needed */}
@@ -104,7 +112,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/healthcheck" element={<HealthCheck />} />
-            <Route path="/test" element={<PlaylistVideo />} />
+            <Route path="/test" element={<AddToPlaylist />} />
           </Routes>
         </Router>
       </div>

@@ -9,6 +9,7 @@ import { MoreHorizontalIcon, ThumbsUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikeOnComment, fetchToggleLikeOnComment } from "@/Redux";
 import { fetchLikeStatus, setLikeLoadingState } from "@/Redux/Slices/Comment";
+import { useDebounceClick } from "@/Hooks/useDebounceClick";
 
 function VideoCommentCard({ data, videoId }) {
   const [fallbackColor, setFallbackColor] = useState("");
@@ -32,8 +33,6 @@ function VideoCommentCard({ data, videoId }) {
     async function fetchLC(){
       if (data?._id) {
         await dispatch(fetchLikeOnComment(data?._id)).unwrap();
-        // console.log(likedCommentData);
-        // console.log(data?._id);
       }
     }
     fetchLC()
@@ -59,7 +58,7 @@ function VideoCommentCard({ data, videoId }) {
   //   }
   // };
 
-  const handleToggleLikeOncomment = async () => {
+  const handleToggleLikeOncomment = useDebounceClick(async () => {
     try {
         dispatch(setLikeLoadingState({ commentId: data._id, isLoading: true }));
         await dispatch(fetchToggleLikeOnComment(data._id)).unwrap();
@@ -68,7 +67,7 @@ function VideoCommentCard({ data, videoId }) {
     } catch (error) {
         console.error(error);
     }
-};
+},500);
 
 
 
