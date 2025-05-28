@@ -7,7 +7,7 @@ import { fetchGetPlaylistById } from "@/Redux";
 import { Link, useParams } from "react-router-dom";
 import ShareCard from "./ShareCard";
 import { getTimeAgo } from "@/utils/formateDate";
-import { createPortal } from 'react-dom';
+import { createPortal } from "react-dom";
 
 function PlaylistVideo() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,16 +29,18 @@ function PlaylistVideo() {
 
   useEffect(() => {
     dispatch(fetchGetPlaylistById(playlistId?.playlistId));
-  }, []);  const ShareModal = () => {
+  }, []);
+  
+  const ShareModal = () => {
     if (!isOpen) return null;
 
     return createPortal(
       <div className="fixed inset-0" style={{ zIndex: 9999 }}>
         <div className="modal-overlay" onClick={() => setIsOpen(false)} />
         <div className="modal-container">
-          <div 
+          <div
             className="modal-content dark:bg-slate-800"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-medium text-lg text-gray-800 dark:text-white">
@@ -62,7 +64,7 @@ function PlaylistVideo() {
     <div className="container mx-auto p-4">
       {/* Render Share Modal */}
       <ShareModal />
-      
+
       <div className="flex flex-col lg:flex-row gap-6 relative min-h-screen">
         {/* Left Side - Fixed Playlist Info */}
         <div className="lg:w-1/3 lg:fixed lg:top-20 lg:max-w-[400px]">
@@ -106,25 +108,30 @@ function PlaylistVideo() {
                     />
                   </button>
                 </div>
-              </div>              {/* Share button actions handled above */}
-
+              </div>{" "}
+              {/* Share button actions handled above */}
               {/* Description */}
               <p className="text-gray-600 dark:text-gray-300">
                 {selectedPlaylist[0]?.description}
               </p>
-
               {/* Video Count */}
               <div className="text-sm text-gray-500 dark:text-gray-400">
                 {selectedPlaylist[0]?.videos?.length || 0} videos
               </div>
             </CardContent>
           </Card>
-        </div>        {/* Right Side - Scrollable Video List */}
+        </div>{" "}
+        {/* Right Side - Scrollable Video List */}
         <div className="lg:w-2/3 lg:ml-[400px] space-y-3 p-2 relative z-0">
           {selectedPlaylist[0]?.videos?.map((video, index) => (
             <div key={video?._id} className="w-full space-y-2 video-list-item">
               <div className="w-full rounded-sm overflow-hidden hover:shadow-md transition-shadow">
-                <Link to={`/video/${video?._id}`} className="flex md:flex-row w-full h-fit flex-col md:h-32">                  {/* Thumbnail with Index */}
+                <Link
+                  to={`/video/${video?._id}`}
+                  className="flex md:flex-row w-full h-fit flex-col md:h-32"
+                >
+                  {" "}
+                  {/* Thumbnail with Index */}
                   <div className="relative w-full md:w-56 min-w-[11rem] md:min-w-[14rem] bg-slate-700 video-thumbnail">
                     <img
                       src={video?.thumbnail}
@@ -140,7 +147,6 @@ function PlaylistVideo() {
                       </span>
                     )}
                   </div>
-
                   {/* Video Info */}
                   <div className="flex flex-col justify-between p-3 w-full">
                     <div>
@@ -153,7 +159,7 @@ function PlaylistVideo() {
                     </div>
                     <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                       <span>{(video?.views || 0).toLocaleString()} views</span>
-                      <Dot/>
+                      <Dot />
                       <span>{getTimeAgo(video?.createdAt)}</span>
                     </div>
                   </div>

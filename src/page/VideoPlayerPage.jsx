@@ -59,7 +59,7 @@ const VideoPlayerPage = () => {
                 <div onClick={() => setIsActiveComment(!isActiveComment)}>
                   <Button variant="link">
                     <span className=" text-sm border-b-2 border-b-accent ">
-                      {isActiveComment ? "Hidde All" : "Show All"}
+                      {isActiveComment ? "Hide" : "Show All"}
                     </span>
                   </Button>
                 </div>

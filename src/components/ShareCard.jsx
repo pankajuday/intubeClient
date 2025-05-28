@@ -56,7 +56,7 @@ const ShareCard = ({ propId, type = 'video' }) => {
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}&url=${encodeURIComponent(shareURL)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-blue-400 text-white rounded-lg flex items-center justify-center hover:bg-blue-500 transition-colors"
+          className="flex-1 p-2 bg-blue-400 text-white rounded-sm flex items-center justify-center hover:bg-blue-500 transition-colors"
           aria-label="Share on Twitter"
         >
           <Twitter size={18} />
@@ -68,7 +68,7 @@ const ShareCard = ({ propId, type = 'video' }) => {
           href={`https://wa.me/?text=${encodeURIComponent(shareMessage + " " + shareURL)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-green-500 text-white rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors"
+          className="flex-1 p-2 bg-green-500 text-white rounded-sm flex items-center justify-center hover:bg-green-600 transition-colors"
           aria-label="Share on WhatsApp"
         >
           <MessageCircle size={18} />
@@ -80,7 +80,7 @@ const ShareCard = ({ propId, type = 'video' }) => {
           href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareURL)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-blue-700 text-white rounded-lg flex items-center justify-center hover:bg-blue-800 transition-colors"
+          className="flex-1 p-2 bg-blue-700 text-white rounded-sm flex items-center justify-center hover:bg-blue-800 transition-colors"
           aria-label="Share on LinkedIn"
         >
           <Linkedin size={18} />
@@ -95,7 +95,7 @@ const ShareCard = ({ propId, type = 'video' }) => {
           href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareURL)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
+          className="flex-1 p-2 bg-blue-600 text-white rounded-sm flex items-center justify-center hover:bg-blue-700 transition-colors"
           aria-label="Share on Facebook"
         >
           <Facebook size={18} />
@@ -105,7 +105,7 @@ const ShareCard = ({ propId, type = 'video' }) => {
         {/* Email Share */}
         <a
           href={`mailto:?subject=${encodeURIComponent(shareMessage)}&body=${encodeURIComponent(`I thought you might like this ${type}: ${shareURL}`)}`}
-          className="flex-1 p-2 bg-gray-500 text-white rounded-lg flex items-center justify-center hover:bg-gray-600 transition-colors"
+          className="flex-1 p-2 bg-gray-500 text-white rounded-sm flex items-center justify-center hover:bg-gray-600 transition-colors"
           aria-label="Share via Email"
         >
           <Mail size={18} />
@@ -115,12 +115,12 @@ const ShareCard = ({ propId, type = 'video' }) => {
 
       {/* Copy Link */}
       <div className="mt-2 flex items-center group relative">
-        <div className="flex-1 bg-gray-100 dark:bg-slate-700 rounded-l-lg p-2 overflow-hidden text-sm text-gray-700 dark:text-slate-200 truncate">
+        <div className="flex-1 bg-gray-100 dark:bg-slate-700 rounded-l-sm p-2 overflow-hidden text-sm text-gray-700 dark:text-slate-200 truncate">
           {shareURL}
         </div>
         <button
           onClick={handleCopy}
-          className={`p-2 ${copied ? 'bg-green-500' : 'bg-gray-200 dark:bg-slate-600'} rounded-r-lg hover:bg-opacity-90 transition-colors`}
+          className={`p-2 ${copied ? 'bg-green-500' : 'bg-gray-200 dark:bg-slate-600'} rounded-r-sm hover:bg-opacity-90 transition-colors`}
           aria-label="Copy link"
         >
           {copied ? <Check size={18} className="text-white" /> : <Copy size={18} className="text-gray-700 dark:text-white" />}

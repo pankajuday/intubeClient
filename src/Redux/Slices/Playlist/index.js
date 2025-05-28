@@ -35,7 +35,7 @@ export const fetchCreatePlaylist = createAsyncThunk(
 
 export const fetchAddVideoOnPlaylist = createAsyncThunk(
   "playlist/add",
-  async (videoId, playlistId, thunkApi) => {
+  async ({ videoId, playlistId }, thunkApi) => {
     try {
       const response = await addVideoOnPlaylist(videoId, playlistId);
       return response.data;
@@ -131,7 +131,7 @@ const playlistSlice = createSlice({
       })
       .addCase(fetchAddVideoOnPlaylist.fulfilled, (state, action) => {
         state.playlistIsLoading = false;
-        state.playlistData = action.payload;
+        
       })
       .addCase(fetchAddVideoOnPlaylist.rejected, (state, action) => {
         state.playlistIsLoading = false;

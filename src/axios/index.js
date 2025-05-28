@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
         }
       }
     } else {
-      showErrorToast(error.message || "Network error");
+      showErrorToast(error?.message || "Network error");
     }
     return Promise.reject(error);
   }
