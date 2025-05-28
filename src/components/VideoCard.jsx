@@ -41,7 +41,7 @@ const VideoCard = ({ video }) => {
   };
 
   return (
-    <Card className="w-full h-full rounded-sm shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105 relative">
+    <Card className="w-full h-full rounded-sm shadow-sm overflow-hidden 5 relative">
       <Link to={`/video/${video?._id}`} className="block">
         {/* Video thumbnail */}
         <AspectRatio ratio={16 / 9} className="w-full bg-slate-700">

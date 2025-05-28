@@ -1,43 +1,46 @@
 import { Share2, ListPlus, Bookmark, Flag } from "lucide-react";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import AddToPlaylist from "./AddToPlaylist";
 
-export default function MoreOpt({ 
-  onClose, 
-  videoId, 
-  videoTitle 
-}) {
+export default function MoreOpt({ onClose, videoId, videoTitle }) {
   const menuRef = useRef(null);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
+  const { userDetail, isLoading } = useSelector((state) => state.user);
 
   // Function to handle sharing via Web Share API
   const handleShare = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     try {
       if (navigator.share) {
         await navigator.share({
-          title: videoTitle || 'Check out this video',
-          url: `${window.location.origin}/video/${videoId}`
+          title: videoTitle || "Check out this video",
+          url: `${window.location.origin}/video/${videoId}`,
         });
       } else {
         // Fallback for browsers that don't support the Web Share API
-        navigator.clipboard.writeText(`${window.location.origin}/video/${videoId}`);
-        alert('Link copied to clipboard!');
+        navigator.clipboard.writeText(
+          `${window.location.origin}/video/${videoId}`
+        );
+        alert("Link copied to clipboard!");
       }
     } catch (error) {
-      console.error('Error sharing:', error);
+      console.error("Error sharing:", error);
     }
     // Only close after action completes
     if (onClose) onClose();
   };
-
   // Handle save to playlist
   const handleSaveToPlaylist = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // TODO: Open playlist modal or trigger playlist UI here
-    // Do not close the popup so user can continue interacting with playlist options
-    if (onClose) onClose();
+    if (!userDetail?._id) {
+      alert("Please login to add to playlist");
+      return;
+    }
+    setIsPlaylistModalOpen(true);
   };
 
   // Handle watch later
@@ -45,7 +48,7 @@ export default function MoreOpt({
     e.preventDefault();
     e.stopPropagation();
     // TODO: Implement watch later functionality
-    alert('Added to Watch Later!');
+    alert("Added to Watch Later!");
     if (onClose) onClose();
   };
 
@@ -54,7 +57,7 @@ export default function MoreOpt({
     e.preventDefault();
     e.stopPropagation();
     // TODO: Implement report functionality
-    alert('Report feature will be implemented soon!');
+    alert("Report feature will be implemented soon!");
     if (onClose) onClose();
   };
 
@@ -65,10 +68,10 @@ export default function MoreOpt({
       role="menu"
       aria-orientation="vertical"
       style={{
-        position: 'absolute',
+        position: "absolute",
         right: 0,
         top: 0,
-        width: '200px'
+        width: "200px",
       }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -95,7 +98,7 @@ export default function MoreOpt({
             <span>Save to playlist</span>
           </button>
         </li>
-        <li>
+        {/* <li>
           <button
             type="button"
             onClick={handleWatchLater}
@@ -105,7 +108,7 @@ export default function MoreOpt({
             <Bookmark size={16} />
             <span>Watch later</span>
           </button>
-        </li>
+        </li> */}
         <li>
           <button
             type="button"
@@ -117,7 +120,29 @@ export default function MoreOpt({
             <span>Report</span>
           </button>
         </li>
-      </ul>
+      </ul>{" "}
+      {isPlaylistModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setIsPlaylistModalOpen(false);
+            if (onClose) onClose();
+          }}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <AddToPlaylist
+              videoId={videoId}
+              userId={userDetail?._id}
+              onClose={() => {
+                setIsPlaylistModalOpen(false);
+                if (onClose) onClose();
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

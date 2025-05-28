@@ -7,6 +7,7 @@ import SpringLoader from "./SpringLoader";
 import { useForm } from "react-hook-form";
 
 function AddToPlaylist({ videoId, userId, onClose }) {
+    
   const {
     register,
     handleSubmit,
