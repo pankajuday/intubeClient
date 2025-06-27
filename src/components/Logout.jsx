@@ -10,24 +10,27 @@ const Logout = () => {
   const dispatch = useDispatch();
   const { authData, authIsLoading, error } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    let isMounted = true;
 
-    try {
-      if (isMounted) {
-        dispatch(fetchLogout()).then(() => {
-          navigate("/login");
-        });
-      }
-    } catch (err) {
-      if (isMounted) {
+ useEffect(() => {
+   
+    const performLogout = async () => {
+      try {
+        await dispatch(fetchLogout()).unwrap();
+        dispatch({ type: "RESET" });
+
+        navigate("/login");
+      } catch (err) {
         console.error("Error logging out:", err);
+        dispatch({ type: "RESET" });
+        navigate("/login");
       }
-    }
-    return () => {
-      isMounted = false;
     };
-  }, [navigate]);
+
+    performLogout();
+
+    // No cleanup needed for this approach
+  }, [dispatch, navigate]);
+
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-slate-950 opacity-60">

@@ -62,7 +62,7 @@ function AddToPlaylist({ videoId, userId, onClose }) {
   const selectedPlaylist = watch("playlistId");
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-4 rounded-md shadow-lg w-full max-w-md">
+    <div className=" h-80 w-80 bg-white dark:bg-slate-800 p-4 rounded-md shadow-lg  max-w-md ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold dark:text-white">
           Save to playlist
@@ -77,11 +77,11 @@ function AddToPlaylist({ videoId, userId, onClose }) {
       </div>
 
       <form onSubmit={handleSubmit(onSubmitForm)}>
-        <div className="mb-6">
+        <div className="mb-6 ">
           <p className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             Select playlist
           </p>
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-y-scroll h-40 w-72">
             {playlistIsLoading ? (
               <SpringLoader />
             ) : (
