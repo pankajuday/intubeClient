@@ -37,10 +37,10 @@ const Signup = () => {
 
   useEffect(() => {
     if (success) {
-      
+
       reset(); 
       dispatch(resetAuthState()); 
-      // navigate("/login"); 
+      navigate("/login"); 
     }
   }, [success, dispatch, navigate, reset]);
 
