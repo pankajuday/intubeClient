@@ -120,6 +120,7 @@ const VideoPlayer = () => {
 
   const handleFullScreen = (e) => {
     e.preventDefault();
+    
     if (videoRef.current) {
       if (!document.fullscreenElement) {
         videoRef.current.requestFullscreen();
@@ -220,6 +221,27 @@ const VideoPlayer = () => {
   const hasPrevVideo =
     relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0;
 
+  const handleKeyPress = useCallback(
+    (e) => {
+      console.log(e)
+      if (e.key === " " || e.key === "k") {
+        e.preventDefault();
+        togglePlayPause();
+      } else if (e.key === "m") {
+        e.preventDefault();
+        toggleMuteHandler();
+      } else if (e.key === "f") {
+        e.preventDefault();
+        handleFullScreen(e);
+      }
+    },
+    [togglePlayPause, toggleMuteHandler, handleFullScreen]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [handleKeyPress]);
 
   return (
     <div className="w-full max-w-7xl mx-auto overflow-hidden z-0">
@@ -239,6 +261,9 @@ const VideoPlayer = () => {
           <div
             className="relative bg-black aspect-video w-full text-white overflow-hidden"
             ref={videoRef}
+            role="region"
+            aria-label="Video player"
+            tabIndex="0"
           >
             <ReactPlayer
               ref={progressRef}
@@ -277,17 +302,22 @@ const VideoPlayer = () => {
               style={{ opacity: displayTrigger ? 1 : 0 }}
               onMouseEnter={() => setDisplayTrigger(true)}
               onMouseLeave={() => setDisplayTrigger(false)}
+              onTouchStart={() => setDisplayTrigger(!displayTrigger)}
+              
             >
               {/* Play/Pause button in center */}
               <div
                 className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                onClick={togglePlayPause}
                 onDoubleClick={handleFullScreen}
               >
                 {isPlaying ? (
-                  <Pause className="text-red-500 h-16 w-16 md:h-24 md:w-24" />
+                  <Pause
+                  onClick={togglePlayPause}
+                   className="text-red-500 h-16 w-16 md:h-24 md:w-24" />
                 ) : (
-                  <Play className="text-blue-500 h-16 w-16 md:h-24 md:w-24" />
+                  <Play
+                  onClick={togglePlayPause}
+                   className="text-blue-500 h-16 w-16 md:h-24 md:w-24" />
                 )}
               </div>
 
@@ -566,4 +596,5 @@ const VideoPlayer = () => {
   );
 };
 
-export default VideoPlayer;
+// Using memo to prevent unnecessary re-renders
+export default memo(VideoPlayer);

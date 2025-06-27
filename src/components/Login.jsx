@@ -5,28 +5,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchLogin } from "@/Redux/Slices/Auth";
 import SpringLoader from "./SpringLoader";
 import CookiePermission from "./Permission/CookiePermission";
+import { useDebounceClick } from "@/Hooks/useDebounceClick";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { authData, authIsLoading, error } = useSelector((state) => state.auth);
+  const { authData, authIsLoading, authError } = useSelector(
+    (state) => state.auth
+  );
+
+
+
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-
-  const onSubmit = (data) => {
+  const onSubmit = useDebounceClick(async (data) => {
     try {
       dispatch(fetchLogin(data)).then((result) => {
-        navigate("/");
-      });
+        
+        if (result?.payload?.user) navigate("/");
+      }).catch((err) => {
+        return err
+        
+      });;
+      
     } catch (error) {
       console.error("Error logging in:", error);
       if (error.status === 404) alert(error.message);
     }
-  };
+    
+  }, 500);
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10">

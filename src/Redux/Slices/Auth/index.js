@@ -6,9 +6,11 @@ export const fetchLogin = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await loginUser(data);
-      return response;
+      
+      return response.data;
+
     } catch (error) {
-      thunkApi.rejectWithValue(error.message);
+      thunkApi.rejectWithValue(error.message || error);
     }
   }
 );
@@ -62,7 +64,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchLogin.rejected, (state, action) => {
         state.authIsLoading = false;
-        state.authData = action.payload;
+        state.authError = action.payload;
       })
       
       .addCase(fetchLogout.pending, (state, action) => {
@@ -70,7 +72,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchLogout.fulfilled, (state, action) => {
         state.authIsLoading = false;
-        state.authData = action.payload;
+        // state.authData = action.payload;
       })
       .addCase(fetchLogout.rejected, (state, action) => {
         state.authIsLoading = false;

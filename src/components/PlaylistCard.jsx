@@ -26,7 +26,7 @@ const PlaylistCard = ({ data }) => {
               className="object-cover w-full h-full"
             />
             {/* Video Count */}
-          <div className="absolute right-2  bg-black/80 text-white text-xs px-2 py-1 rounded">
+          <div className="absolute right-2 bottom-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
             {data?.totalVideos || 0} videos
           </div>
           </AspectRatio>

@@ -28,10 +28,11 @@ axiosInstance.interceptors.response.use(
     // Show success toast for specific actions
     if (["post", "delete", "patch"].includes(response.config.method)) {
       const successMessage = response.data?.message || "Operation successful";
-      if (["/likes/toggle", "/comments", "/subscriptions", "/playlist", "/videos"].some((endpoint) => response.config.url.includes(endpoint))) {
+      if (["/likes/toggle", "/comments", "/subscriptions", "/playlist", "/videos","/login"].some((endpoint) => response.config.url.includes(endpoint))) {
         showSuccessToast(successMessage);
       }
     }
+
     return response;
   },
   (error) => {
@@ -44,8 +45,9 @@ axiosInstance.interceptors.response.use(
           window.location.href = "/login";
         }
       }
+      // return Promise.reject(error);
     } else {
-      showErrorToast(error?.message || "Network error");
+      showErrorToast(error || "Network error");
     }
     return Promise.reject(error);
   }
@@ -159,6 +161,7 @@ export const loginUser = async (data) => {
       username: data.username,
       password: data.password,
     });
+   
     return response.data;
   } catch (error) {
     throw error;
