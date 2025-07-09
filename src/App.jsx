@@ -36,6 +36,9 @@ import HealthCheck from "./components/HealthCheck";
 import { ToastContainer } from "./Notification/Toast";
 import { precacheImportantImages } from "./utils/imageCache";
 import AddToPlaylist from "./components/AddToPlaylist";
+import SearchVideo from "./components/SearchVideo";
+import UpdateProfile from "./components/UpdateProfile";
+import UpdateVideo from "./components/UpdateVideo";
 
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -107,6 +110,9 @@ function App() {
               <Route path="/publish-video" element={<PublishVideo />} />
               <Route path="/playlist/:playlistId" element={<PlaylistVideo />} />
               <Route path="*" element={<NotFound />} />
+              <Route path="/videos" element={<SearchVideo/>} />
+              <Route path="/edit" element={<UpdateProfile/>}/>
+              <Route path="/update-video/:videoId" element={<UpdateVideo/>}/>
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

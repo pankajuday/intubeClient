@@ -3,8 +3,9 @@ import {
   deleteVideoById,
   getAllVideos,
   getVideoById,
+  getVideosBySearch,
   postVideo,
-  updateVideoById,
+  updateVideo,
 } from "@/axios";
 
 // fetcing all videos with pagenation
@@ -47,14 +48,14 @@ export const fetchRelatedVideos = createAsyncThunk(
     try {
       // Use the existing getAllVideos function but we'll filter out the current video later
       const response = await getAllVideos();
-      
+
       // Since we might not have a specific API endpoint for related videos,
       // we'll simulate it by returning all videos except the current one
       const allVideos = response.data;
-      const relatedVideos = Array.isArray(allVideos.docs) ? 
-        allVideos.docs.filter(video => video._id !== videoId) : 
-        [];
-      
+      const relatedVideos = Array.isArray(allVideos.docs)
+        ? allVideos.docs.filter((video) => video._id !== videoId)
+        : [];
+
       return relatedVideos;
     } catch (error) {
       console.error("Error fetching related videos:", error);
@@ -87,18 +88,28 @@ export const fetchDeleteVideoById = createAsyncThunk(
   }
 );
 
-export const fetchUpdateVideoById = createAsyncThunk(
-  "video/update",
-  async (videoId, thunkAPI) => {
+
+
+export const fetchVideosBySearch = createAsyncThunk(
+  "video/search",
+  async ({ query, page, sortBy, sortType }, thunkAPI) => {
     try {
-      const response = await updateVideoById(videoId);
-      return response;
+      const response = await getVideosBySearch(query, page, sortBy, sortType);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
+export const fetchVideoUpdate = createAsyncThunk('video/update',async({data,videoId},thunkAPI)=>{
+  try {
+    const response = await updateVideo(data,videoId);
+    return response.data;
+    } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+})
 
 const videoSlice = createSlice({
   name: "video",
@@ -108,7 +119,7 @@ const videoSlice = createSlice({
     relatedVideos: [],
     videoLoading: false,
     videoError: null,
-    searchResult:[]
+    searchResult: [],
   },
 
   extraReducers: (builder) => {
@@ -124,7 +135,6 @@ const videoSlice = createSlice({
       .addCase(fetchAllVideos.rejected, (state, action) => {
         state.videoLoading = false;
         state.videoError = action.payload; // Access the payload from rejectWithValue
-        state.content = [];
       })
 
       .addCase(fetchVideoById.pending, (state) => {
@@ -140,7 +150,7 @@ const videoSlice = createSlice({
         state.videoError = action.payload; // Access the payload from rejectWithValue
         state.selectedVideo = [];
       })
-      
+
       // fetchRelatedVideos
       .addCase(fetchRelatedVideos.pending, (state) => {
         state.videoLoading = true;
@@ -149,8 +159,10 @@ const videoSlice = createSlice({
       .addCase(fetchRelatedVideos.fulfilled, (state, action) => {
         state.videoLoading = false;
         state.relatedVideos = action.payload;
-        if(state.selectedVideo){
-          state.currentVideoIndex = state.relatedVideos.findIndex((video)=>video._id === state.selectedVideo._id)
+        if (state.selectedVideo) {
+          state.currentVideoIndex = state.relatedVideos.findIndex(
+            (video) => video._id === state.selectedVideo._id
+          );
         }
       })
       .addCase(fetchRelatedVideos.rejected, (state, action) => {
@@ -168,7 +180,7 @@ const videoSlice = createSlice({
       })
       .addCase(fetchPostVideo.rejected, (state, action) => {
         state.videoLoading = false;
-        state.videoError = action.payload; 
+        state.videoError = action.payload;
       })
 
       .addCase(fetchDeleteVideoById.pending, (state) => {
@@ -185,19 +197,44 @@ const videoSlice = createSlice({
         state.selectedVideo = [];
       })
 
-      .addCase(fetchUpdateVideoById.pending, (state) => {
+      
+      .addCase(fetchVideosBySearch.pending,(state)=>{
+        state.videoLoading = true;
+        state.videoError = null;
+
+      })
+      .addCase(fetchVideosBySearch.fulfilled,(state, action)=>{
+        state.videoError = null;
+        state.videoLoading = false;
+        state.searchResult = action.payload;
+
+      })
+      .addCase(fetchVideosBySearch.rejected,(state,action)=>{
+        state.videoLoading = false;
+        state.videoError = action.payload;
+      })
+
+      // fetchVideoUpdate
+      .addCase(fetchVideoUpdate.pending, (state) => {
         state.videoLoading = true;
         state.videoError = null;
       })
-      .addCase(fetchUpdateVideoById.fulfilled, (state, action) => {
+      .addCase(fetchVideoUpdate.fulfilled, (state, action) => {
         state.videoLoading = false;
         state.selectedVideo = action.payload;
+        
+        // // Update the video in content array if it exists there
+        // if (state.content && state.content.docs) {
+        //   const index = state.content.docs.findIndex(video => video._id === action.payload._id);
+        //   if (index !== -1) {
+        //     state.content.docs[index] = action.payload;
+        //   }
+        // }
       })
-      .addCase(fetchUpdateVideoById.rejected, (state, action) => {
+      .addCase(fetchVideoUpdate.rejected, (state, action) => {
         state.videoLoading = false;
-        state.videoError = action.payload; // Access the payload from rejectWithValue
-        state.selectedVideo = [];
-      });
+        state.videoError = action.payload;
+      })
   },
 });
 

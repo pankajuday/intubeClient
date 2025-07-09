@@ -89,12 +89,12 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <a
+                {/* <a
                   className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                   href="#"
                 >
                   Forgot Password?
-                </a>
+                </a> */}
               </div>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"

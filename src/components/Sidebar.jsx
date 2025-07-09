@@ -188,7 +188,7 @@ const Sidebar = () => {
           {userDetail && (
             <div className="mt-auto border-t border-gray-200 pt-4">
               <NavLink
-                to="/dashboard"
+                to="/edit"
                 className={({ isActive }) =>
                   `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
                     isActive
@@ -205,7 +205,7 @@ const Sidebar = () => {
                 <span className="mr-3">
                   <UsersIcon size={20} />
                 </span>
-                Your Channel
+                Edit Profile
               </NavLink>
             </div>
           )}

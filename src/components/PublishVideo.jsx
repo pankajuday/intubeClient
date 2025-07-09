@@ -16,24 +16,15 @@ const PublishVideo = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("videoFile", data.videoFile[0]);
     formData.append("thumbnail", data.thumbnail[0]);
-    try {
-      await dispatch(fetchPostVideo(formData)).unwrap();
-      
-        
-      reset(); 
-      if(!videoLoading){
-        alert("Video published successfully!");
-      }
-    } catch (err) {
-      console.error("Error uploading video:", err);
-      alert("An error occurred. Please try again.", err.message);
-    }
+
+    await dispatch(fetchPostVideo(formData)).unwrap();
+    reset();
+
     console.log(formData);
   };
 
