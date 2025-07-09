@@ -84,7 +84,7 @@ function PlaylistVideo() {
                   {selectedPlaylist[0]?.name}
                 </h2>
                 <div className="flex gap-3">
-                  <button
+                  {/* <button
                     className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                     title="Edit playlist"
                   >
@@ -92,7 +92,7 @@ function PlaylistVideo() {
                       size={20}
                       className="text-gray-600 dark:text-gray-300"
                     />
-                  </button>
+                  </button> */}
                   <button
                     onClick={(e) => {
                       e.preventDefault();

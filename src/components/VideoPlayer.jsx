@@ -396,12 +396,12 @@ const VideoPlayer = () => {
                   {/* Right controls */}
                   <div className="flex gap-3">
                     <button onClick={settingClickHandler}>
-                      <Settings
+                      {/* <Settings
                         className={`transition-transform duration-200 ${
                           isClickedSetting ? "rotate-90" : ""
                         }`}
                         size={20}
-                      />
+                      /> */}
                     </button>
                     <button onClick={pipHandler}>
                       <PictureInPicture2 size={20} />

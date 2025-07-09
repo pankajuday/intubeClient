@@ -1,12 +1,14 @@
-import { Share2, ListPlus, Bookmark, Flag } from "lucide-react";
+import { Share2, ListPlus, Bookmark, Flag, Edit } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import AddToPlaylist from "./AddToPlaylist";
+import { useNavigate } from "react-router-dom";
 
-export default function MoreOpt({ onClose, videoId, videoTitle }) {
+export default function MoreOpt({ onClose, videoId, videoTitle,username }) {
   const menuRef = useRef(null);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const { userDetail, isLoading } = useSelector((state) => state.user);
+  const navigator = useNavigate();
 
   // Function to handle sharing via Web Share API
   const handleShare = async (e) => {
@@ -60,7 +62,12 @@ export default function MoreOpt({ onClose, videoId, videoTitle }) {
     alert("Report feature will be implemented soon!");
     if (onClose) onClose();
   };
-
+// Handle navigation of update video details
+const handleVideoUpdateNavigation = (e)=>{
+  e.preventDefault();
+  e.stopPropagation();
+  navigator(`/update-video/${videoId}`)
+}
   return (
     <div
       ref={menuRef}
@@ -109,7 +116,7 @@ export default function MoreOpt({ onClose, videoId, videoTitle }) {
             <span>Watch later</span>
           </button>
         </li> */}
-        <li>
+        {/* <li>
           <button
             type="button"
             onClick={handleReport}
@@ -119,6 +126,21 @@ export default function MoreOpt({ onClose, videoId, videoTitle }) {
             <Flag size={16} />
             <span>Report</span>
           </button>
+        </li> */}
+        <li>
+          {
+            userDetail?.username === username && (
+              <button
+            type="button"
+            onClick={handleVideoUpdateNavigation}
+            className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+            role="menuitem"
+          >
+            <Edit size={16}/>
+            <span>Update</span>
+          </button>
+            )
+          }
         </li>
       </ul>{" "}
       {isPlaylistModalOpen && (

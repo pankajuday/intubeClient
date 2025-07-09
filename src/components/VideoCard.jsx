@@ -111,6 +111,7 @@ const VideoCard = ({ video }) => {
             onClose={() => setToggleMoreOpt(false)}
             videoId={video?._id}
             videoTitle={video?.title}
+            username={video?.username}
           />
         </div>
       )}

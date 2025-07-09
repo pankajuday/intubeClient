@@ -32,8 +32,7 @@ const Navbar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(`/videos?query=${searchTerm}`);
-      setSearchTerm("");
+      navigate(`/videos?query=${encodeURIComponent(searchTerm.trim())}`);
       setShowMobileSearch(false);
     }
   };
@@ -66,7 +65,7 @@ const Navbar = () => {
       <div className={`flex-1 max-w-2xl mx-4 ${showMobileSearch ? 'flex' : 'hidden sm:flex'}`}>
         <form onSubmit={handleSearch} className="relative w-full">
           <input
-            type="text"
+            type="search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search..."

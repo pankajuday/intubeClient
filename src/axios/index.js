@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-const multipartEndpoints = ["/users/register", "/videos"];
+const multipartEndpoints = ["/users/register", "/videos", "/users/avatar", "/users/cover-image", "/videos/"];
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -127,14 +127,6 @@ export const deleteVideoById = async (videoId) => {
   }
 };
 
-export const updateVideoById = async (videoId) => {
-  try {
-    const response = await axiosInstance.patch(`/videos/${videoId}`);
-    return response.data;
-  } catch (error) {
-    return error;
-  }
-};
 
 // Auth
 export const isLogin = async () => {
@@ -372,5 +364,45 @@ export const getChannel = async (username) => {
     return error;
   }
 };
+
+
+//  update 
+
+export const updateAccount = async(data)=>{
+  try {
+    const response = await axiosInstance.patch("/users/update-account",data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateAvatar = async(data)=>{
+  try {
+    const response = await axiosInstance.patch("/users/avatar",data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+export const updateCoverImage = async(data)=>{
+  try {
+    const response = await axiosInstance.patch("/users/cover-image",data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+export const updateVideo = async(data,videoId)=>{
+  try {
+    const response = await axiosInstance.patch(`/videos/${videoId}`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
 
 export default axiosInstance;
