@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { 
-  HomeIcon, 
-  ClockIcon, 
-  ThumbsUpIcon, 
-  ListVideoIcon, 
-  UsersIcon, 
-  Settings,
-  LogOutIcon
+  Home, 
+  Clock, 
+  ThumbsUp, 
+  ListVideo, 
+  UserCog,
+  LogOut,
+  Users,
+  Plus
 } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -91,10 +92,10 @@ const Sidebar = () => {
   }, [userDetail, dispatch]);
 
   const menuItems = [
-    { icon: <HomeIcon size={20} />, text: "Home", to: "/" },
-    { icon: <ClockIcon size={20} />, text: "History", to: "/history" },
-    { icon: <ThumbsUpIcon size={20} />, text: "Liked Videos", to: "/likedvideos" },
-    { icon: <ListVideoIcon size={20} />, text: "Playlists", to: "/playlists" },
+    { icon: <Home size={18} />, text: "Home", to: "/" },
+    { icon: <Clock size={18} />, text: "History", to: "/history" },
+    { icon: <ThumbsUp size={18} />, text: "Liked Videos", to: "/likedvideos" },
+    { icon: <ListVideo size={18} />, text: "Playlists", to: "/playlists" },
   ];
 
   return (
@@ -102,7 +103,7 @@ const Sidebar = () => {
       {/* Mobile Overlay - only visible when sidebar is open on mobile */}
       {isOpen && window.innerWidth < 768 && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden" 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-200" 
           onClick={() => setIsOpen(false)} 
           aria-hidden="true"
         />
@@ -111,22 +112,22 @@ const Sidebar = () => {
       {/* Sidebar */}
       <aside 
         id="sidebar"
-        className={`fixed left-0 top-16 bottom-0 z-40 w-64 bg-white shadow-lg transition-transform duration-200 ${
+        className={`fixed left-0 top-16 bottom-0 z-40 w-64 shadow-xl transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        } md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:z-0 md:shadow-none overflow-y-auto`}
+        } md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:z-0 md:shadow-none border-r border-slate-800/40 overflow-y-auto bg-slate-950 scrollbar-thin scrollbar-thumb-slate-700/30 scrollbar-track-slate-900/30`}
       >
         <div className="py-4 px-2 h-full flex flex-col">
           {/* Navigation Links */}
-          <nav className="space-y-1 mb-6">
+          <nav className="space-y-0.5 mb-6">
             {menuItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                  `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 ${
                     isActive
-                      ? "bg-gray-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-slate-800/80 text-orange-500 shadow-sm"
+                      : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
                   }`
                 }
                 onClick={() => {
@@ -136,29 +137,29 @@ const Sidebar = () => {
                   }
                 }}
               >
-                <span className="mr-3">{item.icon}</span>
+                <span className="mr-3 text-orange-500/80 group-hover:text-orange-500">{item.icon}</span>
                 {item.text}
               </NavLink>
             ))}
           </nav>
 
           {/* Subscriptions Section */}
-          <div className="mt-2 mb-2">
-            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              SUBSCRIPTIONS
+          <div className="mt-3 mb-2">
+            <h3 className="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center">
+              <Users size={13} className="mr-1.5 text-slate-500/70" /> Subscriptions
             </h3>
             
-            <div className="mt-2 space-y-1 max-h-64 overflow-y-auto">
+            <div className="mt-2 space-y-0.5 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700/30 scrollbar-track-transparent pr-1">
               {subscribedChannels && subscribedChannels.length > 0 ? (
                 subscribedChannels.map((subscription) => (
                   <NavLink
                     key={subscription?._id}
                     to={`/profile/${subscription?.username}`}
                     className={({ isActive }) =>
-                      `flex items-center px-4 py-2 text-sm font-medium rounded-lg ${
+                      `flex items-center px-4 py-2 text-sm rounded-lg transition-colors duration-200 group ${
                         isActive
-                          ? "bg-gray-100 text-blue-600"
-                          : "text-gray-700 hover:bg-gray-50"
+                          ? "bg-slate-800/80 text-orange-500"
+                          : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
                       }`
                     }
                     onClick={() => {
@@ -167,9 +168,9 @@ const Sidebar = () => {
                       }
                     }}
                   >
-                    <Avatar className="h-6 w-6 mr-3">
+                    <Avatar className="h-6 w-6 mr-3 border border-slate-700 shadow-sm">
                       <AvatarImage src={subscription?.avatar} />
-                      <AvatarFallback>
+                      <AvatarFallback className="bg-slate-800 text-orange-500 text-xs font-medium">
                         {subscription?.username?.charAt(0)?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -177,23 +178,32 @@ const Sidebar = () => {
                   </NavLink>
                 ))
               ) : (
-                <p className="px-4 py-2 text-sm text-gray-500 italic">
-                  No subscriptions yet
-                </p>
+                <div className="px-4 py-4 flex flex-col items-center justify-center text-center">
+                  <div className="w-8 h-8 bg-slate-800/50 rounded-full flex items-center justify-center mb-2 text-slate-500">
+                    <Users size={16} />
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    No subscriptions yet
+                  </p>
+                  <button className="mt-2 text-xs flex items-center text-orange-500 hover:text-orange-400 transition-colors">
+                    <Plus size={12} className="mr-1" />
+                    Discover channels
+                  </button>
+                </div>
               )}
             </div>
           </div>
 
           {/* Footer Section */}
           {userDetail && (
-            <div className="mt-auto border-t border-gray-200 pt-4">
+            <div className="mt-auto border-t border-slate-800/50 pt-4">
               <NavLink
                 to="/edit"
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                  `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 ${
                     isActive
-                      ? "bg-gray-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-slate-800/80 text-orange-500"
+                      : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
                   }`
                 }
                 onClick={() => {
@@ -202,8 +212,8 @@ const Sidebar = () => {
                   }
                 }}
               >
-                <span className="mr-3">
-                  <UsersIcon size={20} />
+                <span className="mr-3 text-orange-500/80">
+                  <UserCog size={18} />
                 </span>
                 Edit Profile
               </NavLink>
@@ -211,14 +221,14 @@ const Sidebar = () => {
           )}
 
           {userDetail && (
-            <div className="border-t border-gray-200 mt-2">
+            <div className="border-t border-slate-800/50 mt-2 pt-2">
               <NavLink
                 to="/logout"
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg ${
+                  `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 ${
                     isActive
-                      ? "bg-gray-100 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-slate-800/80 text-orange-500"
+                      : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
                   }`
                 }
                 onClick={() => {
@@ -227,8 +237,8 @@ const Sidebar = () => {
                   }
                 }}
               >
-                <span className="mr-3">
-                  <LogOutIcon size={20} />
+                <span className="mr-3 text-orange-500/80">
+                  <LogOut size={18} />
                 </span>
                 Logout
               </NavLink>

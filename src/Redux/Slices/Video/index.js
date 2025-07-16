@@ -8,18 +8,16 @@ import {
   updateVideo,
 } from "@/axios";
 
-// fetcing all videos with pagenation
+// fetching all videos with pagination
 export const fetchAllVideos = createAsyncThunk(
   "video/get",
-  async (_, thunkAPI) => {
-    // Added thunkAPI
+  async (page = 1, thunkAPI) => {
     try {
-      const response = await getAllVideos();
-      // console.log("API Response:", response);
+      const response = await getAllVideos(page);
       return response;
     } catch (error) {
       console.error("Error fetching videos:", error);
-      return thunkAPI.rejectWithValue(error.message); // Use thunkAPI to reject
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

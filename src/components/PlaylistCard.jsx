@@ -3,9 +3,10 @@ import { Card, CardContent, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Link } from "react-router-dom";
-import {  getRandomColor } from "@/utils/getRandomColor";
+import { getRandomColor } from "@/utils/getRandomColor";
 import defaultImg from "../assets/playlist.png";
 import { getTimeAgo } from "@/utils/formateDate";
+import { ListMusic, Play } from "lucide-react";
 
 const PlaylistCard = ({ data }) => {
   const [fallbackColor, setFallbackColor] = useState("");
@@ -15,44 +16,55 @@ const PlaylistCard = ({ data }) => {
   }, []);
 
   return (
-    <Card className="w-full rounded-sm overflow-hidden hover:shadow-md transition-all duration-200">
+    <Card className="w-full rounded-lg overflow-hidden bg-slate-950 border border-slate-800/50 hover:border-slate-700/70 shadow-lg group transition-all duration-300 hover:shadow-xl">
       <Link to={`/playlist/${data?._id}`} className="block">
         <CardContent className="p-0">
-          {/* Playlist Thumbnail */}
-          <AspectRatio ratio={16 / 9} className="bg-slate-200">
-            <img
-              src={data?.videos?.[0]?.thumbnail || defaultImg}
-              alt={data?.name}
-              className="object-cover w-full h-full"
-            />
-            {/* Video Count */}
-          <div className="absolute right-2 bottom-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-            {data?.totalVideos || 0} videos
+          {/* Playlist Thumbnail with Hover Effect */}
+          <div className="relative">
+            <AspectRatio ratio={16 / 9} className="bg-slate-900 overflow-hidden">
+              <img
+                src={data?.videos?.[0]?.thumbnail || defaultImg}
+                alt={data?.name}
+                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 group-hover:brightness-75"
+                loading="lazy"
+              />
+              
+              {/* Play Overlay on Hover */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-slate-950/80 to-slate-900/40">
+                <div className="bg-orange-600 rounded-full p-3 shadow-lg transform group-hover:scale-110 transition-transform duration-300 hover:bg-orange-500">
+                  <Play size={24} className="text-white" fill="white" />
+                </div>
+              </div>
+              
+              {/* Video Count Badge */}
+              <div className="absolute top-2 left-2 bg-slate-900/80 border border-slate-700/50 backdrop-blur-sm text-slate-200 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-md">
+                <ListMusic size={12} className="text-orange-600" />
+                <span>{data?.totalVideos || 0} videos</span>
+              </div>
+            </AspectRatio>
           </div>
-          </AspectRatio>
 
-          
+          {/* Playlist Info */}
+          <div className="p-4 border-t border-slate-800/50">
+            <CardTitle className="text-sm font-medium text-white leading-tight line-clamp-1 mb-2 group-hover:text-orange-500 transition-colors">
+              {data?.name}
+            </CardTitle>
 
-          {/* Author Info */}
-          <div className="flex gap-3 p-2">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={data?.owner?.avatar} />
-              <AvatarFallback className={`${fallbackColor} text-white text-center font-bold`}>
-                {data?.owner?.username?.[0]?.toUpperCase() || "P"}
-              </AvatarFallback>
-            </Avatar>
-
-            {/* Playlist Details */}
-            <div className="w-full">
-              <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 mb-1">
-                {data?.name}
-              </CardTitle>
-
-              <p className="text-gray-400 text-xs flex items-center gap-1">
-                {data?.owner?.fullName}
-              </p>
-              <div className="flex space-x-2">
-                <p className="text-gray-500 text-xs">
+            {/* Author Info */}
+            <div className="flex items-center gap-2.5">
+              <Avatar className="h-7 w-7 ring-2 ring-slate-800 group-hover:ring-orange-600/30 transition-all">
+                <AvatarImage src={data?.owner?.avatar} />
+                <AvatarFallback className={`${fallbackColor} text-white text-xs font-bold`}>
+                  {data?.owner?.username?.[0]?.toUpperCase() || "P"}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex flex-col">
+                <p className="text-slate-300 text-xs font-medium group-hover:text-slate-200 transition-colors">
+                  {data?.owner?.fullName}
+                </p>
+                <p className="text-slate-500 text-xs flex items-center gap-1">
+                  <span className="w-1 h-1 bg-slate-600 rounded-full inline-block"></span>
                   {getTimeAgo(data?.createdAt)}
                 </p>
               </div>

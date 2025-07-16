@@ -57,7 +57,7 @@ const MainLayout = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-slate-950">
       <Navbar />
       <div className="flex flex-1 ">
         {" "}
@@ -118,7 +118,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/healthcheck" element={<HealthCheck />} />
-            <Route path="/test" element={<AddToPlaylist />} />
+            <Route path="/test" element={<NotFound />} />
           </Routes>
         </Router>
       </div>

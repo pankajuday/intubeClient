@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPostVideo } from "@/Redux";
 import { Textarea } from "./ui/textarea";
+import { Upload, FileText, Image } from "lucide-react";
 
 const PublishVideo = () => {
   const dispatch = useDispatch();
@@ -29,22 +30,24 @@ const PublishVideo = () => {
   };
 
   return (
-    <div className="min-h-screen w-full p-3 md:p-6 flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-[1000px] p-4 md:p-8 bg-white shadow-lg rounded-sm">
-        <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-gray-800">
-          Publish Video
+    <div className="min-h-screen w-full p-3 md:p-6 flex items-center justify-center bg-slate-900">
+      <div className="w-full max-w-[1000px] p-6 md:p-8 bg-slate-950 shadow-xl rounded-lg border border-slate-800">
+        <h1 className="text-2xl md:text-3xl font-bold text-center mb-8 text-white flex items-center justify-center gap-3">
+          <Upload className="w-6 h-6 text-orange-600" />
+          <span>Publish Video</span>
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
             {/* Left Side - File Uploads */}
-            <div className="w-full lg:flex-1 space-y-4 md:space-y-6">
+            <div className="w-full lg:flex-1 space-y-6">
               {/* Video File */}
-              <div className="p-4 md:p-6 border-2 border-dashed border-gray-300 rounded-sm">
+              <div className="p-4 md:p-6 border-2 border-dashed border-slate-700 rounded-lg bg-slate-900/50 hover:bg-slate-900/70 transition-colors group">
                 <label
                   htmlFor="videoFile"
-                  className="block text-base md:text-lg font-medium mb-2 md:mb-3 text-gray-700"
+                  className="flex items-center gap-2 text-base md:text-lg font-medium mb-3 text-white cursor-pointer"
                 >
-                  Video File
+                  <FileText className="w-5 h-5 text-orange-600" />
+                  <span>Video File</span>
                 </label>
                 <input
                   type="file"
@@ -53,22 +56,26 @@ const PublishVideo = () => {
                     required: "Video file is required",
                   })}
                   accept="video/*"
-                  className="w-full text-sm md:text-base text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  className="w-full text-sm md:text-base text-slate-300 file:mr-4 file:py-2 file:px-4 
+                  file:rounded-md file:border-0 file:text-sm file:font-medium 
+                  file:bg-orange-600/10 file:text-orange-600 
+                  hover:file:bg-orange-600/20 cursor-pointer"
                 />
                 {errors.videoFile && (
-                  <p className="text-red-500 text-sm mt-2">
+                  <p className="text-red-400 text-sm mt-2">
                     {errors.videoFile.message}
                   </p>
                 )}
               </div>
 
               {/* Thumbnail */}
-              <div className="p-4 md:p-6 border-2 border-dashed border-gray-300 rounded-sm">
+              <div className="p-4 md:p-6 border-2 border-dashed border-slate-700 rounded-lg bg-slate-900/50 hover:bg-slate-900/70 transition-colors group">
                 <label
                   htmlFor="thumbnail"
-                  className="block text-base md:text-lg font-medium mb-2 md:mb-3 text-gray-700"
+                  className="flex items-center gap-2 text-base md:text-lg font-medium mb-3 text-white cursor-pointer"
                 >
-                  Thumbnail
+                  <Image className="w-5 h-5 text-orange-600" />
+                  <span>Thumbnail</span>
                 </label>
                 <input
                   type="file"
@@ -77,10 +84,13 @@ const PublishVideo = () => {
                     required: "Thumbnail is required",
                   })}
                   accept="image/*"
-                  className="w-full text-sm md:text-base text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  className="w-full text-sm md:text-base text-slate-300 file:mr-4 file:py-2 file:px-4 
+                  file:rounded-md file:border-0 file:text-sm file:font-medium 
+                  file:bg-orange-600/10 file:text-orange-600 
+                  hover:file:bg-orange-600/20 cursor-pointer"
                 />
                 {errors.thumbnail && (
-                  <p className="text-red-500 text-sm mt-2">
+                  <p className="text-red-400 text-sm mt-2">
                     {errors.thumbnail.message}
                   </p>
                 )}
@@ -88,12 +98,12 @@ const PublishVideo = () => {
             </div>
 
             {/* Right Side - Text Fields */}
-            <div className="w-full lg:flex-1 space-y-4 md:space-y-6">
+            <div className="w-full lg:flex-1 space-y-6">
               {/* Title */}
               <div>
                 <label
                   htmlFor="title"
-                  className="block text-base md:text-lg font-medium mb-2 md:mb-3 text-gray-700"
+                  className="block text-base md:text-lg font-medium mb-3 text-white"
                 >
                   Title
                 </label>
@@ -101,11 +111,11 @@ const PublishVideo = () => {
                   type="text"
                   id="title"
                   {...register("title", { required: "Title is required" })}
-                  className="w-full border border-gray-300 rounded-sm p-2.5 md:p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-md p-3 text-white focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-colors placeholder:text-slate-500"
                   placeholder="Enter video title"
                 />
                 {errors.title && (
-                  <p className="text-red-500 text-sm mt-2">
+                  <p className="text-red-400 text-sm mt-2">
                     {errors.title.message}
                   </p>
                 )}
@@ -115,7 +125,7 @@ const PublishVideo = () => {
               <div>
                 <label
                   htmlFor="description"
-                  className="block text-base md:text-lg font-medium mb-2 md:mb-3 text-gray-700"
+                  className="block text-base md:text-lg font-medium mb-3 text-white"
                 >
                   Description
                 </label>
@@ -124,12 +134,12 @@ const PublishVideo = () => {
                   {...register("description", {
                     required: "Description is required",
                   })}
-                  className="w-full border border-gray-300 rounded-sm p-2.5 md:p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-none"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-md p-3 text-white focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-orange-600 transition-colors placeholder:text-slate-500"
                   rows="5"
                   placeholder="Enter video description"
                 ></Textarea>
                 {errors.description && (
-                  <p className="text-red-500 text-sm mt-2">
+                  <p className="text-red-400 text-sm mt-2">
                     {errors.description.message}
                   </p>
                 )}
@@ -138,20 +148,32 @@ const PublishVideo = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-center mt-6 md:mt-8">
+          <div className="flex justify-center mt-8">
             <button
               type="submit"
               disabled={videoLoading}
-              className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-blue-600 text-white rounded-sm font-medium hover:bg-blue-700 transition duration-300 disabled:bg-blue-400 disabled:cursor-not-allowed min-w-[160px] md:min-w-[200px]"
+              className="w-full md:w-auto px-8 py-3 bg-orange-600 text-white rounded-md font-medium 
+              hover:bg-orange-700 transition-colors disabled:bg-orange-600/50 disabled:cursor-not-allowed 
+              min-w-[200px] flex items-center justify-center gap-2"
             >
-              {videoLoading ? "Publishing..." : "Publish Video"}
+              {videoLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Publishing...</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4" />
+                  <span>Publish Video</span>
+                </>
+              )}
             </button>
           </div>
         </form>
 
         {/* Error Message */}
         {videoError && (
-          <div className="mt-4 text-center text-red-500 bg-red-50 p-2.5 md:p-3 rounded-sm text-sm md:text-base">
+          <div className="mt-6 text-center text-red-400 bg-red-500/10 border border-red-500/20 p-3 rounded-md text-sm md:text-base">
             Error: {videoError}
           </div>
         )}

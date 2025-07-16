@@ -4,7 +4,7 @@ import { fetchUpdateAccount, fetchUpdateAvatar, fetchUpdateCoverImage, fetchUser
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import SpringLoader from "./SpringLoader";
-import { Camera, Save, X } from "lucide-react";
+import { Camera, Save, X, User, Mail, ImageIcon, Upload, AlertCircle } from "lucide-react";
 import { showSuccessToast, showErrorToast } from "@/Notification/Toast";
 
 function UpdateProfile() {
@@ -175,27 +175,39 @@ function UpdateProfile() {
   };
 
   return (
-    <div className="update-profile-container max-w-4xl mx-auto pt-24 px-4 pb-8">
-      <h1 className="text-2xl font-bold mb-6">Update Profile</h1>
+    <div className="update-profile-container max-w-4xl mx-auto pt-24 px-4 pb-12 bg-slate-900 min-h-screen">
+      <h1 className="text-3xl font-bold mb-8 text-white flex items-center gap-2">
+        <User className="w-8 h-8 text-orange-500" /> 
+        Update Profile
+      </h1>
       
       {/* Tab Navigation */}
-      <div className="tab-navigation flex mb-6 border-b">
+      <div className="tab-navigation flex mb-8 border-b border-slate-700 overflow-x-auto no-scrollbar">
         <button 
-          className={`py-2 px-4 font-medium ${activeTab === "account" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+          className={`py-3 px-6 font-medium flex items-center gap-2 transition-all ${activeTab === "account" 
+            ? "border-b-2 border-orange-500 text-orange-500" 
+            : "text-slate-300 hover:text-white"}`}
           onClick={() => handleTabChange("account")}
         >
+          <User size={18} />
           Account Details
         </button>
         <button 
-          className={`py-2 px-4 font-medium ${activeTab === "avatar" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+          className={`py-3 px-6 font-medium flex items-center gap-2 transition-all ${activeTab === "avatar" 
+            ? "border-b-2 border-orange-500 text-orange-500" 
+            : "text-slate-300 hover:text-white"}`}
           onClick={() => handleTabChange("avatar")}
         >
+          <Camera size={18} />
           Profile Picture
         </button>
         <button 
-          className={`py-2 px-4 font-medium ${activeTab === "cover" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+          className={`py-3 px-6 font-medium flex items-center gap-2 transition-all ${activeTab === "cover" 
+            ? "border-b-2 border-orange-500 text-orange-500" 
+            : "text-slate-300 hover:text-white"}`}
           onClick={() => handleTabChange("cover")}
         >
+          <ImageIcon size={18} />
           Cover Image
         </button>
       </div>
@@ -204,50 +216,73 @@ function UpdateProfile() {
       
       {/* Error Display */}
       {error && (
-        <div className="error-message bg-red-50 text-red-600 p-4 rounded-md mb-6">
+        <div className="error-message bg-red-900/30 text-red-400 p-5 rounded-lg mb-6 flex items-start gap-3 border border-red-800/50">
+          <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
           <p>{error}</p>
         </div>
       )}
       
       {/* Account Details Form */}
       {activeTab === "account" && (
-        <div className="account-details-form">
-          <form onSubmit={handleSubmit(onAccountSubmit)} className="space-y-4">
+        <div className="account-details-form bg-slate-800/80 p-6 rounded-xl shadow-md border border-slate-700">
+          <form onSubmit={handleSubmit(onAccountSubmit)} className="space-y-6">
             <div className="form-group">
-              <label htmlFor="fullName" className="block text-sm font-medium mb-1">Full Name</label>
+              <label htmlFor="fullName" className="text-sm font-medium mb-2 text-slate-200 flex items-center gap-2">
+                <User size={16} className="text-orange-500" /> Full Name
+              </label>
               <input
                 id="fullName"
                 type="text"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                {...register("fullName", { required: "Full name is required" })}
+                className="w-full p-3 border border-slate-700 rounded-lg 
+                           bg-slate-900/80 text-white
+                           focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                placeholder="Enter your full name"
+                {...register("fullName", { required: "Full name is required",
+                  pattern:{
+                    value: /^[A-Za-z]+(?: [A-Za-z]+)*$/ ,
+                    message: "Please enter a valid full name. Only [A-Za-z] and spaces are allowed. @,#,$..etc characters, [0-9], or extra spaces are not permitted."
+                  }
+                 })}
               />
               {errors.fullName && (
-                <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-2 flex items-center gap-1">
+                  <AlertCircle size={14} /> {errors.fullName.message}
+                </p>
               )}
             </div>
             
             <div className="form-group">
-              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+              <label htmlFor="email" className="text-sm font-medium mb-2 text-slate-200 flex items-center gap-2">
+                <Mail size={16} className="text-orange-500" /> Email Address
+              </label>
               <input
                 id="email"
                 type="email"
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-slate-700 rounded-lg 
+                           bg-slate-900/80 text-white
+                           focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                placeholder="Enter your email address"
                 {...register("email", { 
                   required: "Email is required",
                   pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: "Invalid email address"
                   }
                 })}
               />
               {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-2 flex items-center gap-1">
+                  <AlertCircle size={14} /> {errors.email.message}
+                </p>
               )}
             </div>
             
-
-            
-            <Button type="submit" disabled={isLoading} className="flex items-center gap-2">
-              <Save size={16} /> Update Account Details
+            <Button 
+              type="submit" 
+              disabled={isLoading} 
+              className="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white py-3 px-6 rounded-lg transition-all disabled:opacity-70 shadow-lg shadow-orange-900/20"
+            >
+              <Save size={18} /> Update Account Details
             </Button>
           </form>
         </div>
@@ -255,98 +290,153 @@ function UpdateProfile() {
       
       {/* Avatar Update Form */}
       {activeTab === "avatar" && (
-        <div className="avatar-form">
-          <div className="avatar-preview mb-6 flex justify-center">
+        <div className="avatar-form bg-slate-800/80 p-6 rounded-xl shadow-md border border-slate-700">
+          <div className="avatar-preview mb-8 flex flex-col items-center justify-center">
             {avatarPreview ? (
-              <div className="relative">
+              <div className="relative group">
                 <img 
                   src={avatarPreview} 
                   alt="Avatar Preview" 
-                  className="w-32 h-32 rounded-full object-cover border-2 border-gray-200" 
+                  className="w-40 h-40 rounded-full object-cover border-4 border-slate-700 shadow-md" 
                 />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded-full transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <Camera size={32} className="text-white" />
+                </div>
                 {avatarFile && (
                   <button 
                     onClick={clearAvatar}
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-all"
                     title="Clear selection"
                   >
-                    <X size={16} />
+                    <X size={18} />
                   </button>
                 )}
               </div>
             ) : (
-              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
-                <Camera size={32} className="text-gray-400" />
+              <div className="w-40 h-40 rounded-full bg-slate-700 flex items-center justify-center shadow-md">
+                <Camera size={40} className="text-slate-400" />
               </div>
             )}
+            <h3 className="mt-4 text-lg font-medium text-white">
+              {userDetail?.fullName || "Your Profile"}
+            </h3>
+            <p className="text-slate-400 text-sm">
+              {userDetail?.email || "Update your profile picture"}
+            </p>
           </div>
           
-          <form onSubmit={handleAvatarSubmit} className="space-y-4">
+          <form onSubmit={handleAvatarSubmit} className="space-y-5">
             <div className="form-group">
-              <label htmlFor="avatar" className="block text-sm font-medium mb-1">Select Profile Picture</label>
-              <input
-                id="avatar"
-                type="file"
-                ref={avatarInputRef}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={handleAvatarChange}
-                accept="image/*"
-              />
-              <p className="text-xs text-gray-500 mt-1">Recommended: Square image, 300x300px or larger</p>
+              <label htmlFor="avatar" className="text-sm font-medium mb-2 text-slate-200 flex items-center gap-2">
+                <Upload size={16} className="text-orange-500" /> Select Profile Picture
+              </label>
+              <div className="mt-2 flex items-center justify-center w-full">
+                <label htmlFor="avatar" className="cursor-pointer flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-700 rounded-lg bg-slate-900/50 hover:bg-slate-900 transition-all">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload size={24} className="text-orange-500 mb-2" />
+                    <p className="text-sm text-slate-300">
+                      <span className="font-medium">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">PNG, JPG, GIF (max. 5MB)</p>
+                  </div>
+                  <input
+                    id="avatar"
+                    type="file"
+                    ref={avatarInputRef}
+                    className="hidden"
+                    onChange={handleAvatarChange}
+                    accept="image/*"
+                  />
+                </label>
+              </div>
+              <p className="text-xs text-slate-400 mt-3 text-center">
+                Recommended: Square image, 300x300px or larger for best quality
+              </p>
             </div>
             
-            <Button type="submit" disabled={isLoading || !avatarFile} className="flex items-center gap-2">
-              <Save size={16} /> Update Profile Picture
-            </Button>
+            <div className="flex justify-center mt-4">
+              <Button 
+                type="submit" 
+                disabled={isLoading || !avatarFile} 
+                className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white py-3 px-6 rounded-lg transition-all disabled:opacity-70 disabled:hover:bg-orange-600"
+              >
+                <Save size={18} /> Update Profile Picture
+              </Button>
+            </div>
           </form>
         </div>
       )}
       
       {/* Cover Image Update Form */}
       {activeTab === "cover" && (
-        <div className="cover-image-form">
-          <div className="cover-preview mb-6">
+        <div className="cover-image-form bg-slate-800/80 p-6 rounded-xl shadow-md border border-slate-700">
+          <div className="cover-preview mb-8">
             {coverPreview ? (
-              <div className="relative">
+              <div className="relative group overflow-hidden rounded-xl shadow-md border border-slate-700">
                 <img 
                   src={coverPreview} 
                   alt="Cover Preview" 
-                  className="w-full h-48 object-cover rounded-lg border-2 border-gray-200" 
+                  className="w-full h-56 object-cover" 
                 />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                  <Camera size={36} className="text-white opacity-80" />
+                </div>
                 {coverFile && (
                   <button 
                     onClick={clearCover}
-                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
+                    className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-all"
                     title="Clear selection"
                   >
-                    <X size={16} />
+                    <X size={18} />
                   </button>
                 )}
               </div>
             ) : (
-              <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
-                <Camera size={32} className="text-gray-400" />
+              <div className="w-full h-56 bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl flex flex-col items-center justify-center shadow-md">
+                <ImageIcon size={40} className="text-slate-500 mb-2" />
+                <p className="text-slate-400 text-sm font-medium">No cover image selected</p>
               </div>
             )}
           </div>
           
-          <form onSubmit={handleCoverSubmit} className="space-y-4">
+          <form onSubmit={handleCoverSubmit} className="space-y-5">
             <div className="form-group">
-              <label htmlFor="coverImage" className="block text-sm font-medium mb-1">Select Cover Image</label>
-              <input
-                id="coverImage"
-                type="file"
-                ref={coverInputRef}
-                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                onChange={handleCoverChange}
-                accept="image/*"
-              />
-              <p className="text-xs text-gray-500 mt-1">Recommended: 1200x300px, landscape orientation</p>
+              <label htmlFor="coverImage" className="text-sm font-medium mb-2 text-slate-200 flex items-center gap-2">
+                <Upload size={16} className="text-orange-500" /> Select Cover Image
+              </label>
+              <div className="mt-2 flex items-center justify-center w-full">
+                <label htmlFor="coverImage" className="cursor-pointer flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-700 rounded-lg bg-slate-900/50 hover:bg-slate-900 transition-all">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload size={24} className="text-orange-500 mb-2" />
+                    <p className="text-sm text-slate-300">
+                      <span className="font-medium">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">PNG, JPG (max. 10MB)</p>
+                  </div>
+                  <input
+                    id="coverImage"
+                    type="file"
+                    ref={coverInputRef}
+                    className="hidden"
+                    onChange={handleCoverChange}
+                    accept="image/*"
+                  />
+                </label>
+              </div>
+              <p className="text-xs text-slate-400 mt-3 text-center">
+                Recommended: 1200x300px, landscape orientation for best display on your channel
+              </p>
             </div>
             
-            <Button type="submit" disabled={isLoading || !coverFile} className="flex items-center gap-2">
-              <Save size={16} /> Update Cover Image
-            </Button>
+            <div className="flex justify-center mt-4">
+              <Button 
+                type="submit" 
+                disabled={isLoading || !coverFile} 
+                className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white py-3 px-6 rounded-lg transition-all disabled:opacity-70 disabled:hover:bg-orange-600"
+              >
+                <Save size={18} /> Update Cover Image
+              </Button>
+            </div>
           </form>
         </div>
       )}

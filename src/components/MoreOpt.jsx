@@ -3,12 +3,13 @@ import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import AddToPlaylist from "./AddToPlaylist";
 import { useNavigate } from "react-router-dom";
+import { showSuccessToast, showErrorToast } from "@/Notification/Toast";
 
-export default function MoreOpt({ onClose, videoId, videoTitle,username }) {
+export default function MoreOpt({ onClose, videoId, videoTitle, username }) {
   const menuRef = useRef(null);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const { userDetail, isLoading } = useSelector((state) => state.user);
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   // Function to handle sharing via Web Share API
   const handleShare = async (e) => {
@@ -16,20 +17,22 @@ export default function MoreOpt({ onClose, videoId, videoTitle,username }) {
     e.stopPropagation();
 
     try {
-      if (navigator.share) {
-        await navigator.share({
+      if (window.navigator.share) {
+        await window.navigator.share({
           title: videoTitle || "Check out this video",
           url: `${window.location.origin}/video/${videoId}`,
         });
       } else {
         // Fallback for browsers that don't support the Web Share API
-        navigator.clipboard.writeText(
+        window.navigator.clipboard.writeText(
           `${window.location.origin}/video/${videoId}`
         );
-        alert("Link copied to clipboard!");
+        // Using a more modern approach than alert
+        showSuccessToast("Link copied to clipboard!");
       }
     } catch (error) {
       console.error("Error sharing:", error);
+      showErrorToast("Failed to share: " + (error.message || "Unknown error"));
     }
     // Only close after action completes
     if (onClose) onClose();
@@ -39,7 +42,7 @@ export default function MoreOpt({ onClose, videoId, videoTitle,username }) {
     e.preventDefault();
     e.stopPropagation();
     if (!userDetail?._id) {
-      alert("Please login to add to playlist");
+      showErrorToast("Please login to add to playlist");
       return;
     }
     setIsPlaylistModalOpen(true);
@@ -50,7 +53,7 @@ export default function MoreOpt({ onClose, videoId, videoTitle,username }) {
     e.preventDefault();
     e.stopPropagation();
     // TODO: Implement watch later functionality
-    alert("Added to Watch Later!");
+    showSuccessToast("Added to Watch Later!");
     if (onClose) onClose();
   };
 
@@ -59,93 +62,101 @@ export default function MoreOpt({ onClose, videoId, videoTitle,username }) {
     e.preventDefault();
     e.stopPropagation();
     // TODO: Implement report functionality
-    alert("Report feature will be implemented soon!");
+    showSuccessToast("Report feature will be implemented soon!");
     if (onClose) onClose();
   };
 // Handle navigation of update video details
 const handleVideoUpdateNavigation = (e)=>{
   e.preventDefault();
   e.stopPropagation();
-  navigator(`/update-video/${videoId}`)
+  navigate(`/update-video/${videoId}`)
 }
   return (
     <div
       ref={menuRef}
-      className="origin-top-right rounded-sm shadow-xl bg-white dark:bg-slate-800 ring-1 ring-black dark:ring-slate-700 ring-opacity-5 focus:outline-none z-[1000]"
+      className="origin-top-right rounded-lg shadow-xl bg-slate-950 border border-slate-800 focus:outline-none z-[1000] overflow-hidden"
       role="menu"
       aria-orientation="vertical"
       style={{
         position: "absolute",
         right: 0,
         top: 0,
-        width: "200px",
+        width: "220px",
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      <ul className="py-1">
-        <li>
+      <ul className="py-1.5">
+        <li className="px-1.5">
           <button
             type="button"
             onClick={handleShare}
-            className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 rounded-md transition-colors"
             role="menuitem"
           >
-            <Share2 size={16} />
+            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-orange-500">
+              <Share2 size={16} />
+            </div>
             <span>Share</span>
           </button>
         </li>
-        <li>
+        <li className="px-1.5 mt-0.5">
           <button
             type="button"
             onClick={handleSaveToPlaylist}
-            className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 rounded-md transition-colors"
             role="menuitem"
           >
-            <ListPlus size={16} />
+            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-orange-500">
+              <ListPlus size={16} />
+            </div>
             <span>Save to playlist</span>
           </button>
         </li>
-        {/* <li>
+        {/* <li className="px-1.5 mt-0.5">
           <button
             type="button"
             onClick={handleWatchLater}
-            className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 rounded-md transition-colors"
             role="menuitem"
           >
-            <Bookmark size={16} />
+            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-orange-500">
+              <Bookmark size={16} />
+            </div>
             <span>Watch later</span>
           </button>
         </li> */}
-        {/* <li>
+        {/* <li className="px-1.5 mt-0.5">
           <button
             type="button"
             onClick={handleReport}
-            className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 rounded-md transition-colors"
             role="menuitem"
           >
-            <Flag size={16} />
+            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-orange-500">
+              <Flag size={16} />
+            </div>
             <span>Report</span>
           </button>
         </li> */}
-        <li>
-          {
-            userDetail?.username === username && (
-              <button
-            type="button"
-            onClick={handleVideoUpdateNavigation}
-            className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-            role="menuitem"
-          >
-            <Edit size={16}/>
-            <span>Update</span>
-          </button>
-            )
-          }
-        </li>
-      </ul>{" "}
+        {userDetail?.username === username && (
+          <li className="px-1.5 mt-0.5">
+            <button
+              type="button"
+              onClick={handleVideoUpdateNavigation}
+              className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 rounded-md transition-colors"
+              role="menuitem"
+            >
+              <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-orange-500">
+                <Edit size={16} />
+              </div>
+              <span>Update</span>
+            </button>
+          </li>
+        )}
+      </ul>
       {isPlaylistModalOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center"
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -153,7 +164,10 @@ const handleVideoUpdateNavigation = (e)=>{
             if (onClose) onClose();
           }}
         >
-          <div onClick={(e) => e.stopPropagation()}>
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="animate-fade-in"
+          >
             <AddToPlaylist
               videoId={videoId}
               userId={userDetail?._id}

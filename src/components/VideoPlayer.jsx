@@ -44,6 +44,30 @@ import { useDebounceClick } from "@/Hooks/useDebounceClick";
 import AddToPlaylist from "./AddToPlaylist";
 
 const VideoPlayer = () => {
+  // Custom CSS for skeleton animation
+  const shimmerStyle = `
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .animate-shimmer {
+      animation: shimmer 1.5s infinite;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.07) 50%,
+        rgba(255,255,255,0) 100%
+      );
+      background-size: 200% 100%;
+    }
+    @keyframes glow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.8; }
+    }
+    .animate-glow {
+      animation: glow 2s ease-in-out infinite;
+    }
+  `;
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,7 +120,7 @@ const VideoPlayer = () => {
         dispatch(fetchSubscribedChannels(userDetail?._id));
       }
     }
-  }, [dispatch, videoId, userDetail]);
+  }, [dispatch, videoId]);
 
   useEffect(() => {
     setFallbackColor(getRandomColor());
@@ -120,7 +144,7 @@ const VideoPlayer = () => {
 
   const handleFullScreen = (e) => {
     e.preventDefault();
-    
+
     if (videoRef.current) {
       if (!document.fullscreenElement) {
         videoRef.current.requestFullscreen();
@@ -223,7 +247,7 @@ const VideoPlayer = () => {
 
   const handleKeyPress = useCallback(
     (e) => {
-      console.log(e)
+      console.log(e);
       if (e.key === " " || e.key === "k") {
         e.preventDefault();
         togglePlayPause();
@@ -244,22 +268,67 @@ const VideoPlayer = () => {
   }, [handleKeyPress]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto overflow-hidden z-0">
+    <div className="w-full max-w-7xl mx-auto overflow-hidden z-0 px-3 md:px-6 py-6 bg-slate-950 text-white">
+      <style jsx>{shimmerStyle}</style>
       {videoLoading ? (
         <div>
-          <Skeleton className="w-full aspect-video" />
-          <Skeleton className="h-10 w-full" />
-          <div className="flex items-center gap-3 mt-3">
-            <Skeleton height={50} width={50} circle />
-            <Skeleton height={50} width="80%" />
+          <div className="w-full aspect-video bg-slate-900 rounded-xl overflow-hidden relative border border-slate-800">
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 animate-shimmer"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-16 w-16 rounded-full bg-slate-800/80 animate-glow flex items-center justify-center">
+                <div className="h-12 w-12 rounded-full bg-orange-600/20"></div>
+              </div>
+            </div>
           </div>
-          <Skeleton className="h-10 w-full mt-3" />
+
+          {/* Title skeleton */}
+          <div className="h-8 w-full bg-slate-900 rounded-lg mt-6 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 animate-shimmer"></div>
+          </div>
+
+          {/* Stats bar skeleton */}
+          <div className="flex justify-between mt-4">
+            <div className="h-5 w-32 bg-slate-900 rounded-md relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 animate-shimmer"></div>
+            </div>
+            <div className="flex gap-4">
+              <div className="h-8 w-20 bg-slate-900 rounded-md relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 animate-shimmer"></div>
+              </div>
+              <div className="h-8 w-20 bg-slate-900 rounded-md relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 animate-shimmer"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Channel card skeleton */}
+          <div className="mt-6 bg-slate-900 rounded-xl p-4 border border-slate-800/50 relative overflow-hidden">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full bg-slate-800 border border-slate-700"></div>
+              <div className="space-y-2">
+                <div className="h-5 w-48 bg-slate-800 rounded-md"></div>
+                <div className="h-4 w-24 bg-slate-800 rounded-md"></div>
+              </div>
+              <div className="ml-auto h-10 w-28 bg-orange-600/20 rounded-full"></div>
+            </div>
+          </div>
+
+          {/* Description skeleton */}
+          <div className="mt-6 bg-slate-900 rounded-xl p-4 border border-slate-800/50 space-y-3">
+            <div className="flex justify-between items-center">
+              <div className="h-5 w-24 bg-slate-800 rounded-md"></div>
+              <div className="h-6 w-6 rounded-full bg-slate-800"></div>
+            </div>
+            <div className="h-4 w-full bg-slate-800 rounded-md"></div>
+            <div className="h-4 w-5/6 bg-slate-800 rounded-md"></div>
+            <div className="h-4 w-4/6 bg-slate-800 rounded-md"></div>
+          </div>
         </div>
       ) : (
         <div>
           {/* Video Player */}
           <div
-            className="relative bg-black aspect-video w-full text-white overflow-hidden"
+            className="relative bg-black aspect-video w-full text-white overflow-hidden rounded-xl border border-slate-800 shadow-xl"
             ref={videoRef}
             role="region"
             aria-label="Video player"
@@ -291,19 +360,23 @@ const VideoPlayer = () => {
 
             {/* Loading overlay */}
             {mediaLoader && (
-              <div className="absolute inset-0 flex justify-center items-center bg-black/30">
-                <SpringLoader />
+              <div className="absolute inset-0 flex justify-center items-center bg-black/60 backdrop-blur-sm z-10">
+                <SpringLoader type="circle" color="orange-600" size="large" />
               </div>
             )}
 
             {/* Video controls overlay */}
             <div
-              className="absolute inset-0 transition-opacity duration-300"
-              style={{ opacity: displayTrigger ? 1 : 0 }}
+              className="absolute inset-0 transition-all duration-500"
+              style={{
+                opacity: displayTrigger ? 1 : 0,
+                background: displayTrigger
+                  ? "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.5) 100%)"
+                  : "transparent",
+              }}
               onMouseEnter={() => setDisplayTrigger(true)}
               onMouseLeave={() => setDisplayTrigger(false)}
               onTouchStart={() => setDisplayTrigger(!displayTrigger)}
-              
             >
               {/* Play/Pause button in center */}
               <div
@@ -311,106 +384,156 @@ const VideoPlayer = () => {
                 onDoubleClick={handleFullScreen}
               >
                 {isPlaying ? (
-                  <Pause
-                  onClick={togglePlayPause}
-                   className="text-red-500 h-16 w-16 md:h-24 md:w-24" />
+                  <div
+                    onClick={togglePlayPause}
+                    className="flex items-center justify-center h-16 w-16 md:h-20 md:w-20 bg-orange-600/20 backdrop-blur-sm rounded-full transition-transform duration-300 hover:scale-110 border-2 border-white/30"
+                  >
+                    <Pause className="text-white h-8 w-8 md:h-10 md:w-10 drop-shadow-lg" />
+                  </div>
                 ) : (
-                  <Play
-                  onClick={togglePlayPause}
-                   className="text-blue-500 h-16 w-16 md:h-24 md:w-24" />
+                  <div
+                    onClick={togglePlayPause}
+                    className="flex items-center justify-center h-16 w-16 md:h-20 md:w-20 bg-orange-600/40 backdrop-blur-sm rounded-full transition-transform duration-300 hover:scale-110 border-2 border-white/30"
+                  >
+                    <Play className="text-white h-8 w-8 md:h-10 md:w-10 ml-1 drop-shadow-lg" />
+                  </div>
                 )}
               </div>
 
               {/* Bottom controls */}
-              <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-                {/* Progress bar */}
-                <input
-                  type="range"
-                  min={0}
-                  max={duration || 100}
-                  value={progress}
-                  step={0.1}
-                  onChange={handleSeek}
-                  className="w-full h-1.5 bg-gray-600 rounded-full appearance-none cursor-pointer focus:outline-none"
-                  style={{
-                    background: `linear-gradient(to right, #ef4444 ${
-                      (progress / (duration || 100)) * 100
-                    }%, #4B5563 ${(progress / (duration || 100)) * 100}%)`,
-                  }}
-                />
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-6 bg-gradient-to-t from-black via-black/70 to-transparent">
+                {/* Progress bar container */}
+                <div className="relative group w-full mb-2">
+                  {/* Thin progress track with thicker hover state */}
+                  <div className="h-1 bg-gray-600/40 rounded-full w-full group-hover:h-1.5 transition-all duration-200">
+                    {/* Filled part of progress */}
+                    <div
+                      className="h-full bg-orange-600 rounded-full relative"
+                      style={{
+                        width: `${(progress / (duration || 100)) * 100}%`,
+                      }}
+                    >
+                      {/* Thumb that appears on hover */}
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 bg-orange-600 rounded-full scale-0 group-hover:scale-100 transition-transform duration-200 shadow-sm shadow-black/30"></div>
+                    </div>
+                  </div>
+
+                  {/* Invisible input on top for interaction */}
+                  <input
+                    type="range"
+                    min={0}
+                    max={duration || 100}
+                    value={progress}
+                    step={0.1}
+                    onChange={handleSeek}
+                    className="absolute inset-0 w-full opacity-0 cursor-pointer"
+                  />
+                </div>
 
                 {/* Control buttons */}
-                <div className="flex justify-between items-center mt-2">
+                <div className="flex justify-between items-center mt-3">
                   <div className="flex items-center gap-3">
                     {/* Play/Pause */}
-                    <button onClick={togglePlayPause}>
-                      {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+                    <button
+                      onClick={togglePlayPause}
+                      className="p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
+                    >
+                      {isPlaying ? (
+                        <Pause size={18} className="text-white" />
+                      ) : (
+                        <Play size={18} className="text-white" />
+                      )}
                     </button>
 
                     {/* Volume */}
-                    <div className="flex items-center gap-1">
-                      <button onClick={toggleMuteHandler}>
+                    <div className="flex items-center gap-1 group relative">
+                      <button
+                        onClick={toggleMuteHandler}
+                        className="p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
+                      >
                         {isMuted || volume === 0 ? (
-                          <VolumeX size={20} />
+                          <VolumeX size={18} className="text-white" />
                         ) : (
-                          <Volume2 size={20} />
+                          <Volume2 size={18} className="text-white" />
                         )}
                       </button>
-                      <input
-                        type="range"
-                        min={0}
-                        max={1}
-                        step={0.01}
-                        value={isMuted ? 0 : volume}
-                        onChange={handleVolumeChange}
-                        className="w-16 h-1 bg-gray-600 rounded-full appearance-none cursor-pointer"
-                        style={{
-                          background: `linear-gradient(to right, #ef4444 ${
-                            (isMuted ? 0 : volume) * 100
-                          }%, #4B5563 ${(isMuted ? 0 : volume) * 100}%)`,
-                        }}
-                      />
+                      <div className="w-0 overflow-hidden group-hover:w-16 transition-all duration-300 h-6 flex items-center">
+                        <input
+                          type="range"
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          value={isMuted ? 0 : volume}
+                          onChange={handleVolumeChange}
+                          className="w-16 h-1 bg-gray-600/60 rounded-full appearance-none cursor-pointer focus:outline-none"
+                          style={{
+                            background: `linear-gradient(to right, #f97316 ${
+                              (isMuted ? 0 : volume) * 100
+                            }%, #4B5563 ${(isMuted ? 0 : volume) * 100}%)`,
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Timestamp */}
+                    <div className="text-xs text-white/80 font-medium ml-1">
+                      {Math.floor(progress / 60)}:
+                      {Math.floor(progress % 60)
+                        .toString()
+                        .padStart(2, "0")}{" "}
+                      / {Math.floor(duration / 60)}:
+                      {Math.floor(duration % 60)
+                        .toString()
+                        .padStart(2, "0")}
                     </div>
 
                     {/* Skip buttons */}
                     <button
                       onClick={handlePrevVideo}
                       disabled={!hasPrevVideo}
-                      className={
-                        !hasPrevVideo ? "opacity-50 cursor-not-allowed" : ""
-                      }
+                      className={`p-1.5 rounded-full transition-colors duration-200 ${
+                        hasPrevVideo
+                          ? "hover:bg-white/10"
+                          : "opacity-50 cursor-not-allowed"
+                      }`}
                     >
-                      <SkipBack size={20} />
+                      <SkipBack size={18} className="text-white" />
                     </button>
                     <button
                       onClick={handleNextVideo}
                       disabled={!hasNextVideo}
-                      className={
-                        !hasNextVideo ? "opacity-50 cursor-not-allowed" : ""
-                      }
+                      className={`p-1.5 rounded-full transition-colors duration-200 ${
+                        hasNextVideo
+                          ? "hover:bg-white/10"
+                          : "opacity-50 cursor-not-allowed"
+                      }`}
                     >
-                      <SkipForward size={20} />
+                      <SkipForward size={18} className="text-white" />
                     </button>
                   </div>
 
                   {/* Right controls */}
-                  <div className="flex gap-3">
-                    <button onClick={settingClickHandler}>
-                      {/* <Settings
-                        className={`transition-transform duration-200 ${
-                          isClickedSetting ? "rotate-90" : ""
-                        }`}
-                        size={20}
-                      /> */}
+                  <div className="flex gap-1">
+                    <button
+                      onClick={settingClickHandler}
+                      className="p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
+                    >
+                      {/* Settings button commented out in original code */}
                     </button>
-                    <button onClick={pipHandler}>
-                      <PictureInPicture2 size={20} />
+                    <button
+                      onClick={pipHandler}
+                      className="p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
+                    >
+                      <PictureInPicture2 size={18} className="text-white" />
                     </button>
-                    <button onClick={handleFullScreen}>
+                    <button
+                      onClick={handleFullScreen}
+                      className="p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
+                    >
                       {isFullScreen ? (
-                        <Minimize size={20} />
+                        <Minimize size={18} className="text-white" />
                       ) : (
-                        <Maximize size={20} />
+                        <Maximize size={18} className="text-white" />
                       )}
                     </button>
                   </div>
@@ -420,74 +543,60 @@ const VideoPlayer = () => {
           </div>
 
           {/* Video Info Section */}
-          <div className="mt-4 space-y-4 ">
+          <div className="mt-6 space-y-6">
             {/* Title */}
-            <h1 className="text-lg md:text-xl font-semibold px-2">
+            <h1 className="text-xl md:text-2xl font-bold px-1 leading-tight text-white">
               {selectedVideo?.title}
             </h1>
 
-            {/* Channel info and actions */}
-            <div className="flex flex-col md:flex-row md:justify-between border-y py-3 px-2 gap-4">
-              {/* Channel info */}
-              <div className="flex items-center gap-3">
-                <Avatar className="outline-1 outline-slate-950">
-                  <AvatarImage src={selectedVideo?.owner?.avatar} />
-                  <AvatarFallback className={`${fallbackColor}`}>
-                    {selectedVideo?.owner?.username?.[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <a
-                    href={`/profile/${selectedVideo?.owner?.username}`}
-                    className="text-base font-semibold hover:text-gray-700"
-                  >
-                    {selectedVideo?.owner?.fullName}
-                  </a>
-                  <p className="text-xs text-gray-500">
-                    {selectedVideo?.owner?.subscribers || 0} subscribers
-                  </p>
-                </div>
-                {/* Subscribe button - only show if not own video */}
-                {selectedVideo?.owner?._id !== userDetail?._id && (
-                  <button
-                    onClick={toggleSubscription}
-                    className={`ml-3 px-4 py-2 rounded-sm text-sm font-medium ${
-                      isSubscribed
-                        ? "bg-gray-200 hover:bg-gray-300"
-                        : "bg-slate-950 text-white hover:bg-slate-800"
-                    }`}
-                    disabled={subscriptionIsLoading}
-                  >
-                    {subscriptionIsLoading
-                      ? "Loading..."
-                      : isSubscribed
-                      ? "Unsubscribe"
-                      : "Subscribe"}
-                  </button>
-                )}
+            {/* Video stats and actions bar */}
+            <div className="flex flex-wrap justify-between items-center gap-3 px-1">
+              <div className="flex items-center text-sm text-slate-300">
+                <span className="font-medium">
+                  {selectedVideo?.views?.toLocaleString() || 0} views
+                </span>
+                <span className="mx-1.5 text-slate-500">•</span>
+                <span>
+                  {selectedVideo?.createdAt
+                    ? getTimeAgo(selectedVideo.createdAt)
+                    : ""}
+                </span>
               </div>
 
-              {/* Action buttons */}
-              <div className="flex  items-center justify-around gap-4">
+              {/* Action buttons - Mobile friendly layout */}
+              <div className="flex items-center gap-3 sm:gap-5">
                 <button
                   onClick={handleLikeToggle}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1.5 group"
                   disabled={likeLoading}
                 >
-                  {likeLoading ? (
-                    <SpringLoader />
-                  ) : (
-                    <Heart
-                      className={`${
-                        isLiked
-                          ? "fill-red-500 text-red-500"
-                          : "hover:text-gray-600"
-                      }`}
-                      size={20}
-                    />
-                  )}
-                  <span className="text-sm">{selectedVideo?.likes}</span>
+                  <div className="p-2 rounded-full group-hover:bg-slate-800 transition-colors">
+                    {likeLoading ? (
+                      <SpringLoader
+                        type="dots"
+                        color="orange-600"
+                        size="small"
+                      />
+                    ) : (
+                      <Heart
+                        className={`transition-all ${
+                          isLiked
+                            ? "fill-orange-500 text-orange-500"
+                            : "text-slate-300 group-hover:text-orange-500"
+                        }`}
+                        size={22}
+                      />
+                    )}
+                  </div>
+                  <span
+                    className={`text-sm font-medium ${
+                      isLiked ? "text-orange-500" : "text-slate-300"
+                    }`}
+                  >
+                    {selectedVideo?.likes?.toLocaleString()}
+                  </span>
                 </button>
+
                 <div className="relative">
                   <button
                     onClick={(e) => {
@@ -495,60 +604,90 @@ const VideoPlayer = () => {
                       e.stopPropagation();
                       setIsOpen(!isOpen);
                     }}
+                    className="flex items-center gap-1.5 group"
                   >
-                    <Share size={20} className="hover:text-gray-600" />
+                    <div className="p-2 rounded-full group-hover:bg-slate-800 transition-colors">
+                      <Share
+                        size={22}
+                        className="text-slate-300 group-hover:text-orange-500"
+                      />
+                    </div>
+                    <span className="text-sm font-medium hidden sm:block text-slate-300 group-hover:text-orange-500">
+                      Share
+                    </span>
                   </button>
 
                   {isOpen && (
                     <div
-                      className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
+                      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999] flex items-center justify-center"
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsOpen(false);
                       }}
                     >
                       <div
-                        className="bg-white dark:bg-slate-800 rounded-sm p-4 mx-4 w-full max-w-md"
+                        className="bg-slate-900 rounded-xl shadow-2xl p-5 mx-4 w-full max-w-md border border-slate-800 border-t-orange-600/30"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="flex justify-between items-center mb-4">
-                          <h3 className="font-medium text-lg text-gray-800 dark:text-white">
+                          <h3 className="font-semibold text-lg text-white flex items-center gap-2">
+                            <Share size={18} className="text-orange-500" />
                             Share Video
                           </h3>
                           <button
                             onClick={() => setIsOpen(false)}
-                            className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                            className="p-1.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
                           >
-                            <X />
+                            <X size={18} />
                           </button>
                         </div>
                         <ShareCard propId={videoId} type="video" />
                       </div>
                     </div>
                   )}
-                </div>{" "}
-                <button onClick={() => setIsPlaylistModalOpen(true)}>
-                  <Bookmark size={20} className={`${
+                </div>
+
+                <button
+                  onClick={() => setIsPlaylistModalOpen(true)}
+                  className="flex items-center gap-1.5 group"
+                >
+                  <div className="p-2 rounded-full group-hover:bg-slate-800 transition-colors">
+                    <Bookmark
+                      size={22}
+                      className={`transition-all ${
                         selectedVideo?.isAddedInPlaylist
-                          ? "fill-gray-800 text-gray-800"
-                          : "hover:text-gray-600"
-                      }`} />
+                          ? "fill-orange-500 text-orange-500"
+                          : "text-slate-300 group-hover:text-orange-500"
+                      }`}
+                    />
+                  </div>
+                  <span
+                    className={`text-sm font-medium hidden sm:block ${
+                      selectedVideo?.isAddedInPlaylist
+                        ? "text-orange-500"
+                        : "text-slate-300 group-hover:text-orange-500"
+                    }`}
+                  >
+                    Save
+                  </span>
                 </button>
 
                 {isPlaylistModalOpen && (
                   <div
-                    className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center"
+                    className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999] flex items-center justify-center"
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsPlaylistModalOpen(false);
                     }}
                   >
-                    <div onClick={(e) => e.stopPropagation()}>
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="shadow-2xl border border-slate-800 border-t-orange-600/30 rounded-xl overflow-hidden"
+                    >
                       <AddToPlaylist
                         videoId={selectedVideo?._id}
                         userId={userDetail?._id}
                         onClose={() => setIsPlaylistModalOpen(false)}
-                        
                       />
                     </div>
                   </div>
@@ -556,37 +695,92 @@ const VideoPlayer = () => {
               </div>
             </div>
 
+            {/* Channel info card */}
+            <div className="bg-slate-900 rounded-xl p-4 mt-4 border border-slate-800/70 shadow-md">
+              <div className="flex flex-wrap gap-4 items-center justify-between">
+                {/* Channel info */}
+                <div className="flex items-center gap-4">
+                  <a href={`/profile/${selectedVideo?.owner?.username}`}>
+
+                    <Avatar className="h-12 w-12 hover:shadow-2xl ring-2 ring-orange-600/50  hover:shadow-orange-500  hover:transition-all hover:duration-300 ">
+                    <AvatarImage src={selectedVideo?.owner?.avatar} />
+                    <AvatarFallback
+                      className={`${fallbackColor} text-lg font-bold`}
+                    >
+                      {selectedVideo?.owner?.username?.[0]?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  </a>
+                  <div className="flex flex-col">
+                    <a
+                      href={`/profile/${selectedVideo?.owner?.username}`}
+                      className="text-base font-semibold text-white hover:text-orange-500 transition-colors"
+                    >
+                      {selectedVideo?.owner?.fullName}
+                    </a>
+                    <p className="text-xs text-slate-400 font-medium">
+                      {(
+                        selectedVideo?.owner?.subscribers || 0
+                      ).toLocaleString()}{" "}
+                      subscribers
+                    </p>
+                  </div>
+                </div>
+
+                {/* Subscribe button - only show if not own video */}
+                {selectedVideo?.owner?._id !== userDetail?._id && (
+                  subscriptionIsLoading ? (
+                      <div 
+                      className={`px-6 rounded-full text-sm font-medium transition-all bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700
+                           `}
+                      >
+                        <SpringLoader type="dot" color="orange-600" size="small"/>
+                      </div>
+                    ) :(
+                  <button
+                    onClick={toggleSubscription}
+                    className={`px-6  py-2.5 rounded-full text-sm font-medium transition-all
+                       ${
+                         isSubscribed
+                           ? "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700"
+                           : "bg-orange-600 text-white hover:bg-orange-700 shadow-lg"
+                       }`}
+                    disabled={subscriptionIsLoading}
+                  >
+                     {isSubscribed ? (
+                      "Unsubscribe"
+                    ) : (
+                      "Subscribe"
+                    )}
+                  </button>
+                    )
+                  
+                )}
+              </div>
+            </div>
+
             {/* Description */}
             <div
-              className={`border-b pb-4 px-2 ${
-                descriptionToggle ? "h-auto" : "h-24 overflow-hidden"
-              }`}
+              className={`bg-slate-900/80 rounded-xl p-4 mt-2 transition-all overflow-hidden border border-slate-800/50`}
+              style={{
+                maxHeight: descriptionToggle ? "1000px" : "120px",
+              }}
             >
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex gap-3 text-sm">
-                  <span>{selectedVideo?.views || 0} views</span>
-                  <span>
-                    <Dot />
-                  </span>
-                  <span>
-                    {selectedVideo?.createdAt
-                      ? getTimeAgo(selectedVideo.createdAt)
-                      : ""}
-                  </span>
-                </div>
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-medium text-white">Description</h3>
                 <button
                   onClick={onDescToggle}
-                  className="text-gray-600 hover:text-gray-800"
+                  className="text-slate-400 hover:text-orange-500 p-1 rounded-full hover:bg-slate-800 transition-all"
                 >
                   {descriptionToggle ? (
-                    <ChevronDown size={20} />
+                    <ChevronDown size={18} />
                   ) : (
-                    <ChevronLeft size={20} />
+                    <ChevronLeft size={18} />
                   )}
                 </button>
               </div>
-              <p className="text-sm whitespace-pre-wrap">
-                {selectedVideo?.description}
+              <p className="text-sm whitespace-pre-wrap text-slate-300">
+                {selectedVideo?.description || "No description available."}
               </p>
             </div>
           </div>
