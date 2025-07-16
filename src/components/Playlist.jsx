@@ -1,16 +1,14 @@
 import { fetchUserDetail, fetchUserPlaylist } from "@/Redux";
 import React, { useEffect, useState } from "react";
-import Skeleton from "react-loading-skeleton";
 import { useDispatch, useSelector } from "react-redux";
-import { AspectRatio } from "./ui/aspect-ratio";
-import { Card } from "./ui/card";
 import { Link } from "react-router-dom";
 import NotFound from "@/Error/NotFound";
 import PlaylistCard from "./PlaylistCard";
-import { Plus } from "lucide-react";
+import { FolderPlus, List, ListMusic, Music, Plus } from "lucide-react";
 import EmptyContent from "@/Error/EmptyContent";
 import { Button } from "./ui/button";
 import PlaylistCreate from "./PlaylistCreate";
+import { Skeleton } from "./ui/skeleton";
 
 function Playlist() {
   const dispatch = useDispatch();
@@ -33,66 +31,82 @@ function Playlist() {
   return playlistError ? (
     <NotFound />
   ) : (
-    <div className="w-full relative">
-      <div className="h-auto w-full border-b-2 border-gray-500 pb-3 mb-6 flex flex-row items-center space-x-1">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
-          Playlists
-        </h1>
+    <div className="w-full relative max-w-7xl mx-auto">
+      {/* Header Section */}
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800/50">
+        <div className="flex items-center gap-3">
+          <div className="bg-orange-600/20 p-2.5 rounded-lg">
+            <ListMusic className="h-6 w-6 text-orange-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-white">
+            My Playlists
+          </h1>
+        </div>
+        
         <Button
-          variant="ghost"
-          className="justify-center items-center hover:cursor-pointer"
           onClick={handlePlaylistCreatePOP}
+          className="bg-orange-600 hover:bg-orange-500 text-white gap-2 rounded-lg"
         >
-          <Plus className="hover:text-gray-600 transition-colors " />
-          
+          <Plus size={18} />
+          <span className="hidden sm:inline">New Playlist</span>
         </Button>
       </div>
 
       {/* Popup Overlay */}
       {playlistPOPCreateActive && (
-        <div className="fixed inset-0 bg-black/25 flex items-center justify-center z-50">
-          <div className="w-full max-w-md p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div 
+            className="w-full max-w-md p-4 animate-fade-in"
+            onClick={(e) => e.stopPropagation()}
+          >
             <PlaylistCreate onClose={handlePlaylistCreatePOP} />
           </div>
         </div>
       )}
 
-      <div className="flex flex-wrap gap-4">
-        {playlistIsLoading || isLoading ? (
-          Array(6)
-            .fill()
-            .map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-lg overflow-hidden shadow w-full max-w-sm mb-4 p-3"
-              >
-                <Skeleton height={200} width="100%" />
-                <div className="mt-3">
-                  <Skeleton width="100%" />
-                  <div className="flex items-center gap-2 my-2">
-                    <Skeleton width={30} height={30} circle />
-                    <Skeleton width="calc(100% - 40px)" />
-                  </div>
-                  <Skeleton width="100%" />
+      {/* Playlists Grid */}
+      {playlistIsLoading || isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array(6).fill().map((_, i) => (
+            <div key={i} className="bg-slate-900/50 rounded-lg overflow-hidden shadow-lg border border-slate-800/50">
+              <div className="aspect-video">
+                <Skeleton className="w-full h-full" />
+              </div>
+              <div className="p-4">
+                <Skeleton className="h-5 w-full mb-3" />
+                <div className="flex items-center gap-3 mb-3">
+                  <Skeleton className="w-8 h-8 rounded-full" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-3 w-16" />
                 </div>
               </div>
-            ))
-        ) : Array.isArray(playlistData) &&
-          playlistData.length > 0 ? (
-          playlistData?.map((playlist) => (
+            </div>
+          ))}
+        </div>
+      ) : Array.isArray(playlistData) && playlistData.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {playlistData?.map((playlist) => (
             <div
               key={playlist._id}
-              className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] xl:w-[calc(33.333%-11px)]"
+              className="transition-all duration-300 hover:-translate-y-1"
             >
               <PlaylistCard data={playlist} />
             </div>
-          ))
-        ) : (
-          <div className="w-full flex justify-center items-center">
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-16 px-4 rounded-xl bg-slate-900/30 border border-dashed border-slate-700 text-center">
+          <div className="max-w-md">
+            <FolderPlus className="h-16 w-16 text-slate-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-slate-300 mb-2">No playlists yet</h3>
+            <p className="text-slate-400 mb-6">Create your first playlist by clicking the "New Playlist" button above.</p>
             <EmptyContent />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,30 +7,38 @@ export const ToastContainer = () => (
     position="top-center"
     reverseOrder={false}
     gutter={8}
+    containerStyle={{
+      zIndex: 9999, // Ensures toasts appear above all other elements
+    }}
     toastOptions={{
       duration: 3000,
       style: {
         background: '#363636',
         color: '#fff',
+        zIndex: 99999999,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        borderRadius: '8px',
       },
       success: {
         duration: 3000,
         style: {
-          background: 'rgba(48, 151, 71, 0.9)',
+          background: 'rgba(48, 151, 71, 0.95)',
         },
       },
       error: {
         duration: 4000,
         style: {
-          background: 'rgba(205, 50, 50, 0.9)',
+          background: 'rgba(205, 50, 50, 0.95)',
         },
       },
       loading: {
         duration: Infinity,
+        style: {
+          background: 'rgba(30, 41, 59, 0.95)',
+        },
       },
     }}
-  />
-);
+  />);
 
 
 export const showSuccessToast = (message) => {

@@ -8,6 +8,9 @@ import {
   Check,
   Facebook,
   Mail,
+  Share2,
+  Video,
+  PlaySquare,
 } from "lucide-react";
 import { showErrorToast, showSuccessToast } from "@/Notification/Toast";
 
@@ -48,17 +51,27 @@ const ShareCard = ({ propId, type = "video" }) => {
   }
 
   return (
-    <div className="flex flex-col gap-3 ">
-      {/* Content type indicator */}
-      <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-2">
-        {type === "playlist" ? (
-          <span>Sharing playlist</span>
-        ) : (
-          <span>Sharing video</span>
-        )}
+    <div className="flex flex-col gap-4 bg-slate-950 p-5 rounded-lg border border-slate-800 shadow-lg">
+      {/* Content type indicator with icon */}
+      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="flex items-center gap-2 text-slate-300">
+          {type === "playlist" ? (
+            <>
+              <PlaySquare size={18} className="text-orange-600" />
+              <span className="font-medium">Share this playlist</span>
+            </>
+          ) : (
+            <>
+              <Video size={18} className="text-orange-600" />
+              <span className="font-medium">Share this video</span>
+            </>
+          )}
+        </div>
+        <Share2 size={18} className="text-orange-600" />
       </div>
 
-      <div className="flex flex-row gap-2 flex-wrap ">
+      {/* First row of share options */}
+      <div className="grid grid-cols-3 gap-3">
         {/* Twitter Share */}
         <a
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -66,11 +79,11 @@ const ShareCard = ({ propId, type = "video" }) => {
           )}&url=${encodeURIComponent(shareURL)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-blue-400 text-white rounded-sm flex items-center justify-center hover:bg-blue-500 transition-colors"
+          className="p-2.5 bg-slate-900 text-white rounded-md flex items-center justify-center hover:bg-slate-800 border border-slate-700 transition-all group"
           aria-label="Share on Twitter"
         >
-          <Twitter size={18} />
-          <span className="ml-1 text-sm">Twitter</span>
+          <Twitter size={18} className="text-[#1DA1F2] group-hover:scale-110 transition-transform" />
+          <span className="ml-2 text-sm font-medium">Twitter</span>
         </a>
 
         {/* WhatsApp Share */}
@@ -80,11 +93,11 @@ const ShareCard = ({ propId, type = "video" }) => {
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-green-500 text-white rounded-sm flex items-center justify-center hover:bg-green-600 transition-colors"
+          className="p-2.5 bg-slate-900 text-white rounded-md flex items-center justify-center hover:bg-slate-800 border border-slate-700 transition-all group"
           aria-label="Share on WhatsApp"
         >
-          <MessageCircle size={18} />
-          <span className="ml-1 text-sm">WhatsApp</span>
+          <MessageCircle size={18} className="text-[#25D366] group-hover:scale-110 transition-transform" />
+          <span className="ml-2 text-sm font-medium">WhatsApp</span>
         </a>
 
         {/* LinkedIn Share */}
@@ -94,16 +107,16 @@ const ShareCard = ({ propId, type = "video" }) => {
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-blue-700 text-white rounded-sm flex items-center justify-center hover:bg-blue-800 transition-colors"
+          className="p-2.5 bg-slate-900 text-white rounded-md flex items-center justify-center hover:bg-slate-800 border border-slate-700 transition-all group"
           aria-label="Share on LinkedIn"
         >
-          <Linkedin size={18} />
-          <span className="ml-1 text-sm">LinkedIn</span>
+          <Linkedin size={18} className="text-[#0A66C2] group-hover:scale-110 transition-transform" />
+          <span className="ml-2 text-sm font-medium">LinkedIn</span>
         </a>
       </div>
 
-      {/* Additional share options for mobile */}
-      <div className="flex flex-row gap-2 flex-wrap">
+      {/* Second row of share options */}
+      <div className="grid grid-cols-2 gap-3">
         {/* Facebook Share */}
         <a
           href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -111,11 +124,11 @@ const ShareCard = ({ propId, type = "video" }) => {
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 p-2 bg-blue-600 text-white rounded-sm flex items-center justify-center hover:bg-blue-700 transition-colors"
+          className="p-2.5 bg-slate-900 text-white rounded-md flex items-center justify-center hover:bg-slate-800 border border-slate-700 transition-all group"
           aria-label="Share on Facebook"
         >
-          <Facebook size={18} />
-          <span className="ml-1 text-sm">Facebook</span>
+          <Facebook size={18} className="text-[#1877F2] group-hover:scale-110 transition-transform" />
+          <span className="ml-2 text-sm font-medium">Facebook</span>
         </a>
 
         {/* Email Share */}
@@ -125,37 +138,43 @@ const ShareCard = ({ propId, type = "video" }) => {
           )}&body=${encodeURIComponent(
             `I thought you might like this ${type}: ${shareURL}`
           )}`}
-          className="flex-1 p-2 bg-gray-500 text-white rounded-sm flex items-center justify-center hover:bg-gray-600 transition-colors"
+          className="p-2.5 bg-slate-900 text-white rounded-md flex items-center justify-center hover:bg-slate-800 border border-slate-700 transition-all group"
           aria-label="Share via Email"
         >
-          <Mail size={18} />
-          <span className="ml-1 text-sm">Email</span>
+          <Mail size={18} className="text-orange-600 group-hover:scale-110 transition-transform" />
+          <span className="ml-2 text-sm font-medium">Email</span>
         </a>
       </div>
 
       {/* Copy Link */}
-      <div className="mt-2 flex items-center group relative">
-        <div className="flex-1 bg-gray-100 dark:bg-slate-700 rounded-l-sm p-2 overflow-hidden text-sm text-gray-700 dark:text-slate-200 truncate">
+      <div className="mt-1 flex items-center group relative">
+        <div className="flex-1 bg-slate-900 border-y border-l border-slate-700 rounded-l-md p-3 overflow-hidden text-sm text-slate-300 truncate">
           {shareURL}
         </div>
         <button
           onClick={handleCopy}
-          className={`p-2 ${
-            copied ? "bg-green-500" : "bg-gray-200 dark:bg-slate-600"
-          } rounded-r-sm hover:bg-opacity-90 transition-colors`}
+          className={`p-3 ${
+            copied 
+              ? "bg-orange-600 hover:bg-orange-700" 
+              : "bg-slate-800 hover:bg-slate-700"
+          } border-y border-r border-slate-700 rounded-r-md transition-colors duration-200`}
           aria-label="Copy link"
         >
           {copied ? (
             <Check size={18} className="text-white" />
           ) : (
-            <Copy size={18} className="text-gray-700 dark:text-white" />
+            <Copy size={18} className="text-slate-300" />
           )}
         </button>
-        {copied && (
-          <div className="absolute -top-8 right-0 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-            Copied!
-          </div>
-        )}
+        
+        {/* Tooltip */}
+        <div 
+          className={`absolute -top-8 right-0 bg-slate-800 text-white text-xs px-2 py-1 rounded shadow-lg transition-opacity duration-300 ${
+            copied ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          Copied!
+        </div>
       </div>
     </div>
   );

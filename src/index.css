@@ -1,8 +1,7 @@
 @plugin "tailwindcss-animate";
-
+@plugin "tailwind-scrollbar";
 @custom-variant dark (&:is(.dark *));
 @import "tailwindcss";
-@import './styles/modal.css';
 
 :root {
   --background: hsl(0 0% 100%);

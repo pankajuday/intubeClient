@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getTimeAgo } from "@/utils/formateDate";
 import { getRandomColor } from "@/utils/getRandomColor";
-import defAvatar from "../assets/defaultAvatar.png";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { MoreHorizontalIcon, ThumbsUp } from "lucide-react";
+import { MoreHorizontalIcon, ThumbsUp, Heart, MessageSquare, AlertTriangle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikeOnComment, fetchToggleLikeOnComment } from "@/Redux";
 import { fetchLikeStatus, setLikeLoadingState } from "@/Redux/Slices/Comment";
 import { useDebounceClick } from "@/Hooks/useDebounceClick";
+import SpringLoader from "./SpringLoader";
 
 function VideoCommentCard({ data, videoId }) {
   const [fallbackColor, setFallbackColor] = useState("");
@@ -72,11 +72,11 @@ function VideoCommentCard({ data, videoId }) {
 
 
   return (
-    <Card className="w-full hover:bg-accent/20 transition-colors">
-      <CardContent className="p-4">
+    <Card className="w-full bg-slate-950 border-slate-800 hover:border-slate-700 shadow-md transition-all duration-300 overflow-hidden group hover:bg-slate-900/30">
+      <CardContent className="p-5">
         <div className="flex gap-4">
           {/* Avatar section */}
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-10 w-10 ring-2 ring-slate-800 group-hover:ring-orange-600/20 transition-all duration-300">
             <AvatarImage src={data?.owner?.avatar} alt={data?.owner} />
             <AvatarFallback
               className={`${fallbackColor} text-white text-center font-bold`}
@@ -86,39 +86,63 @@ function VideoCommentCard({ data, videoId }) {
           </Avatar>
 
           {/* Comment content section */}
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-sm">
-                {data?.owner?.username}
+              <span className="font-medium text-sm text-white group-hover:text-orange-200 transition-colors duration-300">
+                {data?.owner?.username || "Anonymous"}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-slate-500 flex items-center">
+                <span className="h-1 w-1 rounded-full bg-slate-700 mx-1.5"></span>
                 {data?.createdAt ? getTimeAgo(data?.createdAt) : ""}
               </span>
             </div>
 
             {/* Comment text */}
-            <p className="text-sm text-foreground/90 leading-relaxed">
-              {data?.content}
+            <p className="text-sm text-slate-300 leading-relaxed">
+              {data?.content || (
+                <span className="text-slate-500 italic flex items-center">
+                  <AlertTriangle size={14} className="mr-1 text-slate-500" />
+                  Comment content unavailable
+                </span>
+              )}
             </p>
 
             {/* Like button */}
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-3 pt-1">
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                className={`h-8 px-2 text-slate-500 hover:text-white hover:bg-slate-900 rounded-md transition-colors ${
+                  isLiked ? 'text-orange-500' : ''
+                }`}
                 onClick={handleToggleLikeOncomment}
+                disabled={isLoading}
               >
                 {isLoading ? (
-                  <MoreHorizontalIcon />
+                  <div className="flex items-center">
+                    <SpringLoader type="dots" color="orange-600" size="small" />
+                  </div>
                 ) : (
-                  <ThumbsUp
-                    className={`h-4 w-4 mr-1 ${
-                      isLiked ? "fill-blue-500 text-blue-500" : ""
-                    } `}
-                  />
+                  <div className="flex items-center">
+                    <Heart
+                      className={`h-4 w-4 mr-1.5 transition-all duration-300 ${
+                        isLiked ? "fill-orange-500 text-orange-500 scale-110" : ""
+                      } `}
+                    />
+                    <span className="text-xs">
+                      {isLiked ? "Liked" : "Like"}
+                    </span>
+                  </div>
                 )}
-                {/* <span className="text-xs">{data?.likes || 0}</span> */}
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-2 text-slate-500 hover:text-white hover:bg-slate-900 rounded-md transition-colors"
+              >
+                <MessageSquare className="h-4 w-4 mr-1.5" />
+                <span className="text-xs">Reply</span>
               </Button>
             </div>
           </div>

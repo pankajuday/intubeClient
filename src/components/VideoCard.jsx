@@ -5,7 +5,7 @@ import { AspectRatio } from "./ui/aspect-ratio";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { formatDate, getTimeAgo } from "@/utils/formateDate";
 import { getRandomColor } from "@/utils/getRandomColor";
-import { Dot, MoreVertical } from "lucide-react";
+import { Clock, Dot, Eye, MoreHorizontal, Play } from "lucide-react";
 import useOnClickOutside from "@/Hooks/useOnClickOutside";
 import MoreOpt from "./MoreOpt";
 
@@ -41,48 +41,63 @@ const VideoCard = ({ video }) => {
   };
 
   return (
-    <Card className="w-full h-full rounded-sm shadow-sm overflow-hidden 5 relative">
-      <Link to={`/video/${video?._id}`} className="block">
+    <Card className="w-full h-full rounded-lg bg-slate-900 border-slate-800 shadow-md overflow-hidden group relative hover:shadow-lg hover:border-slate-700 transition-all">
+      <Link to={`/video/${video?._id}`} className="block relative">
         {/* Video thumbnail */}
-        <AspectRatio ratio={16 / 9} className="w-full bg-slate-700">
+        <AspectRatio ratio={16 / 9} className="w-full bg-slate-800">
           <img
             src={video?.thumbnail}
             alt={video?.title}
-            className="rounded-sm object-cover w-full h-full"
+            className="rounded-t-lg object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
           />
+          {/* Overlay play button - only visible on hover */}
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-900/0 group-hover:bg-slate-900/40 transition-all opacity-0 group-hover:opacity-100 group-hover:scale-105">
+            <div className="w-12 h-12 rounded-full bg-orange-600/90 flex items-center justify-center transform translate-y-2 group-hover:translate-y-0 transition-all ">
+              <Play size={22} className="text-white ml-1" fill="white" />
+            </div>
+          </div>
           {/* Video duration */}
           {video?.duration && (
-            <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+            <span className="absolute bottom-2 right-2 bg-slate-900/85 text-slate-100 text-xs px-2 py-1 rounded flex items-center gap-1 font-medium">
+              <Clock size={10} className="text-orange-500" />
               {formatDuration(video?.duration)}
             </span>
           )}
         </AspectRatio>
       </Link>
-      <CardContent className="flex gap-3 p-2">
-        <Avatar className="h-8 w-8 flex-shrink-0">
-          <AvatarImage src={video?.avatar} />
-          <AvatarFallback
-            className={`${fallbackColor} text-white text-center font-bold`}
-          >
-            {video?.owner?.[0]?.toUpperCase() || "V"}
-          </AvatarFallback>
-        </Avatar>
+      <CardContent className="flex gap-3 p-3 bg-slate-900">
+        <Link to={`/profile/${video?.username}`} className="flex-shrink-0">
+          <Avatar className="h-9 w-9 border-2 border-slate-800 hover:border-orange-600/50 transition-all">
+            <AvatarImage src={video?.avatar} />
+            <AvatarFallback
+              className={`${fallbackColor} text-white text-center font-bold text-xs`}
+            >
+              {video?.owner?.[0]?.toUpperCase() || "V"}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
 
         {/* Video Details */}
         <div className="w-full">
-          <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 mb-1">
+          <CardTitle className="text-sm font-medium leading-tight line-clamp-2 mb-1.5 text-slate-200">
             {video?.title}
           </CardTitle>
 
-          <p className="text-gray-400 text-xs flex items-center gap-1">
-            {video?.owner}
-          </p>
-          <div className="flex space-x-2">
-            <p className="text-gray-500 text-xs">{video?.views || 0} views</p>
-            <span className="text-gray-500 text-xs">
-              <Dot size={20} />
+          <Link to={`/profile/${video?.username}`} className="block">
+            <p className="text-slate-400 text-xs flex items-center gap-1 hover:text-orange-500 transition-colors">
+              {video?.owner}
+            </p>
+          </Link>
+          <div className="flex items-center mt-0.5">
+            <div className="flex items-center text-slate-500 text-xs">
+              <Eye size={11} className="mr-1 text-slate-500/70" />
+              <span>{video?.views || 0} views</span>
+            </div>
+            <span className="text-slate-600 mx-1.5">
+              <Dot size={16} />
             </span>
-            <p className="text-gray-500 text-xs">
+            <p className="text-slate-500 text-xs">
               {getTimeAgo(video?.createdAt)}
             </p>
           </div>
@@ -93,10 +108,10 @@ const VideoCard = ({ video }) => {
           <button
             ref={moreButtonRef}
             onClick={handleMoreClick}
-            className="p-1.5 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700"
+            className="p-1.5 rounded-full text-slate-400 hover:bg-slate-800 hover:text-orange-500 transition-colors"
             title="More options"
           >
-            <MoreVertical size={20} />
+            <MoreHorizontal size={18} />
           </button>
         </div>
       </CardContent>
@@ -105,7 +120,7 @@ const VideoCard = ({ video }) => {
       {toggleMoreOpt && (
         <div
           ref={moreMenuRef}
-          className="absolute top-12 right-2 z-50"
+          className="absolute top-12 right-2 z-50 animate-in fade-in slide-in-from-top-5 duration-200"
         >
           <MoreOpt
             onClose={() => setToggleMoreOpt(false)}
