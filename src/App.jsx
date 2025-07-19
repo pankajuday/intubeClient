@@ -90,7 +90,6 @@ function App() {
     <>
       {/* CookiePermission component can be uncommented when needed */}
       <CookiePermission />
-      <Analytics/>
 
       {/* Toast container for application-wide notifications */}
       <ToastContainer />
