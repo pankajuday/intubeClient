@@ -4,7 +4,13 @@ import { getRandomColor } from "@/utils/getRandomColor";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { MoreHorizontalIcon, ThumbsUp, Heart, MessageSquare, AlertTriangle } from "lucide-react";
+import {
+  MoreHorizontalIcon,
+  ThumbsUp,
+  Heart,
+  MessageSquare,
+  AlertTriangle,
+} from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikeOnComment, fetchToggleLikeOnComment } from "@/Redux";
 import { fetchLikeStatus, setLikeLoadingState } from "@/Redux/Slices/Comment";
@@ -20,7 +26,9 @@ function VideoCommentCard({ data, videoId }) {
     commentError,
     likedCommentError,
     likedCommentLoading,
-    likedCommentData,likedComments, likeLoadingStates
+    likedCommentData,
+    likedComments,
+    likeLoadingStates,
   } = useSelector((state) => state.comment);
   const isLiked = likedComments[data._id];
   const isLoading = likeLoadingStates[data._id];
@@ -30,13 +38,12 @@ function VideoCommentCard({ data, videoId }) {
 
   useEffect(() => {
     setFallbackColor(getRandomColor());
-    async function fetchLC(){
+    async function fetchLC() {
       if (data?._id) {
         await dispatch(fetchLikeOnComment(data?._id)).unwrap();
       }
     }
-    fetchLC()
-    
+    fetchLC();
   }, []);
 
   useEffect(() => {
@@ -60,16 +67,12 @@ function VideoCommentCard({ data, videoId }) {
 
   const handleToggleLikeOncomment = useDebounceClick(async () => {
     try {
-        dispatch(setLikeLoadingState({ commentId: data._id, isLoading: true }));
-        await dispatch(fetchToggleLikeOnComment(data._id)).unwrap();
-      
-
+      dispatch(setLikeLoadingState({ commentId: data._id, isLoading: true }));
+      await dispatch(fetchToggleLikeOnComment(data._id)).unwrap();
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-},500);
-
-
+  }, 500);
 
   return (
     <Card className="w-full bg-slate-950 border-slate-800 hover:border-slate-700 shadow-md transition-all duration-300 overflow-hidden group hover:bg-slate-900/30">
@@ -113,7 +116,7 @@ function VideoCommentCard({ data, videoId }) {
                 variant="ghost"
                 size="sm"
                 className={`h-8 px-2 text-slate-500 hover:text-white hover:bg-slate-900 rounded-md transition-colors ${
-                  isLiked ? 'text-orange-500' : ''
+                  isLiked ? "text-orange-500" : ""
                 }`}
                 onClick={handleToggleLikeOncomment}
                 disabled={isLoading}
@@ -126,7 +129,9 @@ function VideoCommentCard({ data, videoId }) {
                   <div className="flex items-center">
                     <Heart
                       className={`h-4 w-4 mr-1.5 transition-all duration-300 ${
-                        isLiked ? "fill-orange-500 text-orange-500 scale-110" : ""
+                        isLiked
+                          ? "fill-orange-500 text-orange-500 scale-110"
+                          : ""
                       } `}
                     />
                     <span className="text-xs">
@@ -135,7 +140,7 @@ function VideoCommentCard({ data, videoId }) {
                   </div>
                 )}
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="sm"

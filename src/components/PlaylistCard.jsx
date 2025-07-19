@@ -43,6 +43,7 @@ const PlaylistCard = ({ data }) => {
               </div>
             </AspectRatio>
           </div>
+          
 
           {/* Playlist Info */}
           <div className="p-4 border-t border-slate-800/50">

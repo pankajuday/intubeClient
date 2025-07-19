@@ -5,7 +5,13 @@ import { fetchLogin } from "@/Redux/Slices/Auth";
 import SpringLoader from "./SpringLoader";
 import CookiePermission from "./Permission/CookiePermission";
 import { useDebounceClick } from "@/Hooks/useDebounceClick";
-import { User, KeyRound, LogIn, AlertCircle, CircleCheckBig } from "lucide-react";
+import {
+  User,
+  KeyRound,
+  LogIn,
+  AlertCircle,
+  CircleCheckBig,
+} from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,9 +19,6 @@ const Login = () => {
   const { authData, authIsLoading, authError } = useSelector(
     (state) => state.auth
   );
-
-
-
 
   const {
     register,
@@ -35,9 +38,9 @@ const Login = () => {
       // Sanitize inputs before dispatching
       const sanitizedData = {
         username: sanitizeInput(data.username),
-        password: sanitizeInput(data.password)
+        password: sanitizeInput(data.password),
       };
-      
+
       const result = await dispatch(fetchLogin(sanitizedData));
       if (result?.payload?.user) {
         navigate("/");
@@ -65,12 +68,17 @@ const Login = () => {
             )}
 
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-1 text-orange-600">Welcome Back</h2>
+              <h2 className="text-2xl font-bold mb-1 text-orange-600">
+                Welcome Back
+              </h2>
               <p className="text-slate-400 text-sm">
                 Sign in to continue to your account
               </p>
               {authError && (
-                <div className="bg-red-900/30 border border-red-800 text-red-200 px-3 py-2 rounded-lg mt-3 flex items-center justify-center gap-2" role="alert">
+                <div
+                  className="bg-red-900/30 border border-red-800 text-red-200 px-3 py-2 rounded-lg mt-3 flex items-center justify-center gap-2"
+                  role="alert"
+                >
                   <AlertCircle size={14} className="text-red-300" />
                   <p className="text-center text-xs">{authError}</p>
                 </div>
@@ -79,17 +87,27 @@ const Login = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1" htmlFor="username">
+                <label
+                  className="block text-slate-300 text-xs font-medium mb-1"
+                  htmlFor="username"
+                >
                   Username
                 </label>
                 <div className="relative flex items-center">
-                  <User size={16} className="absolute left-2.5 text-slate-400" />
+                  <User
+                    size={16}
+                    className="absolute left-2.5 text-slate-400"
+                  />
                   <input
-                    className={`appearance-none block w-full pl-8 pr-3 py-1.5 border ${errors.username ? 'border-red-500' : 'border-slate-700'} rounded-md bg-slate-800 text-slate-200 leading-tight focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent transition duration-200`}
+                    className={`appearance-none block w-full pl-8 pr-3 py-1.5 border ${
+                      errors.username ? "border-red-500" : "border-slate-700"
+                    } rounded-md bg-slate-800 text-slate-200 leading-tight focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent transition duration-200`}
                     id="username"
                     type="text"
                     placeholder="username123"
-                    {...register("username", { required: "Username is required" })}
+                    {...register("username", {
+                      required: "Username is required",
+                    })}
                   />
                 </div>
                 {errors.username && (
@@ -100,17 +118,27 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1" htmlFor="password">
+                <label
+                  className="block text-slate-300 text-xs font-medium mb-1"
+                  htmlFor="password"
+                >
                   Password
                 </label>
                 <div className="relative flex items-center">
-                  <KeyRound size={16} className="absolute left-2.5 text-slate-400" />
+                  <KeyRound
+                    size={16}
+                    className="absolute left-2.5 text-slate-400"
+                  />
                   <input
-                    className={`appearance-none block w-full pl-8 pr-3 py-1.5 border ${errors.password ? 'border-red-500' : 'border-slate-700'} rounded-md bg-slate-800 text-slate-200 leading-tight focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent transition duration-200`}
+                    className={`appearance-none block w-full pl-8 pr-3 py-1.5 border ${
+                      errors.password ? "border-red-500" : "border-slate-700"
+                    } rounded-md bg-slate-800 text-slate-200 leading-tight focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-transparent transition duration-200`}
                     id="password"
                     type="password"
                     placeholder="Password"
-                    {...register("password", { required: "Password is required" })}
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
                   />
                 </div>
                 {errors.password && (
@@ -149,7 +177,7 @@ const Login = () => {
       <div className="hidden lg:block lg:w-1/2 bg-slate-950 p-6 relative overflow-y-auto">
         <div className="absolute top-0 right-0 left-0 bottom-0 bg-gradient-to-br from-orange-600/20 to-transparent"></div>
         <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-radial from-orange-600/10 via-transparent to-transparent"></div>
-        
+
         <div className="min-h-full flex flex-col justify-center relative z-10 py-4">
           <div className="flex items-center mb-5">
             <div className="h-8 w-8 bg-orange-600 rounded-md flex items-center justify-center mr-2">
@@ -157,35 +185,46 @@ const Login = () => {
             </div>
             <h1 className="text-xl font-bold text-white">InTube</h1>
           </div>
-          
-          <h1 className="text-3xl font-bold text-white mb-3 leading-tight">Welcome to <span className="text-orange-500">InTube</span></h1>
-          <p className="text-slate-300 mb-5 text-sm leading-relaxed max-w-lg">Sign in to access your account and continue your journey with us. Explore videos, create content, and connect with the community.</p>
-          
+
+          <h1 className="text-3xl font-bold text-white mb-3 leading-tight">
+            Welcome to <span className="text-orange-500">InTube</span>
+          </h1>
+          <p className="text-slate-300 mb-5 text-sm leading-relaxed max-w-lg">
+            Sign in to access your account and continue your journey with us.
+            Explore videos, create content, and connect with the community.
+          </p>
+
           <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-5 border border-slate-700/50">
-            <h3 className="text-lg font-medium text-white mb-3">Access Your Features</h3>
+            <h3 className="text-lg font-medium text-white mb-3">
+              Access Your Features
+            </h3>
             <ul className="space-y-3">
               <li className="flex items-center text-slate-300">
                 <span className="flex-shrink-0 h-6 w-6 rounded-full bg-orange-600/20 flex items-center justify-center mr-2">
-                   <CircleCheckBig className="text-orange-600 "/>
+                  <CircleCheckBig className="text-orange-600 " />
                 </span>
-                <span className="text-sm">Your personalized content dashboard</span>
+                <span className="text-sm">
+                  Your personalized content dashboard
+                </span>
               </li>
               <li className="flex items-center text-slate-300">
                 <span className="flex-shrink-0 h-6 w-6 rounded-full bg-orange-600/20 flex items-center justify-center mr-2">
-                   <CircleCheckBig className="text-orange-600 "/>
+                  <CircleCheckBig className="text-orange-600 " />
                 </span>
-                <span className="text-sm">Access to your saved videos and playlists</span>
+                <span className="text-sm">
+                  Access to your saved videos and playlists
+                </span>
               </li>
               <li className="flex items-center text-slate-300">
                 <span className="flex-shrink-0 h-6 w-6 rounded-full bg-orange-600/20 flex items-center justify-center mr-2">
-                   <CircleCheckBig className="text-orange-600 "/>
+                  <CircleCheckBig className="text-orange-600 " />
                 </span>
                 <span className="text-sm">Manage your uploaded content</span>
               </li>
             </ul>
           </div>
         </div>
-        
+
         {/* Background decorative elements */}
         <div className="absolute bottom-10 right-10">
           <div className="h-40 w-40 rounded-full bg-orange-600/10 blur-2xl"></div>
