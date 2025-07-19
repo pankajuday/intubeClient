@@ -39,7 +39,7 @@ import AddToPlaylist from "./components/AddToPlaylist";
 import SearchVideo from "./components/SearchVideo";
 import UpdateProfile from "./components/UpdateProfile";
 import UpdateVideo from "./components/UpdateVideo";
-
+import { Analytics } from "@vercel/analytics/next"
 const MainLayout = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -65,6 +65,7 @@ const MainLayout = () => {
         <Sidebar />
         <main className="w-full pl-0 sm:pl-64 py-4 px-0 md:px-6 transition-all duration-300 justify-center ">
           {isOnline ? <Outlet /> : <NoInternetConnected />}
+          <Analytics/>
         </main>
       </div>
     </div>
