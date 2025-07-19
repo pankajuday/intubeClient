@@ -56,9 +56,9 @@ const CookiePermission = () => {
 
     // Clean up test cookies
     try {
-      document.cookie = "firstPartyTest=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "thirdPartyTest=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=None; Secure;";
-      document.cookie = "essentialTest=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
+      document.cookie = "firstPartyTest=; expires=Thu, Intube Cookies permission  ; path=/;";
+      document.cookie = "thirdPartyTest=; expires=Thu, Intube Cookies permission  ; path=/; SameSite=None; Secure;";
+      document.cookie = "essentialTest=; expires=Thu, Intube Cookies  permission ; path=/; SameSite=Lax;";
     } catch (e) {
       // Ignore cleanup errors
     }

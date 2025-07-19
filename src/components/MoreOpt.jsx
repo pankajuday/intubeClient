@@ -1,14 +1,17 @@
 import { Share2, ListPlus, Bookmark, Flag, Edit } from "lucide-react";
 import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddToPlaylist from "./AddToPlaylist";
 import { useNavigate } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from "@/Notification/Toast";
+import { fetchDeletePlaylistById, fetchDeleteVideoById } from "@/Redux";
 
 export default function MoreOpt({ onClose, videoId, videoTitle, username }) {
   const menuRef = useRef(null);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const { userDetail, isLoading } = useSelector((state) => state.user);
+  const { videoLoading, videoError } = useSelector((state) => state.video);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Function to handle sharing via Web Share API
@@ -65,12 +68,21 @@ export default function MoreOpt({ onClose, videoId, videoTitle, username }) {
     showSuccessToast("Report feature will be implemented soon!");
     if (onClose) onClose();
   };
-// Handle navigation of update video details
-const handleVideoUpdateNavigation = (e)=>{
-  e.preventDefault();
-  e.stopPropagation();
-  navigate(`/update-video/${videoId}`)
-}
+  // Handle navigation of update video details
+  const handleVideoUpdateNavigation = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/update-video/${videoId}`);
+  };
+
+  const handleVideoDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(fetchDeleteVideoById(videoId)).then(()=>{
+      window.location.reload();
+    })
+  };
+  
   return (
     <div
       ref={menuRef}
@@ -138,7 +150,7 @@ const handleVideoUpdateNavigation = (e)=>{
             <span>Report</span>
           </button>
         </li> */}
-        {userDetail?.username === username && (
+        {userDetail?.username === username &&(!(window.location.pathname === "/history") && !(window.location.pathname === "/likedvideos")) && (
           <li className="px-1.5 mt-0.5">
             <button
               type="button"
@@ -153,6 +165,23 @@ const handleVideoUpdateNavigation = (e)=>{
             </button>
           </li>
         )}
+        {
+          userDetail?.username === username && (!(window.location.pathname === "/history") && !(window.location.pathname === "/likedvideos")) && (
+            <li className="px-1.5 mt-0.5">
+            <button
+              type="button"
+              onClick={handleVideoDelete}
+              className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 rounded-md transition-colors"
+              role="menuitem"
+            >
+              <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-orange-500">
+                <Edit size={16} />
+              </div>
+              <span>Delete</span>
+            </button>
+          </li>
+          )
+        }
       </ul>
       {isPlaylistModalOpen && (
         <div
@@ -164,10 +193,7 @@ const handleVideoUpdateNavigation = (e)=>{
             if (onClose) onClose();
           }}
         >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            className="animate-fade-in"
-          >
+          <div onClick={(e) => e.stopPropagation()} className="animate-fade-in">
             <AddToPlaylist
               videoId={videoId}
               userId={userDetail?._id}

@@ -223,7 +223,7 @@ const VideoPlayer = () => {
       currentVideoIndex < relatedVideos.length - 1
     ) {
       const nextVideo = relatedVideos[currentVideoIndex + 1];
-      navigate(`/video/${nextVideo._id}`);
+      navigate(`/video/${nextVideo?._id}`);
     }
   };
 
@@ -234,38 +234,34 @@ const VideoPlayer = () => {
       currentVideoIndex > 0
     ) {
       const prevVideo = relatedVideos[currentVideoIndex - 1];
-      navigate(`/video/${prevVideo._id}`);
+      navigate(`/video/${prevVideo?._id}`);
     }
   };
 
-  const hasNextVideo =
-    relatedVideos &&
-    currentVideoIndex !== undefined &&
-    currentVideoIndex < relatedVideos.length - 1;
-  const hasPrevVideo =
-    relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0;
+  const hasNextVideo = relatedVideos && currentVideoIndex !== undefined && currentVideoIndex < relatedVideos.length - 1;
+  const hasPrevVideo = relatedVideos && currentVideoIndex !== undefined && currentVideoIndex > 0;
 
-  const handleKeyPress = useCallback(
-    (e) => {
-      console.log(e);
-      if (e.key === " " || e.key === "k") {
-        e.preventDefault();
-        togglePlayPause();
-      } else if (e.key === "m") {
-        e.preventDefault();
-        toggleMuteHandler();
-      } else if (e.key === "f") {
-        e.preventDefault();
-        handleFullScreen(e);
-      }
-    },
-    [togglePlayPause, toggleMuteHandler, handleFullScreen]
-  );
+  // const handleKeyPress = useCallback(
+  //   (e) => {
+      
+  //     if (e.key === " " || e.key === "k") {
+  //       e.preventDefault();
+  //       togglePlayPause();
+  //     } else if (e.key === "m") {
+  //       e.preventDefault();
+  //       toggleMuteHandler();
+  //     } else if (e.key === "f") {
+  //       e.preventDefault();
+  //       handleFullScreen(e);
+  //     }
+  //   },
+  //   [togglePlayPause, toggleMuteHandler, handleFullScreen]
+  // );
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [handleKeyPress]);
+  // useEffect(() => {
+  //   document.addEventListener("keydown", handleKeyPress);
+  //   return () => document.removeEventListener("keydown", handleKeyPress);
+  // }, [handleKeyPress]);
 
   return (
     <div className="w-full max-w-7xl mx-auto overflow-hidden z-0 px-3 md:px-6 py-6 bg-slate-950 text-white">
@@ -701,15 +697,14 @@ const VideoPlayer = () => {
                 {/* Channel info */}
                 <div className="flex items-center gap-4">
                   <a href={`/profile/${selectedVideo?.owner?.username}`}>
-
                     <Avatar className="h-12 w-12 hover:shadow-2xl ring-2 ring-orange-600/50  hover:shadow-orange-500  hover:transition-all hover:duration-300 ">
-                    <AvatarImage src={selectedVideo?.owner?.avatar} />
-                    <AvatarFallback
-                      className={`${fallbackColor} text-lg font-bold`}
-                    >
-                      {selectedVideo?.owner?.username?.[0]?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                      <AvatarImage src={selectedVideo?.owner?.avatar} />
+                      <AvatarFallback
+                        className={`${fallbackColor} text-lg font-bold`}
+                      >
+                        {selectedVideo?.owner?.username?.[0]?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                   </a>
                   <div className="flex flex-col">
                     <a
@@ -728,34 +723,32 @@ const VideoPlayer = () => {
                 </div>
 
                 {/* Subscribe button - only show if not own video */}
-                {selectedVideo?.owner?._id !== userDetail?._id && (
-                  subscriptionIsLoading ? (
-                      <div 
+                {selectedVideo?.owner?._id !== userDetail?._id &&
+                  (subscriptionIsLoading ? (
+                    <div
                       className={`px-6 rounded-full text-sm font-medium transition-all bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700
                            `}
-                      >
-                        <SpringLoader type="dot" color="orange-600" size="small"/>
-                      </div>
-                    ) :(
-                  <button
-                    onClick={toggleSubscription}
-                    className={`px-6  py-2.5 rounded-full text-sm font-medium transition-all
+                    >
+                      <SpringLoader
+                        type="dot"
+                        color="orange-600"
+                        size="small"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={toggleSubscription}
+                      className={`px-6  py-2.5 rounded-full text-sm font-medium transition-all
                        ${
                          isSubscribed
                            ? "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700"
                            : "bg-orange-600 text-white hover:bg-orange-700 shadow-lg"
                        }`}
-                    disabled={subscriptionIsLoading}
-                  >
-                     {isSubscribed ? (
-                      "Unsubscribe"
-                    ) : (
-                      "Subscribe"
-                    )}
-                  </button>
-                    )
-                  
-                )}
+                      disabled={subscriptionIsLoading}
+                    >
+                      {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                    </button>
+                  ))}
               </div>
             </div>
 
